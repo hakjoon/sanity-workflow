@@ -42,7 +42,9 @@ are whose*. Because roles multi-select, you can light up writers + copyeds toget
 whole handoff chain for a DTP article, rather than one role at a time.
 
 Both lenses work by receding, not by shouting: what you select stays at full strength and
-everything else drops away. States an article can't reach are dimmed by default — knowing a state exists but is unreachable
+everything else drops away — states, transitions and labels alike. Highlighting a role leaves
+just that role's subgraph legible: the states it acts from, the states it moves articles into,
+and the transitions between them. States an article can't reach are dimmed by default — knowing a state exists but is unreachable
 tells you something. Tick **Hide instead of dim** to drop them entirely and let the view refit to
 just this article's journey. Hiding is tied to reachability only: a transition another role
 performs stays visible, because it's still part of the article's path.

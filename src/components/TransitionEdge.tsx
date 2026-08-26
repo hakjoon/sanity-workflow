@@ -13,6 +13,13 @@ export interface TransitionEdgeData extends Record<string, unknown> {
   label: string
   /** Gated by the self-publish matrix rather than by tier alone. */
   gated: boolean
+  /**
+   * Lens state, mirrored from the edge's className. EdgeLabelRenderer portals
+   * labels into their own layer outside the edge <g>, so the class on the edge
+   * never reaches them — without this the labels stay crisp over a dimmed
+   * diagram and read as the most prominent thing on screen.
+   */
+  lens: 'dim' | 'mute' | null
 }
 
 export type TransitionEdgeType = Edge<TransitionEdgeData, 'transition'>
@@ -67,6 +74,7 @@ export function TransitionEdge({
           <div
             className={`edge-label role-${role}`}
             data-gated={data.gated || undefined}
+            data-lens={data.lens ?? undefined}
             style={{
               transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             }}

@@ -370,6 +370,9 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   text-align: center;
   text-wrap: balance;
 }
+.edge-label[data-lens='dim'] { opacity: var(--dim-opacity); }
+.edge-label[data-lens='mute'] { opacity: var(--mute-opacity); }
+.edge-label { transition: opacity var(--dur-base) var(--ease-out); }
 .edge-label__gate { color: var(--mf-yellow-80); margin-right: 3px; font-size: 9px; }
 
 /* ── Inspector ──────────────────────────────────────────────────────── */

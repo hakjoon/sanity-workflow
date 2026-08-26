@@ -44,11 +44,18 @@ export function toReactFlow(
   // state's own accent would imply, say, an FFE can act somewhere only a
   // copyeditor can.
   const actionableStates = new Map<string, RoleId>()
+  // States the highlighted roles touch — both ends of every transition they
+  // perform, so a lit edge never runs into a faded card. Everything else
+  // recedes, which is what makes the role lens land as hard as the tier lens:
+  // the cards carry most of the visual weight, so dimming edges alone barely
+  // registered.
+  const touchedByViewer = new Set<string>()
   if (hasViewer) {
     for (const t of doc.transitions) {
-      if (path.viewerTransitions.has(t.id) && !actionableStates.has(t.from)) {
-        actionableStates.set(t.from, t.role)
-      }
+      if (!path.viewerTransitions.has(t.id)) continue
+      if (!actionableStates.has(t.from)) actionableStates.set(t.from, t.role)
+      touchedByViewer.add(t.from)
+      touchedByViewer.add(t.to)
     }
   }
 
@@ -67,7 +74,11 @@ export function toReactFlow(
         actionableRole: actionableStates.get(s.id) ?? null,
       },
       hidden: hide && !reachable,
-      className: reachable ? undefined : 'lens-dim',
+      className: !reachable
+        ? 'lens-dim'
+        : hasViewer && !touchedByViewer.has(s.id)
+          ? 'lens-mute'
+          : undefined,
     }
   })
 
@@ -99,6 +110,7 @@ export function toReactFlow(
         style: t.style,
         label: t.label,
         gated: Boolean(t.gate),
+        lens: lens === 'lens-dim' ? 'dim' : lens === 'lens-mute' ? 'mute' : null,
       },
       hidden: hide && !active,
       className: lens,
