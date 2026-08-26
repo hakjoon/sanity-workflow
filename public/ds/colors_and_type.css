@@ -1,0 +1,303 @@
+/* ═══════════════════════════════════════════════════════════════════
+   The Motley Fool · Colors + Type
+   Sourced from the Motley Fool Figma design system.
+
+   ───────────────────────────────────────────────────────────────────
+   VENDORED COPY — trimmed. Everything below the webfont block is
+   byte-identical to the upstream file:
+     _ds/premium-tmf-design-system-figma-code-
+       bafa3119-c5c8-40d7-8d99-919568c8ff58/colors_and_type.css
+   in the "Sanity roles and permissions" Claude Design project.
+
+   Only the @font-face block was changed. Removed:
+     · all 14 "Hurme Geometric Sans 1" faces  — Hurme backs --font-logo
+       only, and this app renders no logo.
+     · the Satoshi italic variable face       — no italics in this UI.
+     · the 10 static Satoshi .otf fallbacks   — duplicates of the
+       variable face's 300–900 range. Left in place they 404 (we ship
+       one font file), and a browser may resolve a missing static face
+       over the variable one and silently fall back to system-ui.
+     · @import of Google Fonts "Inter"        — backs --font-mono, which
+       nothing here uses; it was a render-blocking third-party request.
+
+   Kept: the single Satoshi variable face, and every token, base type
+   rule, and utility class, unchanged.
+
+   To re-sync from the design project, re-fetch upstream and re-apply
+   this trim deliberately — do not paste the upstream file over this one.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Webfont: Satoshi (the entire UI face) ─────────────────────────── */
+@font-face {
+  font-family: "Satoshi";
+  src: url("fonts/Satoshi-Variable.ttf") format("truetype-variations"),
+       url("fonts/Satoshi-Variable.ttf") format("truetype");
+  font-weight: 300 900; font-style: normal; font-display: swap;
+}
+
+:root {
+  /* ── PRIMITIVES · Primary (Fool blue) ──────────────────────────── */
+  --mf-primary-120:   #031780;  /* pressed / hover-dark         */
+  --mf-primary-100:   #0522BA;  /* full strength brand blue    */
+  --mf-primary-24:    #C3CAEE;
+  --mf-primary-16:    #D7DCF4;
+  --mf-primary-8:     #EBEDF9;
+  --mf-primary-4:     #F5F6FC;
+  --mf-primary-0:     #FFFFFF;
+
+  /* ── PRIMITIVES · Content (dark navy, the second workhorse) ───── */
+  --mf-content-100:   #020A36;  /* deepest ink — hero / sidebar surfaces */
+  --mf-content-92:    #171E4D;  /* deepest navy — surfaces + headings */
+  --mf-content-80:    #373D5B;
+  --mf-content-70:    #4E5474;
+  --mf-content-50:    #80849B;
+  --mf-content-36:    #9DA0B2;
+  --mf-content-24:    #C2C4CF;
+  --mf-content-8:     #EBEBEF;
+  --mf-content-4:     #F5F5F7;
+  --mf-content-0:     #FFFFFF;
+
+  /* ── PRIMITIVES · Text (warm neutrals on light bg) ─────────────── */
+  --mf-text-100:      #0A0A0A;  /* body ink                        */
+  --mf-text-80:       #515151;
+  --mf-text-70:       #6F6F6F;
+
+  /* ── PRIMITIVES · Secondary (status + accents) ─────────────────── */
+  --mf-red-100:       #E31C28;  /* loss, destructive, alert        */
+  --mf-red-80:        #851F41;  /* premium wine / editorial        */
+  --mf-red-4:         #FBDCDE;
+  --mf-orange-100:    #C54600;
+  --mf-orange-50:     #FF712F;
+  --mf-orange-4:      #FFF4EE;
+  --mf-yellow-100:    #FFB71B;  /* jester-hat gold, highlights     */
+  --mf-yellow-80:     #CF7F00;
+  --mf-yellow-4:      #F9F3EB;
+  --mf-green-100:     #007D00;  /* gain / success                  */
+  /* Secondary · Red */
+  --mf-secondary-red-50:     #E31C28;
+  --mf-secondary-red-4:      #FBDCDE;
+  /* Secondary · Orange */
+  --mf-secondary-orange-50:  #FF712F;
+  --mf-secondary-orange-4:   #FFCFB6;
+  /* Secondary · Yellow */
+  --mf-secondary-yellow-80:  #CF7F00;
+  --mf-secondary-yellow-50:  #FFB71B;
+  --mf-secondary-yellow-4:   #F9F3EB;
+  /* Secondary · Green */
+  --mf-secondary-green-80:   #178217;
+  --mf-secondary-green-50:   #43B02A;
+  --mf-secondary-green-4:    #EEF7EE;
+  /* Secondary · Purple / Navy */
+  --mf-secondary-purple-50:  #9D1D96;
+  --mf-secondary-navy-80:    #2F3B76;
+
+  --mf-green-80:      #178217;
+  --mf-green-50:      #43B02A;
+  --mf-green-4:       #EEF7EE;
+  --mf-purple-50:     #9D1D96;  /* jester-hat right bell           */
+  --mf-purple-60:     #9747FF;
+  --mf-pink-50:       #E91E63;  /* jester-hat left bell            */
+  --mf-navy-80:       #2F3B76;  /* sidebar accent navy             */
+  --mf-navy-100:      #020A38;  /* footer, deep hero backgrounds   */
+  --mf-blue-50:       #0D69D4;  /* informational links             */
+
+  /* ── SURFACES + LINES ──────────────────────────────────────────── */
+  --mf-surface-page:      #FFFFFF;
+  --mf-surface-muted:     #F5F5F7;  /* subtle section fills         */
+  --mf-surface-raised:    #FFFFFF;  /* cards                        */
+  --mf-surface-ink:       #020A38;  /* dark hero / footer           */
+  --mf-surface-ink-deep:  #020A36;  /* full-bleed launch screens    */
+  --mf-divider:           #EBEBEF;  /* rgb(235,235,239) — #1 usage  */
+  --mf-border-subtle:     #D7DCF4;  /* card outline                 */
+  --mf-border-strong:     #C2C4CF;
+
+  /* ── SEMANTIC · Foreground ─────────────────────────────────────── */
+  --fg-strong:        var(--mf-text-100);
+  --fg-default:       var(--mf-text-80);
+  --fg-muted:         var(--mf-text-70);
+  --fg-faint:         var(--mf-content-36);
+  --fg-on-dark:       #FFFFFF;
+  --fg-on-dark-muted: #C2C4CF;
+  --fg-link:          var(--mf-primary-100);
+  --fg-positive:      var(--mf-green-80);
+  --fg-negative:      var(--mf-red-100);
+  --fg-warning:       var(--mf-yellow-80);
+  --fg-premium:       var(--mf-red-80);  /* the Stock Advisor wine */
+
+  /* ── SEMANTIC · Background ─────────────────────────────────────── */
+  --bg-page:          var(--mf-surface-page);
+  --bg-muted:         var(--mf-surface-muted);
+  --bg-raised:        var(--mf-surface-raised);
+  --bg-primary:       var(--mf-primary-100);
+  --bg-primary-soft:  var(--mf-primary-8);
+  --bg-ink:           var(--mf-surface-ink);
+  --bg-positive-soft: var(--mf-green-4);
+  --bg-negative-soft: var(--mf-red-4);
+  --bg-warning-soft:  var(--mf-yellow-4);
+
+  /* ── SHADOWS (sampled from reference) ──────────────────────────── */
+  --shadow-md:       0 8px 24px  rgba(2, 10, 56, 0.06), 0 1px 2px rgba(2, 10, 56, 0.04);
+  --shadow-lg:       0 16px 40px rgba(2, 10, 56, 0.08), 0 2px 4px rgba(2, 10, 56, 0.05);
+  --shadow-lg-hover: 0 24px 48px rgba(2, 10, 56, 0.16), 0 4px 8px rgba(2, 10, 56, 0.08);
+
+  /* ── RADII (only two in use) ───────────────────────────────────── */
+  --radius-xs: 4px;    /* inputs, chips, small controls              */
+  --radius-sm: 8px;    /* cards, modals, menus, dropdowns            */
+
+  /* ── SPACING (4px base) ────────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── TYPOGRAPHY · Families ─────────────────────────────────────── */
+  /* Satoshi owns the whole UI — headings, display, body, buttons.
+     Hurme Geometric Sans 1 is reserved for the logo wordmark only. */
+  --font-sans:    "Satoshi", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-ui:      "Satoshi", "Inter", system-ui, sans-serif;
+  --font-body:    "Satoshi", "Inter", system-ui, sans-serif;
+  --font-mono:    "Inter", ui-monospace, Menlo, Consolas, monospace;       /* tabular numeric UI */
+  --font-display: "Satoshi", "Inter", system-ui, sans-serif;
+  --font-heading: "Satoshi", "Inter", system-ui, sans-serif;
+  --font-logo:    "Hurme Geometric Sans 1", "Satoshi", system-ui, sans-serif;
+
+  /* ── TYPOGRAPHY · Scale (exact values from Figma Text-Styles) ─── */
+  /* Heading scale — Satoshi Black (900) */
+  --text-h1-size: 32px;  --text-h1-lh: 40px;   --text-h1-weight: 900;
+  --text-h2-size: 24px;  --text-h2-lh: 32px;   --text-h2-weight: 900;
+  --text-h3-size: 20px;  --text-h3-lh: 28px;   --text-h3-weight: 900;
+  --text-h4-size: 18px;  --text-h4-lh: 24px;   --text-h4-weight: 900;
+  --text-h5-size: 16px;  --text-h5-lh: 22px;   --text-h5-weight: 900;
+
+  /* Article scale — longer-form content (Title / Section Title / Subtitle / Paragraph) */
+  --text-title-size: 44px;            --text-title-lh: 56px;            --text-title-weight: 900;
+  --text-section-title-size: 36px;    --text-section-title-lh: 44px;    --text-section-title-weight: 900;
+  --text-section-subtitle-size: 28px; --text-section-subtitle-lh: 36px; --text-section-subtitle-weight: 900;
+  --text-paragraph-size: 20px;        --text-paragraph-lh: 31px;        --text-paragraph-weight: 500;
+  --text-paragraph-bold-weight: 700;
+
+  /* Body scale — UI text */
+  --text-body-size: 16px;     --text-body-lh: 24px;     --text-body-weight: 500;
+  --text-body-bold-weight: 700;
+  /* Caption (aka small) */
+  --text-caption-size: 13px;  --text-caption-lh: 18px;  --text-caption-weight: 500;
+  --text-caption-bold-weight: 700;
+  /* Label (aka micro) */
+  --text-label-size: 11px;    --text-label-lh: 16px;    --text-label-weight: 500;
+  --text-label-bold-weight: 700;
+  /* Legacy aliases */
+  --text-small-size: var(--text-caption-size); --text-small-lh: var(--text-caption-lh); --text-small-weight: var(--text-caption-weight);
+  --text-small-bold-weight: var(--text-caption-bold-weight);
+  --text-micro-size: var(--text-label-size);   --text-micro-lh: var(--text-label-lh);   --text-micro-weight: var(--text-label-weight);
+
+  /* Button + control */
+  --text-button-size: 16px;   --text-button-lh: 24px;   --text-button-weight: 700;
+
+  /* ── MOTION ────────────────────────────────────────────────────── */
+  --ease-out:    cubic-bezier(0.22, 0.61, 0.36, 1.00); /* @kind other */
+  --ease-in-out: cubic-bezier(0.45, 0.05, 0.55, 0.95); /* @kind other */
+  --dur-fast:    120ms; /* @kind other */
+  --dur-base:    180ms; /* @kind other */
+  --dur-slow:    320ms; /* @kind other */
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Base type defaults — applied globally so components inherit
+   ═══════════════════════════════════════════════════════════════════ */
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--fg-strong);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body {
+  margin: 0;
+  background: var(--bg-page);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  font-weight: var(--text-body-weight);
+  color: var(--fg-default);
+}
+
+/* Semantic heading styles — matches Figma Text-Styles > Heading block */
+h1, .text-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-lh);
+  font-weight: var(--text-h1-weight);
+  letter-spacing: -0.01em;
+  color: var(--fg-strong);
+  margin: 0;
+}
+h2, .text-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-lh);
+  font-weight: var(--text-h2-weight);
+  color: var(--fg-strong);
+  margin: 0;
+}
+h3, .text-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-lh);
+  font-weight: var(--text-h3-weight);
+  color: var(--fg-strong);
+  margin: 0;
+}
+h4, .text-h4 {
+  font-family: var(--font-sans);
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-lh);
+  font-weight: var(--text-h4-weight);
+  color: var(--fg-strong);
+  margin: 0;
+}
+h5, .text-h5 {
+  font-family: var(--font-sans);
+  font-size: var(--text-h5-size);
+  line-height: var(--text-h5-lh);
+  font-weight: var(--text-h5-weight);
+  color: var(--fg-strong);
+  margin: 0;
+}
+
+p, .text-body {
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  font-weight: var(--text-body-weight);
+  color: var(--fg-default);
+  margin: 0;
+}
+
+.text-section-title    { font-size: var(--text-section-title-size);    line-height: var(--text-section-title-lh);    font-weight: 900; color: var(--fg-strong); }
+.text-section-subtitle { font-size: var(--text-section-subtitle-size); line-height: var(--text-section-subtitle-lh); font-weight: 900; color: var(--fg-strong); }
+.text-paragraph        { font-size: var(--text-paragraph-size);        line-height: var(--text-paragraph-lh);        font-weight: 500; color: var(--fg-default); }
+.text-paragraph-bold   { font-size: var(--text-paragraph-size);        line-height: var(--text-paragraph-lh);        font-weight: 700; color: var(--fg-strong); }
+
+.text-small            { font-size: var(--text-small-size); line-height: var(--text-small-lh); font-weight: 500; color: var(--fg-muted); }
+.text-small-bold       { font-size: var(--text-small-size); line-height: var(--text-small-lh); font-weight: 700; color: var(--fg-strong); letter-spacing: 0.02em; text-transform: uppercase; }
+.text-micro            { font-size: var(--text-micro-size); line-height: var(--text-micro-lh); font-weight: 500; color: var(--fg-muted); }
+
+.text-button           { font-size: var(--text-button-size); line-height: var(--text-button-lh); font-weight: 700; letter-spacing: 0.01em; }
+
+/* Tabular numbers — mandatory for tables, tickers, prices */
+.tabular-nums, .text-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Utility color classes that map cleanly to Figma variable names */
+.fg-strong   { color: var(--fg-strong); }
+.fg-default  { color: var(--fg-default); }
+.fg-muted    { color: var(--fg-muted); }
+.fg-positive { color: var(--fg-positive); }
+.fg-negative { color: var(--fg-negative); }
+.fg-link     { color: var(--fg-link); }
