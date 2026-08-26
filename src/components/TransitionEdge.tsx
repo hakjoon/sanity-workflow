@@ -11,8 +11,6 @@ export interface TransitionEdgeData extends Record<string, unknown> {
   role: RoleId
   style: 'solid' | 'dashed'
   label: string
-  /** The viewer role can perform this transition. */
-  actionable: boolean
   /** Gated by the self-publish matrix rather than by tier alone. */
   gated: boolean
 }
@@ -60,7 +58,7 @@ export function TransitionEdge({
         className={`transition-edge role-${role}`}
         style={{
           stroke: 'var(--role)',
-          strokeWidth: data?.actionable ? 3 : 2,
+          strokeWidth: 2,
           strokeDasharray: data?.style === 'dashed' ? '5 4' : undefined,
         }}
       />
@@ -68,7 +66,6 @@ export function TransitionEdge({
         <EdgeLabelRenderer>
           <div
             className={`edge-label role-${role}`}
-            data-actionable={data.actionable || undefined}
             data-gated={data.gated || undefined}
             style={{
               transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,

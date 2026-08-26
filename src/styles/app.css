@@ -370,12 +370,7 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   text-align: center;
   text-wrap: balance;
 }
-.edge-label[data-actionable] {
-  background: var(--role);
-  color: var(--mf-primary-0);
-}
 .edge-label__gate { color: var(--mf-yellow-80); margin-right: 3px; font-size: 9px; }
-.edge-label[data-actionable] .edge-label__gate { color: var(--mf-primary-0); }
 
 /* ── Inspector ──────────────────────────────────────────────────────── */
 .inspector {

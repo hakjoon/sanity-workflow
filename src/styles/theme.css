@@ -20,9 +20,14 @@
   --role-hq: var(--mf-red-100);
   --role-system: var(--mf-content-50);
 
-  /* ── Lens states ─────────────────────────────────────────────────── */
-  --dim-opacity: 0.12;
-  --mute-opacity: 0.4;
+  /* ── Lens states ───────────────────────────────────────────────────
+     Both the unreachable lens and the role lens recede rather than
+     emphasise: what you selected stays at full strength and everything
+     else drops away. Reading "what's left" is clearer than hunting for
+     what got louder. Role-dimming is slightly less severe than
+     unreachable so the article's full path stays legible underneath.  */
+  --dim-opacity: 0.1;
+  --mute-opacity: 0.16;
 
   /* ── Diagram surface ─────────────────────────────────────────────── */
   --canvas-bg: var(--mf-primary-4);
@@ -94,11 +99,13 @@
 .react-flow__node.lens-dim,
 .react-flow__edge.lens-dim {
   opacity: var(--dim-opacity);
-  pointer-events: none;
 }
 .react-flow__edge.lens-mute {
   opacity: var(--mute-opacity);
 }
+
+/* Dimmed elements stay clickable — this is an editor, and a transition you
+   have filtered out of view is often exactly the one you want to fix. */
 
 @media (prefers-reduced-motion: reduce) {
   .react-flow__node,

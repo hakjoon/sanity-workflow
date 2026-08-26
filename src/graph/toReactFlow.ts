@@ -73,13 +73,13 @@ export function toReactFlow(
 
   const edges: Edge<TransitionEdgeData>[] = doc.transitions.map((t) => {
     const active = path.activeTransitions.has(t.id)
-    const actionable = path.viewerTransitions.has(t.id)
+    const isViewerRole = path.viewerTransitions.has(t.id)
     // With a viewer role chosen, transitions other roles perform stay
     // visible but recede — they're context, not the answer to "what can I do".
     // Hiding is tied to reachability only. An active transition another role
     // performs stays visible even when a viewer role is selected — it is part
     // of this article's journey, just not your part of it.
-    const lens = !active ? 'lens-dim' : hasViewer && !actionable ? 'lens-mute' : undefined
+    const lens = !active ? 'lens-dim' : hasViewer && !isViewerRole ? 'lens-mute' : undefined
 
     return {
       id: t.id,
@@ -98,7 +98,6 @@ export function toReactFlow(
         role: t.role,
         style: t.style,
         label: t.label,
-        actionable,
         gated: Boolean(t.gate),
       },
       hidden: hide && !active,
