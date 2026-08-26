@@ -34,9 +34,11 @@ export interface DerivedPath {
   activeTransitions: Set<string>
   /** Of the active transitions, those the viewer role performs. */
   viewerTransitions: Set<string>
-  /** True when the selected tier may self-publish the selected type. */
+  /** True when a specific tier and type are chosen and that pair self-publishes. */
   selfPublishes: boolean
-  /** True when no tier/type is selected — the whole graph is shown. */
+  /** Which self-publish outcomes are in play across the selection. */
+  reach: SelfPublishReach
+  /** True when neither a tier nor a type is selected. */
   unfiltered: boolean
 }
 
@@ -54,21 +56,58 @@ export function canSelfPublish(
   return (doc.selfPublish[tierId] ?? []).includes(articleTypeId)
 }
 
+/** Whether self-publish is possible / impossible across a set of combinations. */
+export interface SelfPublishReach {
+  any: boolean
+  none: boolean
+}
+
 /**
- * Is this transition available to the given tier/type combination?
+ * Which self-publish outcomes are reachable across the selected tiers × types.
+ *
+ * With one tier and one type this is a single yes or no. Leaving either on
+ * "all" widens it: MidDTP across all types can self-publish (News brief) and
+ * also cannot (Shorty), so both branches out of Grammarly Edit Complete are
+ * live and both must show.
+ */
+function selfPublishReach(
+  doc: WorkflowDoc,
+  tierIds: string[],
+  typeIds: string[],
+): SelfPublishReach {
+  // A document with no article types can't answer the question either way;
+  // treat both branches as possible rather than silently dropping them.
+  if (typeIds.length === 0) return { any: true, none: true }
+
+  let any = false
+  let none = false
+  for (const tier of tierIds) {
+    const allowed = doc.selfPublish[tier] ?? []
+    for (const type of typeIds) {
+      if (allowed.includes(type)) any = true
+      else none = true
+      if (any && none) return { any, none }
+    }
+  }
+  return { any, none }
+}
+
+/**
+ * Is this transition available to any of the selected tiers, given which
+ * self-publish outcomes are in play?
  *
  * Two independent filters, both must pass:
- *   1. `appliesTo` — the tier must be listed.
- *   2. `gate`      — the self-publish matrix must agree, when a gate is set.
+ *   1. `appliesTo` — at least one selected tier must be listed.
+ *   2. `gate`      — the corresponding self-publish outcome must be reachable.
  */
 function isTransitionAvailable(
   t: Transition,
-  tierId: string,
-  selfPublishes: boolean,
+  tierIds: Set<string>,
+  reach: SelfPublishReach,
 ): boolean {
-  if (!t.appliesTo.includes(tierId)) return false
-  if (t.gate === 'selfPublish' && !selfPublishes) return false
-  if (t.gate === '!selfPublish' && selfPublishes) return false
+  if (!t.appliesTo.some((x) => tierIds.has(x))) return false
+  if (t.gate === 'selfPublish' && !reach.any) return false
+  if (t.gate === '!selfPublish' && !reach.none) return false
   return true
 }
 
@@ -83,25 +122,16 @@ function isTransitionAvailable(
  * reachable — otherwise an unreachable subgraph would still light its edges.
  */
 export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
-  const selfPublishes = canSelfPublish(doc, sel.tierId, sel.articleTypeId)
-  const unfiltered = !sel.tierId || !sel.articleTypeId
+  // "All tiers" / "All types" widen the candidate set rather than switching
+  // the lens off. Picking MidDTP alone still has to drop the SWUser-only
+  // financial-edit branch — otherwise choosing a tier appears to do nothing.
+  const tierIds = sel.tierId ? [sel.tierId] : doc.tiers.map((t) => t.id)
+  const typeIds = sel.articleTypeId ? [sel.articleTypeId] : doc.articleTypes.map((t) => t.id)
+  const unfiltered = !sel.tierId && !sel.articleTypeId
 
-  if (unfiltered) {
-    const all = new Set(doc.states.map((s) => s.id))
-    const allT = new Set(doc.transitions.map((t) => t.id))
-    return {
-      reachableStates: all,
-      activeTransitions: allT,
-      viewerTransitions: viewerSubset(doc, allT, sel.viewerRoles),
-      selfPublishes,
-      unfiltered: true,
-    }
-  }
-
-  const tierId = sel.tierId as string
-  const available = doc.transitions.filter((t) =>
-    isTransitionAvailable(t, tierId, selfPublishes),
-  )
+  const reach = selfPublishReach(doc, tierIds, typeIds)
+  const tierSet = new Set(tierIds)
+  const available = doc.transitions.filter((t) => isTransitionAvailable(t, tierSet, reach))
 
   const outgoing = new Map<string, Transition[]>()
   for (const t of available) {
@@ -133,8 +163,9 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
     reachableStates,
     activeTransitions,
     viewerTransitions: viewerSubset(doc, activeTransitions, sel.viewerRoles),
-    selfPublishes,
-    unfiltered: false,
+    selfPublishes: canSelfPublish(doc, sel.tierId, sel.articleTypeId),
+    reach,
+    unfiltered,
   }
 }
 
@@ -157,15 +188,42 @@ function viewerSubset(
  */
 export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: DerivedPath): string {
   if (path.unfiltered) {
-    return 'Showing every state and transition. Pick a writer tier and an article type to trace one article.'
+    return 'Showing every state and transition. Pick a writer tier or an article type to narrow it.'
   }
+
+  const n = path.reachableStates.size
+  const of = `${n} of ${doc.states.length} states`
   const tier = doc.tiers.find((t) => t.id === sel.tierId)
   const type = doc.articleTypes.find((t) => t.id === sel.articleTypeId)
-  const n = path.reachableStates.size
-  const verdict = path.selfPublishes
-    ? 'self-publishes from Grammarly Edit Complete'
-    : 'routes through copy edit'
-  const label = type?.label ?? '—'
-  const article = /^[aeiou]/i.test(label) ? 'An' : 'A'
-  return `${article} ${label} by a ${tier?.label ?? '—'} writer ${verdict} — ${n} of ${doc.states.length} states.`
+
+  // Both chosen — one definite answer.
+  if (tier && type) {
+    const verdict = path.selfPublishes
+      ? 'self-publishes from Grammarly Edit Complete'
+      : 'routes through copy edit'
+    const article = /^[aeiou]/i.test(type.label) ? 'An' : 'A'
+    return `${article} ${type.label} by a ${tier.label} writer ${verdict} — ${of}.`
+  }
+
+  // Tier only — the union across every article type that tier writes.
+  if (tier) {
+    const allowed = (doc.selfPublish[tier.id] ?? []).length
+    const total = doc.articleTypes.length
+    const split =
+      allowed === 0
+        ? 'no type self-publishes, so everything routes through copy edit'
+        : allowed === total
+          ? 'every type self-publishes'
+          : `${allowed} of ${total} types self-publish, the rest route through copy edit`
+    return `Everywhere a ${tier.label} article can go — ${of}. Pick a type to narrow further: ${split}.`
+  }
+
+  // Type only — the union across every tier.
+  const article = /^[aeiou]/i.test(type?.label ?? '') ? 'An' : 'A'
+  const canSelf = doc.tiers.filter((t) => (doc.selfPublish[t.id] ?? []).includes(type?.id ?? ''))
+  const who =
+    canSelf.length === 0
+      ? 'no tier can self-publish it'
+      : `${canSelf.map((t) => t.label).join(', ')} can self-publish it`
+  return `${article} ${type?.label ?? '—'} across all tiers — ${of}. Pick a tier to narrow further: ${who}.`
 }

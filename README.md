@@ -61,7 +61,13 @@ performs stays visible, because it's still part of the article's path.
 | SWUser + anything | 12 | copy edit → financial edit — the full graph |
 | AI-assist + AI-Assist | 6 | self-publishes |
 
-`npm run check` asserts all of these plus default-deny and the viewer-role subset.
+Leaving either selector on **All** widens the union rather than switching the lens off. MidDTP
+across all types reaches 10 states — the SWUser-only financial-edit branch stays dark — and both
+forks out of Grammarly Edit Complete are live, because 5 of MidDTP's 10 types self-publish and
+the rest don't.
+
+`npm run check` asserts all of these, both tier-only and tier+type, plus default-deny and the
+role subsets.
 
 ## Editing
 

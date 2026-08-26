@@ -92,6 +92,49 @@ for (const tier of withNewType.tiers) {
 if (!denyFailed) console.log(`✓ ${'default-deny (new type)'.padEnd(24)} all 5 tiers route to copy edit`)
 else failed++
 
+// Tier alone, "All types": the union across every type that tier writes.
+// This is the case that used to fall through to "show everything".
+interface TierCase { tier: string; states: number; excludes?: string[] }
+const TIER_ONLY: TierCase[] = [
+  { tier: 'midDTP',   states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'ultraDTP', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'dtp',      states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'aiAssist', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'swUser',   states: 12 },
+]
+for (const c of TIER_ONLY) {
+  const p = derivePath(doc, { tierId: c.tier, articleTypeId: null, viewerRoles: [], hideUnreachable: false })
+  const problems: string[] = []
+  if (p.reachableStates.size !== c.states) problems.push(`expected ${c.states} states, got ${p.reachableStates.size}`)
+  for (const ex of c.excludes ?? []) {
+    if (p.reachableStates.has(ex)) problems.push(`"${ex}" should not be reachable`)
+  }
+  const label = `${c.tier} + all types`.padEnd(24)
+  if (problems.length) { failed++; console.log(`✗ ${label} ${problems.join('; ')}`) }
+  else console.log(`✓ ${label} ${p.reachableStates.size} states`)
+}
+
+// A tier that self-publishes some types but not others must show BOTH forks
+// out of Grammarly Edit Complete when no type is pinned.
+const midAll = derivePath(doc, { tierId: 'midDTP', articleTypeId: null, viewerRoles: [], hideUnreachable: false })
+const bothForks =
+  midAll.activeTransitions.has('t-grammarly-scheduled') &&
+  midAll.activeTransitions.has('t-grammarly-readyCopy')
+if (bothForks) console.log(`✓ ${'midDTP both forks live'.padEnd(24)} self-publish and copy-edit routes both shown`)
+else { failed++; console.log('✗ midDTP + all types: expected both Grammarly forks to be live') }
+
+// SWUser self-publishes nothing, so the self-publish fork must stay dark.
+const swAll = derivePath(doc, { tierId: 'swUser', articleTypeId: null, viewerRoles: [], hideUnreachable: false })
+if (!swAll.activeTransitions.has('t-grammarly-scheduled')) {
+  console.log(`✓ ${'swUser no self-publish'.padEnd(24)} fork correctly dark across all types`)
+} else { failed++; console.log('✗ swUser + all types: self-publish fork should not be live') }
+
+// Nothing selected still shows the whole graph.
+const nothing = derivePath(doc, { tierId: null, articleTypeId: null, viewerRoles: [], hideUnreachable: false })
+if (nothing.reachableStates.size === doc.states.length && nothing.activeTransitions.size === doc.transitions.length) {
+  console.log(`✓ ${'no selection'.padEnd(24)} full graph, ${nothing.activeTransitions.size} transitions`)
+} else { failed++; console.log(`✗ no selection: expected full graph, got ${nothing.reachableStates.size} states`) }
+
 // Multi-role highlight: writers + copyeds together must equal the union of
 // each alone, and must not exceed the active set.
 const dtpBase = { tierId: 'dtp', articleTypeId: 'shorty', hideUnreachable: false }
