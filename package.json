@@ -1,0 +1,26 @@
+{
+  "name": "sanity-workflow",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "check": "node --experimental-strip-types scripts/check-paths.ts",
+    "lint:tokens": "! grep -rnE '#[0-9A-Fa-f]{3,8}\\b' src/ || (echo '\\nRaw hex found above — use an --mf-* token instead.' && false)"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.3.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
