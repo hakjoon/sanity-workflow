@@ -6,7 +6,6 @@ import {
   applyNodeChanges,
   type Connection,
   type NodeChange,
-  type OnSelectionChangeParams,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 
@@ -86,11 +85,30 @@ export function DiagramCanvas({ doc, path, selection, selected, onUpdate, onSele
     [onUpdate, onSelect],
   )
 
-  const onSelectionChange = useCallback(
-    ({ nodes: sn, edges: se }: OnSelectionChangeParams) => {
-      if (sn.length === 1) onSelect({ kind: 'state', id: sn[0].id })
-      else if (se.length === 1) onSelect({ kind: 'transition', id: se[0].id })
-      else if (sn.length === 0 && se.length === 0) onSelect(null)
+  // Selection is driven by explicit click handlers rather than React Flow's
+  // internal selection state. Its selection travels through onNodesChange /
+  // onEdgesChange as 'select' changes, which this component deliberately does
+  // not apply — node positions are owned by the document, not by React Flow.
+  // Routing clicks directly keeps one source of truth for what's selected.
+  const onNodeClick = useCallback(
+    (_: React.MouseEvent, node: { id: string }) => onSelect({ kind: 'state', id: node.id }),
+    [onSelect],
+  )
+  const onEdgeClick = useCallback(
+    (e: React.MouseEvent, edge: { id: string }) => {
+      // Keep the click from also reaching the pane handler below, which would
+      // clear the selection we just made.
+      e.stopPropagation()
+      onSelect({ kind: 'transition', id: edge.id })
+    },
+    [onSelect],
+  )
+
+  /** Clicking empty canvas deselects. */
+  const onPaneClick = useCallback(
+    (e: React.MouseEvent) => {
+      const el = e.target as Element | null
+      if (!el?.closest('.react-flow__edge, .react-flow__node')) onSelect(null)
     },
     [onSelect],
   )
@@ -122,7 +140,9 @@ export function DiagramCanvas({ doc, path, selection, selected, onUpdate, onSele
         edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onConnect={onConnect}
-        onSelectionChange={onSelectionChange}
+        onNodeClick={onNodeClick}
+        onEdgeClick={onEdgeClick}
+        onPaneClick={onPaneClick}
         fitView
         fitViewOptions={{ padding: 0.12 }}
         minZoom={0.2}
