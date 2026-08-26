@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Theme layer.
+
+   Sits on top of the vendored Motley Fool design system
+   (public/ds/colors_and_type.css) and adds only what this app needs:
+   role colours, React Flow overrides, and the lens dim/highlight states.
+
+   Rule for this file and every file under src/: no raw hex values.
+   Every colour resolves through an --mf-* token. `npm run lint:tokens`
+   enforces it.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Role colours ─────────────────────────────────────────────────
+     The five actor groups. --role is read by both SVG strokes and card
+     borders, so a single class drives every surface for a role.        */
+  --role-writer: var(--mf-primary-100);
+  --role-copyed: var(--mf-purple-50);
+  --role-ffe: var(--mf-orange-50);
+  --role-hq: var(--mf-red-100);
+  --role-system: var(--mf-content-50);
+
+  /* ── Lens states ─────────────────────────────────────────────────── */
+  --dim-opacity: 0.12;
+  --mute-opacity: 0.4;
+
+  /* ── Diagram surface ─────────────────────────────────────────────── */
+  --canvas-bg: var(--mf-primary-4);
+  --card-bg: var(--mf-primary-0);
+}
+
+.role-writer { --role: var(--role-writer); }
+.role-copyed { --role: var(--role-copyed); }
+.role-ffe    { --role: var(--role-ffe); }
+.role-hq     { --role: var(--role-hq); }
+.role-system { --role: var(--role-system); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   React Flow overrides — the library ships its own grey-blue palette.
+   ═══════════════════════════════════════════════════════════════════ */
+.react-flow {
+  --xy-background-color: var(--canvas-bg);
+  --xy-edge-stroke: var(--mf-content-50);
+  --xy-edge-stroke-selected: var(--mf-primary-100);
+  --xy-handle-background-color: var(--mf-primary-0);
+  --xy-handle-border-color: var(--mf-primary-24);
+  --xy-selection-background-color: var(--mf-primary-8);
+  --xy-controls-button-background-color: var(--mf-primary-0);
+  --xy-controls-button-background-color-hover: var(--mf-primary-8);
+  --xy-controls-button-color: var(--mf-content-92);
+  --xy-controls-button-border-color: var(--mf-primary-24);
+  --xy-minimap-background-color: var(--mf-primary-0);
+  --xy-node-border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+}
+
+.react-flow__attribution {
+  background: transparent;
+  font-size: 10px;
+}
+.react-flow__attribution a { color: var(--mf-content-36); }
+
+.react-flow__controls-button {
+  border-bottom-color: var(--mf-content-8);
+}
+
+.react-flow__handle {
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--mf-primary-24);
+  background: var(--mf-primary-0);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+/* Handles only appear when you're actually wiring something up. */
+.react-flow__node:hover .react-flow__handle,
+.react-flow__node.selected .react-flow__handle,
+.react-flow.connecting .react-flow__handle {
+  opacity: 1;
+}
+.react-flow__handle:hover {
+  background: var(--mf-primary-100);
+  border-color: var(--mf-primary-100);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Lens dim / highlight
+   ═══════════════════════════════════════════════════════════════════ */
+.react-flow__node,
+.react-flow__edge {
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.react-flow__node.lens-dim,
+.react-flow__edge.lens-dim {
+  opacity: var(--dim-opacity);
+  pointer-events: none;
+}
+.react-flow__edge.lens-mute {
+  opacity: var(--mute-opacity);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .react-flow__node,
+  .react-flow__edge,
+  .react-flow__handle {
+    transition: none;
+  }
+}
