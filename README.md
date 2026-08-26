@@ -92,7 +92,7 @@ edges that would bury the diagram. It's the `hqOverride` flag, surfaced as a ban
 as HQ.
 
 **Four things are still open**, badged in the diagram and listed in the notes panel: who holds
-Edits Done, whether anything can act on Published, who can reach Unpublished, and the
+Edits Done, who can get back into a Published article, who can reach Unpublished, and the
 fall-through routing below.
 
 **One routing rule is derived, not confirmed.** A MidDTP or UltraDTP article that *fails* the
