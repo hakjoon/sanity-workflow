@@ -303,12 +303,12 @@
       "Writer tiers are SWUser, DTP, MidDTP, UltraDTP and AI-assist. All apply to every state up to Grammarly Edit Complete — no tier skips that state.",
       "At Grammarly Edit Complete, self-publishing is decided by the tier × article-type matrix — not by tier alone. The same writer's News brief and Shorty can take different paths.",
       "Articles that cannot self-publish move on to the copy edit states, handled by copyeditors.",
-      "Many articles are published straight out of In Financial Edit — the FFE publishes or schedules from there rather than moving the article to Edits Done first.",
+      "Most articles are published or scheduled straight out of In Financial Edit — the FFE finishes there. Edits Done is not a step on that path.",
       "In Copy Edit is a branch point. Only SWUser articles continue to financial edit. Every other tier is published or scheduled straight from In Copy Edit.",
       "No tier skips copy edit but still needs FFE — financial edit always follows copy edit.",
       "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
-      "Edits Done is open to Copyeds as well as FFEs — a copyeditor can publish or schedule a non-SWUser article from there.",
-      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it either goes back to the FFE or gets published there.",
+      "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
+      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the FFE, or is published or scheduled there by an FFE or, for a non-SWUser article, a copyeditor.",
       "HQ editors can move an article from any state to any other."
     ],
     "open": [

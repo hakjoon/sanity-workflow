@@ -135,6 +135,26 @@ if (nothing.reachableStates.size === doc.states.length && nothing.activeTransiti
   console.log(`✓ ${'no selection'.padEnd(24)} full graph, ${nothing.activeTransitions.size} transitions`)
 } else { failed++; console.log(`✗ no selection: expected full graph, got ${nothing.reachableStates.size} states`) }
 
+// Edits Done is optional and only exists on the send-back loop: the only way
+// in is from Edits Required. If an edit ever gives it another inbound edge,
+// the notes panel stops being true.
+const intoEditsDone = doc.transitions.filter((t) => t.to === 'editsDone')
+if (intoEditsDone.length === 1 && intoEditsDone[0].from === 'editsRequired') {
+  console.log(`✓ ${'Edits Done is send-back only'.padEnd(24)} sole inbound is from Edits Required`)
+} else {
+  failed++
+  console.log(`✗ Edits Done should only be reachable from Edits Required, got: ${intoEditsDone.map((t) => t.from).join(', ') || 'nothing'}`)
+}
+
+// And nothing publishes directly out of Edits Required.
+const outOfEditsRequired = doc.transitions.filter((t) => t.from === 'editsRequired')
+if (outOfEditsRequired.every((t) => t.to === 'editsDone')) {
+  console.log(`✓ ${'Edits Required publishes not'.padEnd(24)} only exit is to Edits Done`)
+} else {
+  failed++
+  console.log(`✗ Edits Required should only exit to Edits Done, got: ${outOfEditsRequired.map((t) => t.to).join(', ')}`)
+}
+
 // Multi-role highlight: writers + copyeds together must equal the union of
 // each alone, and must not exceed the active set.
 const dtpBase = { tierId: 'dtp', articleTypeId: 'shorty', hideUnreachable: false }
