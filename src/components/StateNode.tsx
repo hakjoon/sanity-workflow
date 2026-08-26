@@ -7,8 +7,8 @@ export interface StateNodeData extends Record<string, unknown> {
   border: 'solid' | 'dashed'
   badges: BadgeId[]
   actors: Actor[]
-  /** Set when a viewer role is chosen and that role can act on this state. */
-  actionable: boolean
+  /** The highlighted role that can act from this state, if any. */
+  actionableRole: RoleId | null
 }
 
 export type StateNodeType = Node<StateNodeData, 'stateNode'>
@@ -44,7 +44,7 @@ export function StateNode({ data, selected }: NodeProps<StateNodeType>) {
       className={`state-node role-${data.accent}`}
       data-border={data.border}
       data-selected={selected || undefined}
-      data-actionable={data.actionable || undefined}
+      data-actionable={data.actionableRole ?? undefined}
     >
       {HANDLES.map((h) => (
         <div key={h.id}>

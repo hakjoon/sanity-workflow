@@ -4,6 +4,7 @@ import {
   Controls,
   ReactFlow,
   applyNodeChanges,
+  useReactFlow,
   type Connection,
   type NodeChange,
 } from '@xyflow/react'
@@ -130,6 +131,20 @@ export function DiagramCanvas({ doc, path, selection, selected, onUpdate, onSele
   useEffect(() => {
     dragging.current = false
   }, [doc])
+
+  // When hiding collapses the graph to a subset, refit so the remaining path
+  // fills the canvas instead of sitting in a corner of the old bounds. Keyed
+  // on which nodes are visible, not on every doc change, so this doesn't
+  // yank the viewport while you're dragging a node.
+  const visibleKey = styledNodes
+    .filter((n) => !n.hidden)
+    .map((n) => n.id)
+    .join(',')
+  const { fitView } = useReactFlow()
+  useEffect(() => {
+    const t = setTimeout(() => void fitView({ padding: 0.12, duration: 200 }), 0)
+    return () => clearTimeout(t)
+  }, [visibleKey, fitView])
 
   return (
     <div className="canvas">

@@ -35,11 +35,16 @@ lens re-derives immediately.
 - **Article by** — writer tier: UltraDTP (16), MidDTP (58), DTP, SWUser (34), AI-assist (25)
 - **Article type** — Shorty, Medium, Article, Duo, News brief, Short MM, Long MM, Influencer,
   Earnings, AI-Assist
-- **Viewing as** — Writers / Copyeds / FFEs / HQ / System
+- **Highlight roles** — Writers / Copyeds / FFEs / HQ / System, **multi-select**
 
-Tier + type answer *where does this article go*. Viewer role answers *which of those moves are
-mine*. States an article can't reach are dimmed rather than removed — knowing a state exists but
-is unreachable tells you more than it vanishing.
+Tier + type answer *where does this article go*. Highlighting roles answers *which of those moves
+are whose*. Because roles multi-select, you can light up writers + copyeds together to see the
+whole handoff chain for a DTP article, rather than one role at a time.
+
+States an article can't reach are dimmed by default — knowing a state exists but is unreachable
+tells you something. Tick **Hide instead of dim** to drop them entirely and let the view refit to
+just this article's journey. Hiding is tied to reachability only: a transition another role
+performs stays visible, because it's still part of the article's path.
 
 ### Reference paths
 

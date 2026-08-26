@@ -16,8 +16,20 @@ interface Props {
  * Viewer role answers "which of those moves are mine". They compose, and
  * each clears independently.
  */
+export const EMPTY_LENS: LensSelection = {
+  tierId: null,
+  articleTypeId: null,
+  viewerRoles: [],
+  hideUnreachable: false,
+}
+
 export function LensBar({ doc, selection, path, onChange }: Props) {
   const set = (patch: Partial<LensSelection>) => onChange({ ...selection, ...patch })
+  const isActive =
+    Boolean(selection.tierId) ||
+    Boolean(selection.articleTypeId) ||
+    selection.viewerRoles.length > 0 ||
+    selection.hideUnreachable
 
   return (
     <section className="lens-bar" aria-label="Workflow lens">
@@ -63,7 +75,7 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
 
         <div className="lens-group">
           <span className="lens-group__label" id="lens-viewer-label">
-            Viewing as
+            Highlight roles
           </span>
           <div className="segmented" role="group" aria-labelledby="lens-viewer-label">
             {ROLE_IDS.map((r: RoleId) => (
@@ -71,8 +83,14 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
                 key={r}
                 type="button"
                 className={`segmented__item role-${r}`}
-                aria-pressed={selection.viewerRole === r}
-                onClick={() => set({ viewerRole: selection.viewerRole === r ? null : r })}
+                aria-pressed={selection.viewerRoles.includes(r)}
+                onClick={() =>
+                  set({
+                    viewerRoles: selection.viewerRoles.includes(r)
+                      ? selection.viewerRoles.filter((x) => x !== r)
+                      : [...selection.viewerRoles, r],
+                  })
+                }
               >
                 {ROLES[r].short}
               </button>
@@ -80,12 +98,20 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
           </div>
         </div>
 
-        {(selection.tierId || selection.articleTypeId || selection.viewerRole) && (
-          <button
-            type="button"
-            className="btn btn--ghost"
-            onClick={() => onChange({ tierId: null, articleTypeId: null, viewerRole: null })}
-          >
+        <div className="lens-group lens-group--tight">
+          <span className="lens-group__label">Unreachable states</span>
+          <label className="check check--inline">
+            <input
+              type="checkbox"
+              checked={selection.hideUnreachable}
+              onChange={(e) => set({ hideUnreachable: e.target.checked })}
+            />
+            Hide instead of dim
+          </label>
+        </div>
+
+        {isActive && (
+          <button type="button" className="btn btn--ghost" onClick={() => onChange(EMPTY_LENS)}>
             Clear lens
           </button>
         )}
@@ -93,19 +119,22 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
 
       <p className="lens-bar__summary" role="status">
         {describeLens(doc, selection, path)}
-        {selection.viewerRole && !path.unfiltered && (
+        {selection.viewerRoles.length > 0 && !path.unfiltered && (
           <>
             {' '}
             <strong>
-              {path.viewerTransitions.size}{' '}
-              {path.viewerTransitions.size === 1 ? 'transition is' : 'transitions are'} yours as{' '}
-              {ROLES[selection.viewerRole].short}.
+              {path.viewerTransitions.size} of {path.activeTransitions.size}{' '}
+              {path.activeTransitions.size === 1 ? 'transition' : 'transitions'} performed by{' '}
+              {selection.viewerRoles.map((r) => ROLES[r].short).join(' + ')}.
             </strong>
           </>
         )}
+        {selection.hideUnreachable && !path.unfiltered && (
+          <> {doc.states.length - path.reachableStates.size} unreachable states hidden.</>
+        )}
       </p>
 
-      {selection.viewerRole === 'hq' && doc.hqOverride && (
+      {selection.viewerRoles.includes('hq') && doc.hqOverride && (
         <p className="callout callout--hq">
           <strong>HQ editors can move an article from any state to any other.</strong> Those{' '}
           {doc.states.length * (doc.states.length - 1)} transitions are not drawn — they would

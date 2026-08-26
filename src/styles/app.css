@@ -328,7 +328,13 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
 }
 .state-node[data-border='dashed'] { border-top-style: dashed; border-right-style: dashed; border-bottom-style: dashed; }
 .state-node[data-selected] { box-shadow: var(--shadow-lg); border-color: var(--mf-primary-100); }
-.state-node[data-actionable] { box-shadow: 0 0 0 2px var(--role); }
+/* Ring is the acting role's colour, not the card's accent — see toReactFlow. */
+.state-node[data-actionable] { box-shadow: 0 0 0 2px var(--actionable, var(--role)); }
+.state-node[data-actionable='writer'] { --actionable: var(--role-writer); }
+.state-node[data-actionable='copyed'] { --actionable: var(--role-copyed); }
+.state-node[data-actionable='ffe']    { --actionable: var(--role-ffe); }
+.state-node[data-actionable='hq']     { --actionable: var(--role-hq); }
+.state-node[data-actionable='system'] { --actionable: var(--role-system); }
 .state-node__badges { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
 .state-node__title {
   font-size: 15px;
@@ -533,4 +539,13 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   color: var(--mf-content-4);
   text-wrap: pretty;
   margin: 0;
+}
+
+.lens-group--tight { min-width: 0; }
+.check--inline {
+  padding: var(--space-2) 0;
+  white-space: nowrap;
+  font-weight: var(--text-caption-bold-weight);
+  color: var(--mf-text-80);
+  cursor: pointer;
 }

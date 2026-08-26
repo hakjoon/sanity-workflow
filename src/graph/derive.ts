@@ -13,7 +13,18 @@ import type { RoleId, Transition, WorkflowDoc } from '../data/schema'
 export interface LensSelection {
   tierId: string | null
   articleTypeId: string | null
-  viewerRole: RoleId | null
+  /**
+   * Roles to highlight. Multi-select, so "the whole flow of a DTP article"
+   * is expressible as writers + copyeds together rather than one at a time.
+   * Empty means no role emphasis — the article's whole path reads evenly.
+   */
+  viewerRoles: RoleId[]
+  /**
+   * Remove states this article can never reach, instead of greying them.
+   * Off by default: an unreachable state still tells you something. On, the
+   * diagram collapses to just this article's journey.
+   */
+  hideUnreachable: boolean
 }
 
 export interface DerivedPath {
@@ -81,7 +92,7 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
     return {
       reachableStates: all,
       activeTransitions: allT,
-      viewerTransitions: viewerSubset(doc, allT, sel.viewerRole),
+      viewerTransitions: viewerSubset(doc, allT, sel.viewerRoles),
       selfPublishes,
       unfiltered: true,
     }
@@ -121,7 +132,7 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
   return {
     reachableStates,
     activeTransitions,
-    viewerTransitions: viewerSubset(doc, activeTransitions, sel.viewerRole),
+    viewerTransitions: viewerSubset(doc, activeTransitions, sel.viewerRoles),
     selfPublishes,
     unfiltered: false,
   }
@@ -130,13 +141,14 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
 function viewerSubset(
   doc: WorkflowDoc,
   active: Set<string>,
-  viewerRole: RoleId | null,
+  viewerRoles: RoleId[],
 ): Set<string> {
-  if (!viewerRole) return new Set()
+  if (viewerRoles.length === 0) return new Set()
+  const roles = new Set(viewerRoles)
   const out = new Set<string>()
   for (const t of doc.transitions) {
-    if (active.has(t.id) && t.role === viewerRole) out.add(t.id)
-    }
+    if (active.has(t.id) && roles.has(t.role)) out.add(t.id)
+  }
   return out
 }
 

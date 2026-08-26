@@ -41,7 +41,7 @@ const CASES: Case[] = [
 let failed = 0
 
 for (const c of CASES) {
-  const path = derivePath(doc, { tierId: c.tier, articleTypeId: c.type, viewerRole: null })
+  const path = derivePath(doc, { tierId: c.tier, articleTypeId: c.type, viewerRoles: [], hideUnreachable: false })
   const n = path.reachableStates.size
   const problems: string[] = []
 
@@ -61,7 +61,7 @@ for (const c of CASES) {
 }
 
 // Viewer-role check from the plan: DTP + Copyed.
-const dtpCopyed = derivePath(doc, { tierId: 'dtp', articleTypeId: 'shorty', viewerRole: 'copyed' })
+const dtpCopyed = derivePath(doc, { tierId: 'dtp', articleTypeId: 'shorty', viewerRoles: ['copyed'], hideUnreachable: false })
 const expected = new Set([
   't-readyCopy-inCopy',
   't-inCopy-scheduled',
@@ -83,7 +83,7 @@ const withNewType = structuredClone(doc)
 withNewType.articleTypes.push({ id: 'brandNew', label: 'Brand New' })
 let denyFailed = false
 for (const tier of withNewType.tiers) {
-  const p = derivePath(withNewType, { tierId: tier.id, articleTypeId: 'brandNew', viewerRole: null })
+  const p = derivePath(withNewType, { tierId: tier.id, articleTypeId: 'brandNew', viewerRoles: [], hideUnreachable: false })
   if (p.selfPublishes || !p.reachableStates.has('readyCopy')) {
     denyFailed = true
     console.log(`✗ default-deny: ${tier.id} did not route a new type through copy edit`)
@@ -91,6 +91,33 @@ for (const tier of withNewType.tiers) {
 }
 if (!denyFailed) console.log(`✓ ${'default-deny (new type)'.padEnd(24)} all 5 tiers route to copy edit`)
 else failed++
+
+// Multi-role highlight: writers + copyeds together must equal the union of
+// each alone, and must not exceed the active set.
+const dtpBase = { tierId: 'dtp', articleTypeId: 'shorty', hideUnreachable: false }
+const w = derivePath(doc, { ...dtpBase, viewerRoles: ['writer'] }).viewerTransitions
+const c = derivePath(doc, { ...dtpBase, viewerRoles: ['copyed'] }).viewerTransitions
+const both = derivePath(doc, { ...dtpBase, viewerRoles: ['writer', 'copyed'] })
+const union = new Set([...w, ...c])
+const unionOk =
+  both.viewerTransitions.size === union.size &&
+  [...union].every((id) => both.viewerTransitions.has(id)) &&
+  [...both.viewerTransitions].every((id) => both.activeTransitions.has(id))
+if (unionOk) {
+  console.log(`✓ ${'multi-role writer+copyed'.padEnd(24)} ${w.size} + ${c.size} = ${both.viewerTransitions.size} of ${both.activeTransitions.size} active`)
+} else {
+  failed++
+  console.log(`✗ multi-role writer+copyed: expected union of ${w.size} and ${c.size}, got ${both.viewerTransitions.size}`)
+}
+
+// Empty role list means no emphasis at all.
+const none = derivePath(doc, { ...dtpBase, viewerRoles: [] })
+if (none.viewerTransitions.size === 0) {
+  console.log(`✓ ${'no roles selected'.padEnd(24)} nothing emphasised`)
+} else {
+  failed++
+  console.log(`✗ no roles selected: expected 0 emphasised, got ${none.viewerTransitions.size}`)
+}
 
 console.log()
 if (failed) {

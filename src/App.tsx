@@ -5,13 +5,11 @@ import { useWorkflowStore } from './data/useWorkflowStore'
 import { derivePath, type LensSelection } from './graph/derive'
 import { DiagramCanvas } from './components/DiagramCanvas'
 import { Inspector, type Selected } from './components/Inspector'
-import { LensBar } from './components/LensBar'
+import { EMPTY_LENS, LensBar } from './components/LensBar'
 import { Legend } from './components/Legend'
 import { NotesPanel } from './components/NotesPanel'
 import { SelfPublishMatrix } from './components/SelfPublishMatrix'
 import type { WorkflowDoc } from './data/schema'
-
-const EMPTY_LENS: LensSelection = { tierId: null, articleTypeId: null, viewerRole: null }
 
 export default function App() {
   const store = useWorkflowStore()

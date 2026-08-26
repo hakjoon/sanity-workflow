@@ -36,12 +36,19 @@ export function toReactFlow(
   path: DerivedPath,
   sel: LensSelection,
 ): LensView {
-  const viewerRole = sel.viewerRole
+  const hasViewer = sel.viewerRoles.length > 0
+  const hide = sel.hideUnreachable && !path.unfiltered
 
-  const actionableStates = new Set<string>()
-  if (viewerRole) {
+  // Which highlighted role can act from each state. Keyed by state so the
+  // "you can act here" ring is drawn in the acting role's colour — using the
+  // state's own accent would imply, say, an FFE can act somewhere only a
+  // copyeditor can.
+  const actionableStates = new Map<string, RoleId>()
+  if (hasViewer) {
     for (const t of doc.transitions) {
-      if (path.viewerTransitions.has(t.id)) actionableStates.add(t.from)
+      if (path.viewerTransitions.has(t.id) && !actionableStates.has(t.from)) {
+        actionableStates.set(t.from, t.role)
+      }
     }
   }
 
@@ -57,8 +64,9 @@ export function toReactFlow(
         border: s.border,
         badges: s.badges,
         actors: s.actors,
-        actionable: actionableStates.has(s.id),
+        actionableRole: actionableStates.get(s.id) ?? null,
       },
+      hidden: hide && !reachable,
       className: reachable ? undefined : 'lens-dim',
     }
   })
@@ -68,7 +76,10 @@ export function toReactFlow(
     const actionable = path.viewerTransitions.has(t.id)
     // With a viewer role chosen, transitions other roles perform stay
     // visible but recede — they're context, not the answer to "what can I do".
-    const lens = !active ? 'lens-dim' : viewerRole && !actionable ? 'lens-mute' : undefined
+    // Hiding is tied to reachability only. An active transition another role
+    // performs stays visible even when a viewer role is selected — it is part
+    // of this article's journey, just not your part of it.
+    const lens = !active ? 'lens-dim' : hasViewer && !actionable ? 'lens-mute' : undefined
 
     return {
       id: t.id,
@@ -90,6 +101,7 @@ export function toReactFlow(
         actionable,
         gated: Boolean(t.gate),
       },
+      hidden: hide && !active,
       className: lens,
     }
   })
