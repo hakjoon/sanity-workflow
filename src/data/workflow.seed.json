@@ -150,7 +150,7 @@
       "id": "unpublished", "title": "Unpublished",
       "position": { "x": 1250, "y": 470 },
       "accent": "hq", "border": "dashed",
-      "badges": [],
+      "badges": ["access"],
       "actors": [
         { "role": "hq", "text": "HQ editors only" }
       ]
@@ -313,6 +313,7 @@
     ],
     "open": [
       "Edits Done — claimed by one owner, or an open queue? Unclear whether it stays claimed by the FFE who finished the edit, or reopens for anyone eligible to pick up. Two things narrow this: it only ever affects articles that were sent back, since Edits Done is unreachable otherwise; and whoever holds it can publish or schedule, so the answer decides who is allowed to finish a resubmitted article.",
+      "Published — claim model undecided. Nothing acts on a published article today, so the question is whether that stays true: can anyone edit or re-schedule one in place, or is HQ unpublish-then-republish the only way back in? Carried over from the source diagram's TBD badge, which was never written up as a question.",
       "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build.",
       "Fall-through routing is derived, not confirmed: a MidDTP or UltraDTP article that fails the self-publish check is currently routed like DTP — copyeditor publishes from In Copy Edit, no financial edit."
     ],

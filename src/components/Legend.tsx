@@ -32,7 +32,13 @@ export function Legend() {
         <span className="badge" data-variant="tbd">
           {BADGES.tbd}
         </span>
-        not decided yet
+        who holds it — not decided yet
+      </span>
+      <span className="legend__item">
+        <span className="badge" data-variant="access">
+          {BADGES.access}
+        </span>
+        who can get in — not decided yet
       </span>
 
       <span className="legend__divider" />

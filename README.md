@@ -91,6 +91,10 @@ draft.
 edges that would bury the diagram. It's the `hqOverride` flag, surfaced as a banner when you view
 as HQ.
 
+**Four things are still open**, badged in the diagram and listed in the notes panel: who holds
+Edits Done, whether anything can act on Published, who can reach Unpublished, and the
+fall-through routing below.
+
 **One routing rule is derived, not confirmed.** A MidDTP or UltraDTP article that *fails* the
 self-publish check falls through to copy edit, and is currently routed like DTP: the copyeditor
 publishes from In Copy Edit, no financial edit. The design states only that *"only SWUser

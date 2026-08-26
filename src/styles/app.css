@@ -277,6 +277,13 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   border: 1px dashed var(--mf-yellow-80);
   color: var(--mf-yellow-80);
 }
+/* Same undecided treatment as the claim-model badge — both mark an open
+   question, they just ask different ones. */
+.badge[data-variant='access'] {
+  background: var(--mf-yellow-4);
+  border: 1px dashed var(--mf-yellow-80);
+  color: var(--mf-yellow-80);
+}
 .badge[data-variant='branch'] {
   background: var(--mf-primary-8);
   border: 1px solid var(--mf-purple-50);

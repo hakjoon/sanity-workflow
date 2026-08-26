@@ -20,12 +20,13 @@ export const ROLES: Record<RoleId, { label: string; short: string }> = {
   system: { label: 'System (automatic)', short: 'System' },
 }
 
-export type BadgeId = 'claimable' | 'claimed' | 'tbd' | 'branch'
+export type BadgeId = 'claimable' | 'claimed' | 'tbd' | 'access' | 'branch'
 
 export const BADGES: Record<BadgeId, string> = {
   claimable: 'Claimable',
   claimed: 'Claimed',
   tbd: 'Claim model TBD',
+  access: 'Access TBD',
   branch: 'Branch',
 }
 
