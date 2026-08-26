@@ -312,7 +312,7 @@
       "HQ editors can move an article from any state to any other."
     ],
     "open": [
-      "Edits Done: unclear whether it stays claimed by the FFE who finished the edit, or reopens as a queue anyone eligible can pick up.",
+      "Edits Done — claimed by one owner, or an open queue? Unclear whether it stays claimed by the FFE who finished the edit, or reopens for anyone eligible to pick up. Two things narrow this: it only ever affects articles that were sent back, since Edits Done is unreachable otherwise; and whoever holds it can publish or schedule, so the answer decides who is allowed to finish a resubmitted article.",
       "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build.",
       "Fall-through routing is derived, not confirmed: a MidDTP or UltraDTP article that fails the self-publish check is currently routed like DTP — copyeditor publishes from In Copy Edit, no financial edit."
     ],
