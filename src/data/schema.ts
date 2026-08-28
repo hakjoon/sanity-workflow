@@ -6,7 +6,7 @@
  * unreadable version. It is not a general-purpose schema library.
  */
 
-export const SCHEMA_VERSION = 3
+export const SCHEMA_VERSION = 4
 
 export type RoleId = 'writer' | 'copyed' | 'ffe' | 'hq' | 'system'
 
@@ -78,7 +78,6 @@ export type Gate = 'selfPublish' | '!selfPublish'
 export interface Tier {
   id: string
   label: string
-  headcount: number | null
   note?: string
 }
 

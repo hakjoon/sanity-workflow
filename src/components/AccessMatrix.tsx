@@ -5,6 +5,7 @@ import { accessLevel, type LensSelection } from '../graph/derive'
 interface Props {
   doc: WorkflowDoc
   selection: LensSelection
+  dirty: boolean
   onUpdate: (fn: (draft: WorkflowDoc) => WorkflowDoc) => void
   onSelect: (tierId: string, articleTypeId: string) => void
 }
@@ -29,19 +30,29 @@ const slug = (label: string) =>
     .replace(/[^a-zA-Z0-9]/g, '')
     .replace(/^(.)/, (c) => c.toLowerCase())
 
+function uniqueId(base: string, taken: (id: string) => boolean): string {
+  let id = base || 'item'
+  if (!taken(id)) return id
+  let n = 2
+  while (taken(`${id}${n}`)) n++
+  return `${id}${n}`
+}
+
 /**
- * Who may write what, and who may skip review.
+ * Who may write what, who may skip review, and who carries which modifier.
  *
- * Three states per cell rather than two: a tier can self-publish a type, write
- * it and send it to review, or have no access at all. That last one matters —
- * "can't self-publish" and "never authors this" produce very different
- * diagrams, and collapsing them hid the difference.
+ * Three access states per cell rather than two: a group can self-publish a
+ * type, write it and send it to review, or have no access at all. That last
+ * one matters — "can't self-publish" and "never authors this" produce very
+ * different diagrams.
  *
- * Stored as publish/write id lists per tier, so anything unlisted is no
- * access. New article types are therefore denied to everyone until granted.
+ * Access is stored as publish/write id lists per group, so anything unlisted
+ * is no access. New groups and new article types are therefore denied
+ * everything until granted.
  */
-export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
+export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Props) {
   const [newType, setNewType] = useState('')
+  const [newGroup, setNewGroup] = useState('')
 
   const setLevel = (tierId: string, typeId: string, level: AccessLevel) => {
     onUpdate((d) => {
@@ -54,19 +65,52 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
     })
   }
 
+  const toggleModifier = (modifierId: string, tierId: string) => {
+    onUpdate((d) => ({
+      ...d,
+      modifiers: d.modifiers.map((m) =>
+        m.id !== modifierId
+          ? m
+          : {
+              ...m,
+              appliesTo: m.appliesTo.includes(tierId)
+                ? m.appliesTo.filter((t) => t !== tierId)
+                : [...m.appliesTo, tierId],
+            },
+      ),
+    }))
+  }
+
   const addType = (e: React.FormEvent) => {
     e.preventDefault()
     const label = newType.trim()
     if (!label) return
-    let id = slug(label) || 'type'
-    if (doc.articleTypes.some((t) => t.id === id)) {
-      let n = 2
-      while (doc.articleTypes.some((t) => t.id === `${id}${n}`)) n++
-      id = `${id}${n}`
-    }
+    const id = uniqueId(slug(label) || 'type', (x) => doc.articleTypes.some((t) => t.id === x))
     // Touches no access lists — unlisted reads as no access, which is the rule.
     onUpdate((d) => ({ ...d, articleTypes: [...d.articleTypes, { id, label }] }))
     setNewType('')
+  }
+
+  const addGroup = (e: React.FormEvent) => {
+    e.preventDefault()
+    const label = newGroup.trim()
+    if (!label) return
+    const id = uniqueId(slug(label) || 'group', (x) => doc.tiers.some((t) => t.id === x))
+    onUpdate((d) => ({
+      ...d,
+      tiers: [...d.tiers, { id, label }],
+      // Explicit empty entry: the validator requires one per group, and it
+      // reads as no access to everything until the row is filled in.
+      access: { ...d.access, [id]: { publish: [], write: [] } },
+      // Opt the group into every transition. Without this it could be granted
+      // an article type and still go nowhere, because appliesTo would not list
+      // it. Access and modifiers do the gating; transitions describe the
+      // workflow, and a new group follows the standard one until told
+      // otherwise. Modifier-gated transitions stay inert until the group is
+      // given that modifier.
+      transitions: d.transitions.map((t) => ({ ...t, appliesTo: [...t.appliesTo, id] })),
+    }))
+    setNewGroup('')
   }
 
   const removeType = (typeId: string) => {
@@ -85,6 +129,37 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
     }))
   }
 
+  const removeGroup = (tierId: string) => {
+    const label = doc.tiers.find((t) => t.id === tierId)?.label ?? tierId
+    const orphaned = doc.transitions.filter(
+      (t) => t.appliesTo.length === 1 && t.appliesTo[0] === tierId,
+    )
+    const warning = orphaned.length
+      ? `\n\n${orphaned.length} transition${orphaned.length === 1 ? '' : 's'} apply only to ${label} and will be left with no group, making them dead in every lens.`
+      : ''
+    if (!confirm(`Remove the ${label} group?${warning}`)) return
+
+    onUpdate((d) => {
+      const access = { ...d.access }
+      delete access[tierId]
+      return {
+        ...d,
+        tiers: d.tiers.filter((t) => t.id !== tierId),
+        access,
+        // A group id left dangling in these lists would fail validation on
+        // the next import, so clean both up here.
+        modifiers: d.modifiers.map((m) => ({
+          ...m,
+          appliesTo: m.appliesTo.filter((t) => t !== tierId),
+        })),
+        transitions: d.transitions.map((t) => ({
+          ...t,
+          appliesTo: t.appliesTo.filter((x) => x !== tierId),
+        })),
+      }
+    })
+  }
+
   return (
     <section className="panel matrix-panel" aria-labelledby="matrix-heading">
       <div className="panel__head">
@@ -92,8 +167,9 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
           Access matrix
         </h2>
         <p className="panel__sub">
-          What each writer tier may do with each article type. Click a cell to cycle it — the
-          diagram re-derives immediately. Double-click to trace that combination.
+          What each writer group may do with each article type, and which modifiers it can carry.
+          Click a cell to cycle it — the diagram re-derives immediately. Double-click to trace that
+          combination.
         </p>
       </div>
 
@@ -102,7 +178,7 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
           <thead>
             <tr>
               <th scope="col" className="matrix__corner">
-                Tier / role
+                Group
               </th>
               {doc.articleTypes.map((t) => (
                 <th
@@ -123,6 +199,11 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
                   </button>
                 </th>
               ))}
+              {doc.modifiers.map((m) => (
+                <th key={m.id} scope="col" className="matrix__colhead matrix__colhead--mod">
+                  <span>{m.label}</span>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -130,9 +211,15 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
               <tr key={tier.id} data-active={selection.tierId === tier.id || undefined}>
                 <th scope="row" className="matrix__rowhead">
                   {tier.label}
-                  {tier.headcount !== null && (
-                    <span className="matrix__count"> ({tier.headcount})</span>
-                  )}
+                  <button
+                    type="button"
+                    className="matrix__remove"
+                    title={`Remove ${tier.label}`}
+                    aria-label={`Remove group ${tier.label}`}
+                    onClick={() => removeGroup(tier.id)}
+                  >
+                    ×
+                  </button>
                 </th>
                 {doc.articleTypes.map((type) => {
                   const level = accessLevel(doc, tier.id, type.id)
@@ -148,6 +235,24 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
                         onDoubleClick={() => onSelect(tier.id, type.id)}
                       >
                         {CELL[level].glyph}
+                      </button>
+                    </td>
+                  )
+                })}
+                {doc.modifiers.map((m) => {
+                  const carries = m.appliesTo.includes(tier.id)
+                  return (
+                    <td key={m.id} className="matrix__modcell">
+                      <button
+                        type="button"
+                        className="matrix__cell"
+                        data-level={carries ? 'publish' : 'none'}
+                        aria-pressed={carries}
+                        aria-label={`${tier.label} ${carries ? 'can' : 'cannot'} carry ${m.label}. Activate to change.`}
+                        title={`${m.label}: ${m.description}`}
+                        onClick={() => toggleModifier(m.id, tier.id)}
+                      >
+                        {carries ? '✓' : '✗'}
                       </button>
                     </td>
                   )
@@ -172,23 +277,45 @@ export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
         <span className="matrix__cell matrix__cell--inline" data-level="none">
           ✗
         </span>{' '}
-        no access — that tier never authors this type
+        no access — that group never authors this type
       </p>
 
-      <form className="matrix__add" onSubmit={addType}>
-        <label htmlFor="new-article-type">New article type</label>
-        <input
-          id="new-article-type"
-          className="input"
-          value={newType}
-          placeholder="e.g. Podcast recap"
-          onChange={(e) => setNewType(e.target.value)}
-        />
-        <button type="submit" className="btn" disabled={!newType.trim()}>
-          Add
-        </button>
-        <span className="matrix__hint">Added with no access for every tier, until granted.</span>
-      </form>
+      <div className="matrix__adds">
+        <form className="matrix__add" onSubmit={addGroup}>
+          <label htmlFor="new-group">New group</label>
+          <input
+            id="new-group"
+            className="input"
+            value={newGroup}
+            placeholder="e.g. Contractor"
+            onChange={(e) => setNewGroup(e.target.value)}
+          />
+          <button type="submit" className="btn" disabled={!newGroup.trim()}>
+            Add
+          </button>
+        </form>
+
+        <form className="matrix__add" onSubmit={addType}>
+          <label htmlFor="new-article-type">New article type</label>
+          <input
+            id="new-article-type"
+            className="input"
+            value={newType}
+            placeholder="e.g. Podcast recap"
+            onChange={(e) => setNewType(e.target.value)}
+          />
+          <button type="submit" className="btn" disabled={!newType.trim()}>
+            Add
+          </button>
+        </form>
+      </div>
+
+      <p className="matrix__hint matrix__saved">
+        Both start with no access to anything until granted. Matrix edits are part of the workflow
+        document — they persist across reloads
+        {dirty ? ' (unsaved changes are held locally)' : ''} and are included in{' '}
+        <strong>Export JSON</strong> above, alongside the diagram.
+      </p>
     </section>
   )
 }

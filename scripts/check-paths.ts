@@ -198,6 +198,33 @@ if (either.activeTransitions.has('t-inCopy-readyFinancial') && either.activeTran
   console.log(`✓ ${'1Editor unpinned'.padEnd(24)} both review depths shown`)
 } else { failed++; console.log('✗ unpinned 1Editor should show both review depths') }
 
+// A newly added group starts with no access to anything and carries no
+// modifier, so it can't author an article until the matrix is filled in.
+const withGroup = structuredClone(doc)
+withGroup.tiers.push({ id: 'contractor', label: 'Contractor' })
+withGroup.access.contractor = { publish: [], write: [] }
+// Same as the Add group button: opt into every transition, gated by access.
+withGroup.transitions = withGroup.transitions.map((t) => ({ ...t, appliesTo: [...t.appliesTo, 'contractor'] }))
+let groupOk = true
+for (const type of withGroup.articleTypes) {
+  const p = derivePath(withGroup, { tierId: 'contractor', articleTypeId: type.id, viewerRoles: [], modifiers: {}, hideUnreachable: false })
+  if (!p.noAccess) { groupOk = false; console.log(`✗ new group has access to ${type.id}`) }
+}
+if (withGroup.modifiers.some((m) => m.appliesTo.includes('contractor'))) {
+  groupOk = false
+  console.log('✗ new group should carry no modifiers')
+}
+if (groupOk) console.log(`✓ ${'new group is inert'.padEnd(24)} no access to any type, carries no modifier`)
+else failed++
+
+// Granting one type makes exactly that one route.
+const granted = structuredClone(withGroup)
+granted.access.contractor = { publish: [], write: ['shorty'] }
+const gp = derivePath(granted, { tierId: 'contractor', articleTypeId: 'shorty', viewerRoles: [], modifiers: { oneEditor: false }, hideUnreachable: false })
+if (!gp.noAccess && gp.reachableStates.has('inCopy') && gp.reachableStates.has('inFinancial')) {
+  console.log(`✓ ${'granted group routes'.padEnd(24)} write access sends it CE → FFE`)
+} else { failed++; console.log(`✗ granted group should route CE → FFE, got ${gp.reachableStates.size} states`) }
+
 // Edits Done is optional and only exists on the send-back loop: the only way
 // in is from Edits Required. If an edit ever gives it another inbound edge,
 // the notes panel stops being true.

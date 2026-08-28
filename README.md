@@ -35,13 +35,15 @@ tier × article-type **access matrix**, editable in the page. Each cell is three
 | W | writes it, and it goes through review |
 | ✗ | no access — that tier never authors this type |
 
-Click a cell to cycle it and the active lens re-derives immediately. The ✗/W distinction
+Click a cell to cycle it and the active lens re-derives immediately. Groups and article types are
+both addable and removable from the matrix, and a further column per modifier controls which
+groups can carry it. The ✗/W distinction
 matters: "can't self-publish" and "never writes this" produce very different diagrams, and a
 two-state matrix hid the difference. A new article type starts ✗ for everyone.
 
 ### Three lenses, composable
 
-- **Article by** — writer tier: UltraDTP (16), MidDTP (58), SWUser (34), AI-assist (25)
+- **Article by** — writer group: UltraDTP, MidDTP, SWUser, AI-assist (add your own in the matrix)
 - **1Editor** — a modifier a writer carries *on top of* a tier, not a tier itself. Someone can be
   MidDTP and 1Editor, or SWUser and 1Editor. It stops review at the copyeditor instead of
   continuing to a financial editor. UltraDTP, MidDTP and SWUser can carry it; AI-assist can't.
@@ -96,6 +98,9 @@ column **denied for every tier** (the "New Type" default-deny rule from the sour
 table).
 
 ### Persistence
+
+The matrix is part of the workflow document, not a separate thing — group and type edits persist
+and export alongside the diagram.
 
 `src/data/workflow.seed.json` is the committed source of truth and loads on first run. After
 that a localStorage draft (`sanity-workflow:draft:v1`) wins. **Export JSON** downloads the

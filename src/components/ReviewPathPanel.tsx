@@ -11,7 +11,6 @@ interface Props {
 interface TierRow {
   id: string
   label: string
-  headcount: number | null
   selfPublishCount: number
   typeCount: number
   /** A type this tier cannot self-publish, used to derive the review route. */
@@ -68,7 +67,6 @@ function buildRows(doc: WorkflowDoc): TierRow[] {
     return {
       id: tier.id,
       label: tier.label,
-      headcount: tier.headcount,
       selfPublishCount: entry.publish.length,
       // Denominator is what the tier can actually author, not every type
       // in the system — no-access types aren't articles it ever writes.
@@ -109,7 +107,6 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
         <thead>
           <tr>
             <th scope="col">Tier</th>
-            <th scope="col">Writers</th>
             <th scope="col">Self-publishes</th>
             <th scope="col">Otherwise</th>
             <th scope="col">Editors</th>
@@ -131,7 +128,6 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
               }}
             >
               <th scope="row">{row.label}</th>
-              <td className="tabular-nums">{row.headcount ?? '—'}</td>
               <td>
                 {row.selfPublishCount === 0 ? (
                   <span className="review-table__none">nothing</span>

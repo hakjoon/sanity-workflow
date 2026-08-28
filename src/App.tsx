@@ -191,6 +191,7 @@ export default function App() {
       <AccessMatrix
         doc={doc}
         selection={lens}
+        dirty={store.dirty}
         onUpdate={update}
         onSelect={(tierId, articleTypeId) => setLens((l) => ({ ...l, tierId, articleTypeId }))}
       />

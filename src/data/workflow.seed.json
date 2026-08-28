@@ -1,25 +1,21 @@
 {
-  "version": 3,
+  "version": 4,
   "tiers": [
     {
       "id": "ultraDTP",
-      "label": "UltraDTP",
-      "headcount": 16
+      "label": "UltraDTP"
     },
     {
       "id": "midDTP",
-      "label": "MidDTP",
-      "headcount": 58
+      "label": "MidDTP"
     },
     {
       "id": "swUser",
-      "label": "SWUser",
-      "headcount": 34
+      "label": "SWUser"
     },
     {
       "id": "aiAssist",
       "label": "AI-assist",
-      "headcount": 25,
       "note": "Most are also members of one of the other writer buckets, but a writer acts as exactly one tier at a time."
     }
   ],

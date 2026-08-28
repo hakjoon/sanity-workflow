@@ -604,3 +604,11 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   line-height: var(--text-label-lh);
   color: var(--mf-text-70);
 }
+
+.matrix__colhead--mod { border-left: 2px solid var(--mf-primary-24); }
+.matrix__modcell { border-left: 2px solid var(--mf-primary-24); }
+.matrix__rowhead .matrix__remove { margin-left: var(--space-2); }
+.matrix__rowhead:hover .matrix__remove { opacity: 1; }
+.matrix__adds { display: flex; gap: var(--space-8); flex-wrap: wrap; margin-top: var(--space-4); }
+.matrix__adds .matrix__add { margin-top: 0; }
+.matrix__saved { margin-top: var(--space-3); max-width: 80ch; }

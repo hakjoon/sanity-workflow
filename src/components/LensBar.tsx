@@ -57,7 +57,6 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
             {doc.tiers.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.label}
-                {t.headcount !== null ? ` (${t.headcount})` : ''}
               </option>
             ))}
           </select>
