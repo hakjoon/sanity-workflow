@@ -20,6 +20,12 @@ export interface LensSelection {
    */
   viewerRoles: RoleId[]
   /**
+   * Modifier id -> pinned value. A modifier that isn't present is left open,
+   * so both routes show — the same "All types" union semantics, applied to
+   * writer properties rather than article types.
+   */
+  modifiers: Record<string, boolean>
+  /**
    * Remove states this article can never reach, instead of greying them.
    * Off by default: an unreachable state still tells you something. On, the
    * diagram collapses to just this article's journey.
@@ -123,10 +129,16 @@ function isTransitionAvailable(
   t: Transition,
   tierIds: Set<string>,
   reach: SelfPublishReach,
+  modifiers: Record<string, boolean>,
 ): boolean {
   if (!t.appliesTo.some((x) => tierIds.has(x))) return false
   if (t.gate === 'selfPublish' && !reach.any) return false
   if (t.gate === '!selfPublish' && !reach.none) return false
+  if (t.whenModifier) {
+    const pinned = modifiers[t.whenModifier.id]
+    // Unpinned means either value is possible, so the transition stays live.
+    if (pinned !== undefined && pinned !== t.whenModifier.is) return false
+  }
   return true
 }
 
@@ -146,7 +158,8 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
   // financial-edit branch — otherwise choosing a tier appears to do nothing.
   let tierIds = sel.tierId ? [sel.tierId] : doc.tiers.map((t) => t.id)
   let typeIds = sel.articleTypeId ? [sel.articleTypeId] : doc.articleTypes.map((t) => t.id)
-  const unfiltered = !sel.tierId && !sel.articleTypeId
+  const unfiltered =
+    !sel.tierId && !sel.articleTypeId && Object.keys(sel.modifiers).length === 0
 
   // Narrow each axis to combinations that actually exist. Picking a type only
   // should show the tiers that write it, not every tier; picking a tier only
@@ -173,9 +186,28 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
     }
   }
 
+  // A modifier pinned on for a tier that can't carry it describes nobody.
+  const impossibleModifier = doc.modifiers.some((m) => {
+    if (sel.modifiers[m.id] !== true) return false
+    return !tierIds.some((t) => m.appliesTo.includes(t))
+  })
+  if (impossibleModifier) {
+    return {
+      reachableStates: new Set(),
+      activeTransitions: new Set(),
+      viewerTransitions: new Set(),
+      selfPublishes: false,
+      reach: { any: false, none: false },
+      noAccess: true,
+      unfiltered: false,
+    }
+  }
+
   const reach = selfPublishReach(doc, tierIds, typeIds)
   const tierSet = new Set(tierIds)
-  const available = doc.transitions.filter((t) => isTransitionAvailable(t, tierSet, reach))
+  const available = doc.transitions.filter((t) =>
+    isTransitionAvailable(t, tierSet, reach, sel.modifiers),
+  )
 
   const outgoing = new Map<string, Transition[]>()
   for (const t of available) {
@@ -241,7 +273,20 @@ export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: Derived
   const tier = doc.tiers.find((t) => t.id === sel.tierId)
   const type = doc.articleTypes.find((t) => t.id === sel.articleTypeId)
 
+  const pinnedOn = doc.modifiers.filter((m) => sel.modifiers[m.id] === true)
+  const pinnedOff = doc.modifiers.filter((m) => sel.modifiers[m.id] === false)
+  const modSuffix = pinnedOn.length
+    ? ` (${pinnedOn.map((m) => m.label).join(' + ')})`
+    : pinnedOff.length
+      ? ` (no ${pinnedOff.map((m) => m.label).join(' or ')})`
+      : ''
+
   if (path.noAccess) {
+    for (const m of pinnedOn) {
+      if (tier && !m.appliesTo.includes(tier.id)) {
+        return `${tier.label} writers can't carry ${m.label}, so that combination doesn't exist.`
+      }
+    }
     if (tier && type) return `${tier.label} writers have no access to ${type.label} — that article doesn't exist.`
     if (type) return `No tier can write ${type.label} yet — grant write or self-publish access below.`
     return `${tier?.label ?? 'This tier'} has no article types yet — grant access below.`
@@ -253,7 +298,7 @@ export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: Derived
       ? 'self-publishes from Grammarly Edit Complete'
       : 'routes through copy edit'
     const article = /^[aeiou]/i.test(type.label) ? 'An' : 'A'
-    return `${article} ${type.label} by a ${tier.label} writer ${verdict} — ${of}.`
+    return `${article} ${type.label} by a ${tier.label}${modSuffix} writer ${verdict} — ${of}.`
   }
 
   // Tier only — the union across every article type that tier writes.
@@ -267,7 +312,7 @@ export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: Derived
         : pub === 0
           ? `none of its ${wr} types self-publish, so everything goes to review`
           : `${pub} of its ${pub + wr} types self-publish, the other ${wr} go to review`
-    return `Everywhere a ${tier.label} article can go — ${of}. ${split[0].toUpperCase()}${split.slice(1)}.`
+    return `Everywhere a ${tier.label}${modSuffix} article can go — ${of}. ${split[0].toUpperCase()}${split.slice(1)}.`
   }
 
   // Type only — the union across every tier.

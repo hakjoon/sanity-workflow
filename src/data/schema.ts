@@ -6,7 +6,7 @@
  * unreadable version. It is not a general-purpose schema library.
  */
 
-export const SCHEMA_VERSION = 2
+export const SCHEMA_VERSION = 3
 
 export type RoleId = 'writer' | 'copyed' | 'ffe' | 'hq' | 'system'
 
@@ -46,6 +46,28 @@ export type AccessLevel = 'publish' | 'write' | 'none'
 export interface TierAccess {
   publish: string[]
   write: string[]
+}
+
+/**
+ * A property a writer can carry on top of their tier, changing how their
+ * articles route without changing what they may write.
+ *
+ * 1Editor is the only one today: it stops review at copy edit rather than
+ * continuing to a financial editor. It composes — a writer is MidDTP *and*
+ * 1Editor, not one or the other.
+ */
+export interface Modifier {
+  id: string
+  label: string
+  description: string
+  /** Tier ids that can carry it. */
+  appliesTo: string[]
+}
+
+/** Restricts a transition to writers who do or don't carry a modifier. */
+export interface ModifierCondition {
+  id: string
+  is: boolean
 }
 
 export type HandleId = 't' | 'r' | 'b' | 'l'
@@ -106,6 +128,7 @@ export interface Transition {
   /** Tier ids this transition is available to. */
   appliesTo: string[]
   gate?: Gate
+  whenModifier?: ModifierCondition
   note?: string
 }
 
@@ -122,6 +145,7 @@ export interface WorkflowDoc {
   articleTypes: ArticleType[]
   /** tier id -> what that tier may do with each article type. */
   access: Record<string, TierAccess>
+  modifiers: Modifier[]
   states: WorkflowState[]
   transitions: Transition[]
   reviewStages: ReviewStage[]
@@ -257,6 +281,30 @@ export function parseWorkflow(input: unknown): ParseResult {
     })
   }
 
+  // ── Modifiers ──────────────────────────────────────────────────────
+  const modifierIds = new Set<string>()
+  if (!Array.isArray(input.modifiers)) {
+    errors.push('"modifiers" must be an array.')
+  } else {
+    input.modifiers.forEach((m, i) => {
+      if (!isObj(m) || typeof m.id !== 'string' || typeof m.label !== 'string') {
+        errors.push(`modifiers[${i}]: needs string "id" and "label".`)
+        return
+      }
+      if (modifierIds.has(m.id)) errors.push(`modifiers[${i}]: duplicate modifier id "${m.id}".`)
+      modifierIds.add(m.id)
+      if (!isStrArray(m.appliesTo)) {
+        errors.push(`modifiers[${i}] ("${m.id}"): "appliesTo" must be an array of tier ids.`)
+      } else {
+        for (const tier of m.appliesTo) {
+          if (!tierIds.has(tier)) {
+            errors.push(`modifiers[${i}] ("${m.id}"): appliesTo references unknown tier "${tier}".`)
+          }
+        }
+      }
+    })
+  }
+
   // ── Transitions ────────────────────────────────────────────────────
   const transitionIds = new Set<string>()
   if (!Array.isArray(input.transitions)) {
@@ -292,6 +340,14 @@ export function parseWorkflow(input: unknown): ParseResult {
       }
       if (t.gate !== undefined && t.gate !== 'selfPublish' && t.gate !== '!selfPublish') {
         errors.push(`${at}: "gate" must be "selfPublish" or "!selfPublish".`)
+      }
+      if (t.whenModifier !== undefined) {
+        const wm = t.whenModifier
+        if (!isObj(wm) || typeof wm.id !== 'string' || typeof wm.is !== 'boolean') {
+          errors.push(`${at}: "whenModifier" needs a string "id" and boolean "is".`)
+        } else if (!modifierIds.has(wm.id)) {
+          errors.push(`${at}: whenModifier references unknown modifier "${wm.id}".`)
+        }
       }
     })
   }

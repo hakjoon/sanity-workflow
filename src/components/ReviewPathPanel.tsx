@@ -20,6 +20,9 @@ interface TierRow {
   route: string[]
   minEditors: number
   maxEditors: number
+  /** Route when the tier carries the 1Editor-style modifier, if it can. */
+  modifierRoute: string[] | null
+  modifierLabel: string | null
 }
 
 /**
@@ -38,18 +41,29 @@ function buildRows(doc: WorkflowDoc): TierRow[] {
     // cannot self-publish. Types it has no access to are not articles.
     const sample = doc.articleTypes.find((t) => entry.write.includes(t.id)) ?? null
 
-    let route: string[] = []
-    if (sample) {
+    const stagesFor = (modifiers: Record<string, boolean>) => {
+      if (!sample) return []
       const path = derivePath(doc, {
         tierId: tier.id,
         articleTypeId: sample.id,
         viewerRoles: [],
+        modifiers,
         hideUnreachable: false,
       })
-      route = doc.reviewStages
+      return doc.reviewStages
         .filter((stage) => path.reachableStates.has(stage.state))
         .map((stage) => stage.short)
     }
+
+    // Baseline route is the writer without any modifier.
+    const off = Object.fromEntries(doc.modifiers.map((m) => [m.id, false]))
+    const route = stagesFor(off)
+
+    // And the route for a writer who carries one, where the tier allows it.
+    const carried = doc.modifiers.find((m) => m.appliesTo.includes(tier.id))
+    const modifierRoute = carried
+      ? stagesFor({ ...off, [carried.id]: true })
+      : null
 
     return {
       id: tier.id,
@@ -63,6 +77,8 @@ function buildRows(doc: WorkflowDoc): TierRow[] {
       route,
       minEditors: entry.publish.length > 0 ? 0 : route.length,
       maxEditors: entry.write.length > 0 ? route.length : 0,
+      modifierRoute,
+      modifierLabel: carried?.label ?? null,
     }
   })
 }
@@ -84,7 +100,8 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
         <p className="panel__sub">
           How many editors touch an article before it publishes. Types marked ✓ in the access
           matrix skip review entirely; types marked W go to a copyeditor, and every tier except DTP
-          continues to a financial editor. Click a row to trace that tier.
+          continues to a financial editor — unless the writer carries 1Editor, which stops review
+          at the copyeditor. Click a row to trace that tier.
         </p>
       </div>
 
@@ -96,6 +113,7 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
             <th scope="col">Self-publishes</th>
             <th scope="col">Otherwise</th>
             <th scope="col">Editors</th>
+            <th scope="col">As 1Editor</th>
           </tr>
         </thead>
         <tbody>
@@ -136,6 +154,17 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
                 )}
               </td>
               <td className="tabular-nums review-table__count">{editorsLabel(row)}</td>
+              <td className="tabular-nums">
+                {row.modifierRoute === null ? (
+                  <span className="review-table__none">can't carry it</span>
+                ) : row.route.length === 0 ? (
+                  <span className="review-table__none">no effect</span>
+                ) : (
+                  <span className="review-table__count">
+                    {row.minEditors === 0 ? `0 or ${row.modifierRoute.length}` : row.modifierRoute.length}
+                  </span>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

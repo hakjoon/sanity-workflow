@@ -20,6 +20,7 @@ export const EMPTY_LENS: LensSelection = {
   tierId: null,
   articleTypeId: null,
   viewerRoles: [],
+  modifiers: {},
   hideUnreachable: false,
 }
 
@@ -29,7 +30,15 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
     Boolean(selection.tierId) ||
     Boolean(selection.articleTypeId) ||
     selection.viewerRoles.length > 0 ||
+    Object.keys(selection.modifiers).length > 0 ||
     selection.hideUnreachable
+
+  const setModifier = (id: string, value: string) => {
+    const next = { ...selection.modifiers }
+    if (value === '') delete next[id]
+    else next[id] = value === 'on'
+    set({ modifiers: next })
+  }
 
   return (
     <section className="lens-bar" aria-label="Workflow lens">
@@ -72,6 +81,31 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
             ))}
           </select>
         </div>
+
+        {doc.modifiers.map((m) => {
+          const pinned = selection.modifiers[m.id]
+          const carriers = m.appliesTo
+            .map((id) => doc.tiers.find((t) => t.id === id)?.label ?? id)
+            .join(', ')
+          return (
+            <div className="lens-group" key={m.id}>
+              <label className="lens-group__label" htmlFor={`lens-mod-${m.id}`}>
+                {m.label}
+              </label>
+              <select
+                id={`lens-mod-${m.id}`}
+                className="select"
+                title={`${m.description} Carried by: ${carriers}.`}
+                value={pinned === undefined ? '' : pinned ? 'on' : 'off'}
+                onChange={(e) => setModifier(m.id, e.target.value)}
+              >
+                <option value="">Either</option>
+                <option value="on">Is {m.label}</option>
+                <option value="off">Not {m.label}</option>
+              </select>
+            </div>
+          )
+        })}
 
         <div className="lens-group">
           <span className="lens-group__label" id="lens-viewer-label">

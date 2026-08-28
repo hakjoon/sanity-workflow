@@ -41,7 +41,11 @@ two-state matrix hid the difference. A new article type starts ✗ for everyone.
 
 ### Three lenses, composable
 
-- **Article by** — writer tier: UltraDTP (16), MidDTP (58), DTP, SWUser (34), AI-assist (25)
+- **Article by** — writer tier: UltraDTP (16), MidDTP (58), SWUser (34), AI-assist (25)
+- **1Editor** — a modifier a writer carries *on top of* a tier, not a tier itself. Someone can be
+  MidDTP and 1Editor, or SWUser and 1Editor. It stops review at the copyeditor instead of
+  continuing to a financial editor. UltraDTP, MidDTP and SWUser can carry it; AI-assist can't.
+  Left on **Either**, both review depths show
 - **Article type** — Shorty, Medium, Article, Duo, News brief, Short MM, Long MM, Influencer,
   Earnings, AI-Assist
 - **Highlight roles** — Writers / Copyeds / FFEs / HQ / System, **multi-select**
@@ -63,16 +67,17 @@ performs stays visible, because it's still part of the article's path.
 | Tier + type | States | Route | Editors |
 | --- | --- | --- | --- |
 | UltraDTP + Shorty | 6 | self-publishes, never enters review | 0 |
-| UltraDTP + AI-Assist | 12 | denied by matrix → copy edit → financial edit | 2 |
+| UltraDTP + AI-Assist | 0 | no access — that article doesn't exist | — |
 | MidDTP + News brief | 6 | self-publishes | 0 |
-| MidDTP + Shorty | 12 | denied by matrix → copy edit → financial edit | 2 |
-| DTP + anything | 10 | copy edit only — the copyeditor finishes it | 1 |
-| SWUser + anything | 12 | copy edit → financial edit — the full graph | 2 |
+| MidDTP + Shorty | 12 | copy edit → financial edit | 2 |
+| MidDTP + Shorty + 1Editor | 10 | copy edit only — copyeditor finishes it | 1 |
+| SWUser + anything | 12 | copy edit → financial edit | 2 |
+| SWUser + anything + 1Editor | 10 | copy edit only | 1 |
 | AI-assist + AI-Assist | 6 | self-publishes | 0 |
 
-**DTP is the only tier that stops at copy edit.** Every other tier that enters review continues
-to a financial editor, so an article gets either 0 editors (self-published) or 2 — except DTP's,
-which always gets exactly 1.
+**Editors come from two things and nothing else:** the tier's access to that article type, and
+whether the writer carries 1Editor. Self-published → 0. Otherwise a copyeditor, then a financial
+editor — unless 1Editor, which stops at the copyeditor.
 
 Leaving either selector on **All** widens the union rather than switching the lens off. MidDTP
 across all types reaches 10 states — the SWUser-only financial-edit branch stays dark — and both

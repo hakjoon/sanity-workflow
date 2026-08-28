@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "tiers": [
     {
       "id": "ultraDTP",
@@ -10,11 +10,6 @@
       "id": "midDTP",
       "label": "MidDTP",
       "headcount": 58
-    },
-    {
-      "id": "dtp",
-      "label": "DTP",
-      "headcount": null
     },
     {
       "id": "swUser",
@@ -100,20 +95,6 @@
         "duo"
       ]
     },
-    "dtp": {
-      "publish": [],
-      "write": [
-        "shorty",
-        "medium",
-        "article",
-        "duo",
-        "newsBrief",
-        "shortMM",
-        "longMM",
-        "influencer",
-        "earnings"
-      ]
-    },
     "swUser": {
       "publish": [],
       "write": [
@@ -145,6 +126,18 @@
       ]
     }
   },
+  "modifiers": [
+    {
+      "id": "oneEditor",
+      "label": "1Editor",
+      "description": "Review stops at copy edit — the copyeditor publishes, no financial editor.",
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "swUser"
+      ]
+    }
+  ],
   "states": [
     {
       "id": "inbox",
@@ -439,7 +432,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -456,7 +448,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -473,7 +464,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ],
@@ -492,7 +482,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ],
@@ -510,7 +499,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -525,11 +513,15 @@
       "style": "solid",
       "label": "hand off to FFE queue",
       "appliesTo": [
-        "swUser",
-        "midDTP",
         "ultraDTP",
+        "midDTP",
+        "swUser",
         "aiAssist"
-      ]
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
     },
     {
       "id": "t-inCopy-scheduled",
@@ -539,11 +531,17 @@
       "targetHandle": "r",
       "role": "copyed",
       "style": "solid",
-      "label": "DTP only — copyed publishes / schedules",
+      "label": "1Editor — copyed publishes / schedules",
       "appliesTo": [
-        "dtp"
+        "ultraDTP",
+        "midDTP",
+        "swUser"
       ],
-      "note": "DTP is the only tier that finishes at copy edit. Every other tier that enters review continues to financial edit."
+      "note": "Only for writers carrying the 1Editor modifier. Everyone else continues to financial edit.",
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
+      }
     },
     {
       "id": "t-inCopy-editsRequired",
@@ -557,7 +555,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -572,11 +569,15 @@
       "style": "solid",
       "label": "claim",
       "appliesTo": [
-        "swUser",
-        "midDTP",
         "ultraDTP",
+        "midDTP",
+        "swUser",
         "aiAssist"
-      ]
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
     },
     {
       "id": "t-inFinancial-editsRequired",
@@ -588,11 +589,15 @@
       "style": "dashed",
       "label": "@ writer",
       "appliesTo": [
-        "swUser",
-        "midDTP",
         "ultraDTP",
+        "midDTP",
+        "swUser",
         "aiAssist"
-      ]
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
     },
     {
       "id": "t-inFinancial-scheduled",
@@ -604,11 +609,15 @@
       "style": "solid",
       "label": "FFE publishes / schedules from here",
       "appliesTo": [
-        "swUser",
-        "midDTP",
         "ultraDTP",
+        "midDTP",
+        "swUser",
         "aiAssist"
-      ]
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
     },
     {
       "id": "t-editsRequired-editsDone",
@@ -622,7 +631,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -637,11 +645,15 @@
       "style": "dashed",
       "label": "FFE resumes the article",
       "appliesTo": [
-        "swUser",
-        "midDTP",
         "ultraDTP",
+        "midDTP",
+        "swUser",
         "aiAssist"
-      ]
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
     },
     {
       "id": "t-editsDone-scheduled-copyed",
@@ -653,8 +665,14 @@
       "style": "solid",
       "label": "Copyeds publish / schedule",
       "appliesTo": [
-        "dtp"
-      ]
+        "ultraDTP",
+        "midDTP",
+        "swUser"
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
+      }
     },
     {
       "id": "t-editsDone-scheduled-ffe",
@@ -666,11 +684,15 @@
       "style": "solid",
       "label": "FFE publishes / schedules",
       "appliesTo": [
-        "swUser",
-        "midDTP",
         "ultraDTP",
+        "midDTP",
+        "swUser",
         "aiAssist"
-      ]
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
     },
     {
       "id": "t-scheduled-published",
@@ -684,7 +706,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -701,7 +722,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -718,7 +738,6 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "dtp",
         "swUser",
         "aiAssist"
       ]
@@ -742,16 +761,16 @@
   "notes": {
     "answered": [
       "States are skippable by role, and role determines the path.",
-      "Writer tiers are SWUser, DTP, MidDTP, UltraDTP and AI-assist. All apply to every state up to Grammarly Edit Complete — no tier skips that state.",
+      "Writer tiers are UltraDTP, MidDTP, SWUser and AI-assist. All apply to every state up to Grammarly Edit Complete — no tier skips that state. 1Editor is not a tier: it is a property a writer carries on top of one, so someone can be MidDTP and 1Editor, or SWUser and 1Editor.",
       "At Grammarly Edit Complete, self-publishing is decided by the tier × article-type matrix — not by tier alone. The same writer's News brief and Shorty can take different paths.",
       "Access is three-way, not two. A tier either self-publishes a type, writes it and sends it to review, or has no access and never authors it at all. Only the middle case reaches the copy edit states.",
-      "Editors per article depends on the tier, not the article type. SWUser always gets two — a copyeditor and a financial editor. DTP always gets one, the copyeditor. MidDTP, UltraDTP and AI-assist get none when the matrix lets them self-publish, and two when it doesn't.",
+      "Editors per article comes from three things: the tier's access to the type, whether the writer carries 1Editor, and nothing else. Anything self-published gets none. Anything else gets a copyeditor, then a financial editor — unless the writer is 1Editor, in which case the copyeditor finishes it.",
       "Most articles are published or scheduled straight out of In Financial Edit — the FFE finishes there. Edits Done is not a step on that path.",
-      "In Copy Edit is a branch point, and DTP is the only exception. Every tier that enters copy edit goes on to financial edit — SWUser, MidDTP, UltraDTP and AI-assist alike. DTP is the one tier that finishes there, with the copyeditor publishing or scheduling straight from In Copy Edit.",
+      "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the copyeditor from In Copy Edit. UltraDTP, MidDTP and SWUser can carry 1Editor; AI-assist cannot.",
       "No tier skips copy edit but still needs FFE — financial edit always follows copy edit.",
       "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
       "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
-      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the FFE, or is published or scheduled there by an FFE or, for a DTP article, a copyeditor.",
+      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the FFE, or is published or scheduled there by an FFE or, for a 1Editor writer's article, a copyeditor.",
       "HQ editors can move an article from any state to any other."
     ],
     "open": [
@@ -759,7 +778,7 @@
       "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
       "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build."
     ],
-    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor, and every tier except DTP goes on to a financial editor — so the FFE queue draws from SWUser, MidDTP, UltraDTP and AI-assist. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
+    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the FFE queue depends on how many writers hold that modifier, not on which tier they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
     "caveat": "HQ any-to-any and the copy-edit send-back both need non-sequential transitions, which Sanity does not support today."
   }
 }
