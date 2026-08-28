@@ -120,7 +120,7 @@
       "accent": "ffe", "border": "dashed",
       "badges": ["claimable"],
       "actors": [
-        { "role": "writer", "text": "SWUser articles only — " },
+        { "role": "writer", "text": "Everything in review except DTP — " },
         { "role": "ffe",    "text": "FFEs claim" }
       ]
     },
@@ -202,16 +202,16 @@
       "id": "t-inCopy-readyFinancial", "from": "inCopy", "to": "readyFinancial",
       "sourceHandle": "b", "targetHandle": "t",
       "role": "copyed", "style": "solid",
-      "label": "SWUser only — hand off to FFE queue",
-      "appliesTo": ["swUser"]
+      "label": "hand off to FFE queue",
+      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
     },
     {
       "id": "t-inCopy-scheduled", "from": "inCopy", "to": "scheduled",
       "sourceHandle": "b", "targetHandle": "r",
       "role": "copyed", "style": "solid",
-      "label": "no financial edit — copyed publishes / schedules",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "aiAssist"],
-      "note": "Derived: the design states only SWUser articles continue to financial edit, so every other tier that reaches copy edit is published from here."
+      "label": "DTP only — copyed publishes / schedules",
+      "appliesTo": ["dtp"],
+      "note": "DTP is the only tier that finishes at copy edit. Every other tier that enters review continues to financial edit."
     },
     {
       "id": "t-inCopy-editsRequired", "from": "inCopy", "to": "editsRequired",
@@ -226,21 +226,21 @@
       "sourceHandle": "l", "targetHandle": "r",
       "role": "ffe", "style": "solid",
       "label": "claim",
-      "appliesTo": ["swUser"]
+      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
     },
     {
       "id": "t-inFinancial-editsRequired", "from": "inFinancial", "to": "editsRequired",
       "sourceHandle": "l", "targetHandle": "r",
       "role": "ffe", "style": "dashed",
       "label": "@ writer",
-      "appliesTo": ["swUser"]
+      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
     },
     {
       "id": "t-inFinancial-scheduled", "from": "inFinancial", "to": "scheduled",
       "sourceHandle": "b", "targetHandle": "t",
       "role": "ffe", "style": "solid",
       "label": "FFE publishes / schedules from here",
-      "appliesTo": ["swUser"]
+      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
     },
 
     {
@@ -255,21 +255,21 @@
       "sourceHandle": "b", "targetHandle": "b",
       "role": "ffe", "style": "dashed",
       "label": "FFE resumes the article",
-      "appliesTo": ["swUser"]
+      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
     },
     {
       "id": "t-editsDone-scheduled-copyed", "from": "editsDone", "to": "scheduled",
       "sourceHandle": "b", "targetHandle": "l",
       "role": "copyed", "style": "solid",
       "label": "Copyeds publish / schedule",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "aiAssist"]
+      "appliesTo": ["dtp"]
     },
     {
       "id": "t-editsDone-scheduled-ffe", "from": "editsDone", "to": "scheduled",
       "sourceHandle": "b", "targetHandle": "t",
       "role": "ffe", "style": "solid",
       "label": "FFE publishes / schedules",
-      "appliesTo": ["swUser"]
+      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
     },
 
     {
@@ -295,6 +295,11 @@
     }
   ],
 
+  "reviewStages": [
+    { "id": "copyEdit",      "label": "Copy edit",      "short": "CE",  "state": "inCopy" },
+    { "id": "financialEdit", "label": "Financial edit", "short": "FFE", "state": "inFinancial" }
+  ],
+
   "hqOverride": true,
 
   "notes": {
@@ -303,21 +308,21 @@
       "Writer tiers are SWUser, DTP, MidDTP, UltraDTP and AI-assist. All apply to every state up to Grammarly Edit Complete — no tier skips that state.",
       "At Grammarly Edit Complete, self-publishing is decided by the tier × article-type matrix — not by tier alone. The same writer's News brief and Shorty can take different paths.",
       "Articles that cannot self-publish move on to the copy edit states, handled by copyeditors.",
+      "Editors per article depends on the tier, not the article type. SWUser always gets two — a copyeditor and a financial editor. DTP always gets one, the copyeditor. MidDTP, UltraDTP and AI-assist get none when the matrix lets them self-publish, and two when it doesn't.",
       "Most articles are published or scheduled straight out of In Financial Edit — the FFE finishes there. Edits Done is not a step on that path.",
-      "In Copy Edit is a branch point. Only SWUser articles continue to financial edit. Every other tier is published or scheduled straight from In Copy Edit.",
+      "In Copy Edit is a branch point, and DTP is the only exception. Every tier that enters copy edit goes on to financial edit — SWUser, MidDTP, UltraDTP and AI-assist alike. DTP is the one tier that finishes there, with the copyeditor publishing or scheduling straight from In Copy Edit.",
       "No tier skips copy edit but still needs FFE — financial edit always follows copy edit.",
       "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
       "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
-      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the FFE, or is published or scheduled there by an FFE or, for a non-SWUser article, a copyeditor.",
+      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the FFE, or is published or scheduled there by an FFE or, for a DTP article, a copyeditor.",
       "HQ editors can move an article from any state to any other."
     ],
     "open": [
       "Edits Done — claimed by one owner, or an open queue? Unclear whether it stays claimed by the FFE who finished the edit, or reopens for anyone eligible to pick up. Two things narrow this: it only ever affects articles that were sent back, since Edits Done is unreachable otherwise; and whoever holds it can publish or schedule, so the answer decides who is allowed to finish a resubmitted article.",
       "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
-      "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build.",
-      "Fall-through routing is derived, not confirmed: a MidDTP or UltraDTP article that fails the self-publish check is currently routed like DTP — copyeditor publishes from In Copy Edit, no financial edit."
+      "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build."
     ],
-    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor; only SWUser continues to a financial editor. New article types default to no self-publish rights for every tier.",
+    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor, and every tier except DTP goes on to a financial editor — so the FFE queue draws from SWUser, MidDTP, UltraDTP and AI-assist. New article types default to no self-publish rights for every tier, which means each new type adds work to both queues until someone grants it.",
     "caveat": "HQ any-to-any and the copy-edit send-back both need non-sequential transitions, which Sanity does not support today."
   }
 }

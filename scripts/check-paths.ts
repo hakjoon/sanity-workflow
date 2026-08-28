@@ -29,13 +29,13 @@ interface Case {
 
 const CASES: Case[] = [
   { tier: 'ultraDTP', type: 'shorty', states: 6, excludes: ['readyCopy', 'inCopy', 'inFinancial'] },
-  { tier: 'ultraDTP', type: 'aiAssist', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'ultraDTP', type: 'aiAssist', states: 12 },
   { tier: 'midDTP', type: 'newsBrief', states: 6, excludes: ['readyCopy', 'inCopy', 'inFinancial'] },
-  { tier: 'midDTP', type: 'shorty', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'midDTP', type: 'shorty', states: 12 },
   { tier: 'dtp', type: 'shorty', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
   { tier: 'swUser', type: 'shorty', states: 12 },
   { tier: 'aiAssist', type: 'aiAssist', states: 6, excludes: ['readyCopy', 'inCopy'] },
-  { tier: 'aiAssist', type: 'shorty', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'aiAssist', type: 'shorty', states: 12 },
 ]
 
 let failed = 0
@@ -96,10 +96,10 @@ else failed++
 // This is the case that used to fall through to "show everything".
 interface TierCase { tier: string; states: number; excludes?: string[] }
 const TIER_ONLY: TierCase[] = [
-  { tier: 'midDTP',   states: 10, excludes: ['readyFinancial', 'inFinancial'] },
-  { tier: 'ultraDTP', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'midDTP',   states: 12 },
+  { tier: 'ultraDTP', states: 12 },
   { tier: 'dtp',      states: 10, excludes: ['readyFinancial', 'inFinancial'] },
-  { tier: 'aiAssist', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
+  { tier: 'aiAssist', states: 12 },
   { tier: 'swUser',   states: 12 },
 ]
 for (const c of TIER_ONLY) {
@@ -134,6 +134,26 @@ const nothing = derivePath(doc, { tierId: null, articleTypeId: null, viewerRoles
 if (nothing.reachableStates.size === doc.states.length && nothing.activeTransitions.size === doc.transitions.length) {
   console.log(`✓ ${'no selection'.padEnd(24)} full graph, ${nothing.activeTransitions.size} transitions`)
 } else { failed++; console.log(`✗ no selection: expected full graph, got ${nothing.reachableStates.size} states`) }
+
+// Editors per article: DTP is the only tier that stops at copy edit.
+const REVIEW: Array<[string, string[]]> = [
+  ['swUser',   ['inCopy', 'inFinancial']],
+  ['dtp',      ['inCopy']],
+  ['midDTP',   ['inCopy', 'inFinancial']],
+  ['ultraDTP', ['inCopy', 'inFinancial']],
+  ['aiAssist', ['inCopy', 'inFinancial']],
+]
+for (const [tier, expectedStages] of REVIEW) {
+  const allowed = doc.selfPublish[tier] ?? []
+  const sample = doc.articleTypes.find((t) => !allowed.includes(t.id))
+  if (!sample) { failed++; console.log(`✗ ${tier}: no non-self-publish type to test`); continue }
+  const p = derivePath(doc, { tierId: tier, articleTypeId: sample.id, viewerRoles: [], hideUnreachable: false })
+  const got = doc.reviewStages.filter((r) => p.reachableStates.has(r.state)).map((r) => r.state)
+  const ok = got.length === expectedStages.length && expectedStages.every((x) => got.includes(x))
+  const label = `${tier} review stages`.padEnd(24)
+  if (ok) console.log(`✓ ${label} ${got.length} editor(s) via ${got.join(' → ')}`)
+  else { failed++; console.log(`✗ ${label} expected ${expectedStages.join(' → ')}, got ${got.join(' → ') || 'none'}`) }
+}
 
 // Edits Done is optional and only exists on the send-back loop: the only way
 // in is from Edits Required. If an edit ever gives it another inbound edge,

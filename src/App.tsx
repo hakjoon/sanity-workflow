@@ -8,6 +8,7 @@ import { Inspector, type Selected } from './components/Inspector'
 import { EMPTY_LENS, LensBar } from './components/LensBar'
 import { Legend } from './components/Legend'
 import { NotesPanel } from './components/NotesPanel'
+import { ReviewPathPanel } from './components/ReviewPathPanel'
 import { SelfPublishMatrix } from './components/SelfPublishMatrix'
 import type { WorkflowDoc } from './data/schema'
 
@@ -180,6 +181,12 @@ export default function App() {
           </div>
         </ReactFlowProvider>
       </section>
+
+      <ReviewPathPanel
+        doc={doc}
+        selection={lens}
+        onSelect={(tierId, articleTypeId) => setLens((l) => ({ ...l, tierId, articleTypeId }))}
+      />
 
       <SelfPublishMatrix
         doc={doc}

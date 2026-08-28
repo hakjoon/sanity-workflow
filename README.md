@@ -51,15 +51,19 @@ performs stays visible, because it's still part of the article's path.
 
 ### Reference paths
 
-| Tier + type | States | Route |
-| --- | --- | --- |
-| UltraDTP + Shorty | 6 | self-publishes, never enters review |
-| UltraDTP + AI-Assist | 10 | denied by matrix → copy edit, no financial |
-| MidDTP + News brief | 6 | self-publishes |
-| MidDTP + Shorty | 10 | denied by matrix → copy edit, no financial |
-| DTP + anything | 10 | always copy edit, never financial |
-| SWUser + anything | 12 | copy edit → financial edit — the full graph |
-| AI-assist + AI-Assist | 6 | self-publishes |
+| Tier + type | States | Route | Editors |
+| --- | --- | --- | --- |
+| UltraDTP + Shorty | 6 | self-publishes, never enters review | 0 |
+| UltraDTP + AI-Assist | 12 | denied by matrix → copy edit → financial edit | 2 |
+| MidDTP + News brief | 6 | self-publishes | 0 |
+| MidDTP + Shorty | 12 | denied by matrix → copy edit → financial edit | 2 |
+| DTP + anything | 10 | copy edit only — the copyeditor finishes it | 1 |
+| SWUser + anything | 12 | copy edit → financial edit — the full graph | 2 |
+| AI-assist + AI-Assist | 6 | self-publishes | 0 |
+
+**DTP is the only tier that stops at copy edit.** Every other tier that enters review continues
+to a financial editor, so an article gets either 0 editors (self-published) or 2 — except DTP's,
+which always gets exactly 1.
 
 Leaving either selector on **All** widens the union rather than switching the lens off. MidDTP
 across all types reaches 10 states — the SWUser-only financial-edit branch stays dark — and both
@@ -91,19 +95,13 @@ draft.
 edges that would bury the diagram. It's the `hqOverride` flag, surfaced as a banner when you view
 as HQ.
 
-**Four things are still open**, badged in the diagram and listed in the notes panel: who holds
-Edits Done, who can get back into a Published article, who can reach Unpublished, and the
-fall-through routing below.
+**Three things are still open**, badged in the diagram and listed in the notes panel: who holds
+Edits Done, who can get back into a Published article, and who can reach Unpublished.
 
-**One routing rule is derived, not confirmed.** A MidDTP or UltraDTP article that *fails* the
-self-publish check falls through to copy edit, and is currently routed like DTP: the copyeditor
-publishes from In Copy Edit, no financial edit. The design states only that *"only SWUser
-articles continue to financial edit"* — it says nothing about this fall-through case
-specifically. Change `t-inCopy-scheduled` / `t-inCopy-readyFinancial` in the seed if that's
-wrong, then re-run `npm run check`.
-
-This is tracked as the third item under **Still open** in the page's notes panel, alongside the
-two claim models the design left undecided.
+**The fall-through routing departs from the source diagram.** The design said *"Only SWUser
+articles continue to financial edit"*, which would send a MidDTP article that can't self-publish
+down the DTP route. That's wrong: confirmed with the team, every tier except DTP continues to a
+financial editor. The seed follows the corrected rule, and `npm run check` pins it per tier.
 
 ## Design system
 

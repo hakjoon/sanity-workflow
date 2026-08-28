@@ -554,3 +554,36 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   color: var(--mf-text-80);
   cursor: pointer;
 }
+
+/* ── Review-path legend ─────────────────────────────────────────────── */
+.review-table { border-collapse: collapse; width: 100%; font-size: var(--text-caption-size); }
+.review-table th, .review-table td {
+  border-bottom: 1px solid var(--mf-content-8);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+.review-table thead th {
+  font-size: var(--text-label-size);
+  line-height: var(--text-label-lh);
+  font-weight: var(--text-label-bold-weight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mf-text-70);
+  border-bottom-color: var(--mf-primary-24);
+}
+.review-table tbody th { font-weight: var(--text-caption-bold-weight); color: var(--mf-content-92); }
+.review-table tbody tr { cursor: pointer; transition: background var(--dur-fast) var(--ease-out); }
+.review-table tbody tr:hover { background: var(--mf-primary-4); }
+.review-table tbody tr[data-active] { background: var(--mf-primary-8); }
+.review-table tbody tr:focus-visible { outline: 2px solid var(--mf-primary-100); outline-offset: -2px; }
+.review-table__none { color: var(--mf-text-70); }
+.review-table__arrow { color: var(--mf-content-36); }
+.review-table__count { font-weight: 900; color: var(--mf-content-92); }
+.review-table .role-copyed { color: var(--role-copyed); font-weight: var(--text-caption-bold-weight); }
+.review-table .role-ffe { color: var(--role-ffe); font-weight: var(--text-caption-bold-weight); }
+.review-table__key {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-label-size);
+  line-height: var(--text-label-lh);
+  color: var(--mf-text-70);
+}

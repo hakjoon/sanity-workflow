@@ -47,6 +47,19 @@ export interface ArticleType {
   label: string
 }
 
+/**
+ * A review step an article can pass through, named so the review-path legend
+ * can be derived from reachability rather than hardcoding state ids.
+ */
+export interface ReviewStage {
+  id: string
+  label: string
+  /** Abbreviation used in the compact route column, e.g. "CE". */
+  short: string
+  /** The state that means this stage happened. */
+  state: string
+}
+
 export interface Actor {
   /** null renders in muted body colour rather than a role colour. */
   role: RoleId | null
@@ -93,6 +106,7 @@ export interface WorkflowDoc {
   selfPublish: Record<string, string[]>
   states: WorkflowState[]
   transitions: Transition[]
+  reviewStages: ReviewStage[]
   hqOverride: boolean
   notes: WorkflowNotes
 }
@@ -248,6 +262,21 @@ export function parseWorkflow(input: unknown): ParseResult {
       }
       if (t.gate !== undefined && t.gate !== 'selfPublish' && t.gate !== '!selfPublish') {
         errors.push(`${at}: "gate" must be "selfPublish" or "!selfPublish".`)
+      }
+    })
+  }
+
+  // ── Review stages ──────────────────────────────────────────────────
+  if (!Array.isArray(input.reviewStages)) {
+    errors.push('"reviewStages" must be an array.')
+  } else {
+    input.reviewStages.forEach((r, i) => {
+      if (!isObj(r) || typeof r.id !== 'string' || typeof r.label !== 'string' || typeof r.short !== 'string') {
+        errors.push(`reviewStages[${i}]: needs string "id", "label" and "short".`)
+        return
+      }
+      if (typeof r.state !== 'string' || !stateIds.has(r.state)) {
+        errors.push(`reviewStages[${i}] ("${r.id}"): "state" references unknown state "${String(r.state)}".`)
       }
     })
   }
