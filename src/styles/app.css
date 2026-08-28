@@ -497,10 +497,27 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   font-weight: 900;
   line-height: 1;
   padding: var(--space-2);
-  color: var(--mf-red-100);
   transition: background var(--dur-fast) var(--ease-out);
 }
-.matrix__cell[data-allowed] { color: var(--mf-green-80); }
+.matrix__cell[data-level='publish'] { color: var(--mf-green-80); }
+.matrix__cell[data-level='write']   { color: var(--mf-primary-100); background: var(--mf-primary-4); }
+.matrix__cell[data-level='none']    { color: var(--mf-content-24); }
+.matrix__cell--inline {
+  display: inline-block;
+  width: auto;
+  min-width: 22px;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-xs);
+  cursor: default;
+  font-size: var(--text-caption-size);
+}
+.matrix__key {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-label-size);
+  line-height: 20px;
+  color: var(--mf-text-70);
+}
+.matrix__keysep { margin: 0 var(--space-3); color: var(--mf-content-24); }
 .matrix__cell:hover { background: var(--mf-primary-8); }
 .matrix__cell:focus-visible { outline: 2px solid var(--mf-primary-100); outline-offset: -2px; }
 .matrix__add {

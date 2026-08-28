@@ -33,8 +33,10 @@ interface TierRow {
  */
 function buildRows(doc: WorkflowDoc): TierRow[] {
   return doc.tiers.map((tier) => {
-    const allowed = doc.selfPublish[tier.id] ?? []
-    const sample = doc.articleTypes.find((t) => !allowed.includes(t.id)) ?? null
+    const entry = doc.access[tier.id] ?? { publish: [], write: [] }
+    // The review route is whatever happens to a type this tier writes but
+    // cannot self-publish. Types it has no access to are not articles.
+    const sample = doc.articleTypes.find((t) => entry.write.includes(t.id)) ?? null
 
     let route: string[] = []
     if (sample) {
@@ -49,17 +51,18 @@ function buildRows(doc: WorkflowDoc): TierRow[] {
         .map((stage) => stage.short)
     }
 
-    const alwaysSelfPublishes = allowed.length === doc.articleTypes.length
     return {
       id: tier.id,
       label: tier.label,
       headcount: tier.headcount,
-      selfPublishCount: allowed.length,
-      typeCount: doc.articleTypes.length,
+      selfPublishCount: entry.publish.length,
+      // Denominator is what the tier can actually author, not every type
+      // in the system — no-access types aren't articles it ever writes.
+      typeCount: entry.publish.length + entry.write.length,
       sampleReviewType: sample?.id ?? null,
       route,
-      minEditors: allowed.length > 0 ? 0 : route.length,
-      maxEditors: alwaysSelfPublishes ? 0 : route.length,
+      minEditors: entry.publish.length > 0 ? 0 : route.length,
+      maxEditors: entry.write.length > 0 ? route.length : 0,
     }
   })
 }
@@ -79,9 +82,9 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
           Editors per article, by tier
         </h2>
         <p className="panel__sub">
-          How many editors touch an article before it publishes. Anything the self-publish matrix
-          allows skips review entirely; everything else goes to a copyeditor, and every tier except
-          DTP continues to a financial editor. Click a row to trace that tier.
+          How many editors touch an article before it publishes. Types marked ✓ in the access
+          matrix skip review entirely; types marked W go to a copyeditor, and every tier except DTP
+          continues to a financial editor. Click a row to trace that tier.
         </p>
       </div>
 
@@ -115,9 +118,9 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
                 {row.selfPublishCount === 0 ? (
                   <span className="review-table__none">nothing</span>
                 ) : row.selfPublishCount === row.typeCount ? (
-                  'every type'
+                  `all ${row.typeCount} it writes`
                 ) : (
-                  `${row.selfPublishCount} of ${row.typeCount} types`
+                  `${row.selfPublishCount} of ${row.typeCount} it writes`
                 )}
               </td>
               <td>

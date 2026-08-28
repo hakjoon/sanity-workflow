@@ -1,313 +1,750 @@
 {
-  "version": 1,
-
+  "version": 2,
   "tiers": [
-    { "id": "ultraDTP", "label": "UltraDTP", "headcount": 16 },
-    { "id": "midDTP",   "label": "MidDTP",   "headcount": 58 },
-    { "id": "dtp",      "label": "DTP",      "headcount": null },
-    { "id": "swUser",   "label": "SWUser",   "headcount": 34 },
-    { "id": "aiAssist", "label": "AI-assist", "headcount": 25,
-      "note": "Most are also members of one of the other writer buckets, but a writer acts as exactly one tier at a time." }
+    {
+      "id": "ultraDTP",
+      "label": "UltraDTP",
+      "headcount": 16
+    },
+    {
+      "id": "midDTP",
+      "label": "MidDTP",
+      "headcount": 58
+    },
+    {
+      "id": "dtp",
+      "label": "DTP",
+      "headcount": null
+    },
+    {
+      "id": "swUser",
+      "label": "SWUser",
+      "headcount": 34
+    },
+    {
+      "id": "aiAssist",
+      "label": "AI-assist",
+      "headcount": 25,
+      "note": "Most are also members of one of the other writer buckets, but a writer acts as exactly one tier at a time."
+    }
   ],
-
   "articleTypes": [
-    { "id": "shorty",     "label": "Shorty" },
-    { "id": "medium",     "label": "Medium" },
-    { "id": "article",    "label": "Article" },
-    { "id": "duo",        "label": "Duo" },
-    { "id": "newsBrief",  "label": "News brief" },
-    { "id": "shortMM",    "label": "Short MM" },
-    { "id": "longMM",     "label": "Long MM" },
-    { "id": "influencer", "label": "Influencer" },
-    { "id": "earnings",   "label": "Earnings" },
-    { "id": "aiAssist",   "label": "AI-Assist (all types)" }
+    {
+      "id": "shorty",
+      "label": "Shorty"
+    },
+    {
+      "id": "medium",
+      "label": "Medium"
+    },
+    {
+      "id": "article",
+      "label": "Article"
+    },
+    {
+      "id": "duo",
+      "label": "Duo"
+    },
+    {
+      "id": "newsBrief",
+      "label": "News brief"
+    },
+    {
+      "id": "shortMM",
+      "label": "Short MM"
+    },
+    {
+      "id": "longMM",
+      "label": "Long MM"
+    },
+    {
+      "id": "influencer",
+      "label": "Influencer"
+    },
+    {
+      "id": "earnings",
+      "label": "Earnings"
+    },
+    {
+      "id": "aiAssist",
+      "label": "AI-Assist (all types)"
+    }
   ],
-
-  "selfPublish": {
-    "ultraDTP": ["shorty", "medium", "article", "duo", "newsBrief", "shortMM", "longMM", "influencer", "earnings"],
-    "midDTP":   ["newsBrief", "shortMM", "longMM", "influencer", "earnings"],
-    "dtp":      [],
-    "swUser":   [],
-    "aiAssist": ["aiAssist"]
+  "access": {
+    "ultraDTP": {
+      "publish": [
+        "shorty",
+        "medium",
+        "article",
+        "duo",
+        "newsBrief",
+        "shortMM",
+        "longMM",
+        "influencer",
+        "earnings"
+      ],
+      "write": []
+    },
+    "midDTP": {
+      "publish": [
+        "newsBrief",
+        "shortMM",
+        "longMM",
+        "influencer",
+        "earnings"
+      ],
+      "write": [
+        "shorty",
+        "medium",
+        "article",
+        "duo"
+      ]
+    },
+    "dtp": {
+      "publish": [],
+      "write": [
+        "shorty",
+        "medium",
+        "article",
+        "duo",
+        "newsBrief",
+        "shortMM",
+        "longMM",
+        "influencer",
+        "earnings"
+      ]
+    },
+    "swUser": {
+      "publish": [],
+      "write": [
+        "shorty",
+        "medium",
+        "article",
+        "duo",
+        "newsBrief",
+        "shortMM",
+        "longMM",
+        "influencer",
+        "earnings"
+      ]
+    },
+    "aiAssist": {
+      "publish": [
+        "aiAssist"
+      ],
+      "write": [
+        "shorty",
+        "medium",
+        "article",
+        "duo",
+        "newsBrief",
+        "shortMM",
+        "longMM",
+        "influencer",
+        "earnings"
+      ]
+    }
   },
-
   "states": [
     {
-      "id": "inbox", "title": "Inbox/Ideas",
-      "position": { "x": 40, "y": 40 },
-      "accent": "writer", "border": "solid",
-      "badges": ["claimable"],
+      "id": "inbox",
+      "title": "Inbox/Ideas",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "accent": "writer",
+      "border": "solid",
+      "badges": [
+        "claimable"
+      ],
       "actors": [
-        { "role": "writer", "text": "All writers" },
-        { "role": "copyed", "text": "Copyeds" },
-        { "role": "ffe",    "text": "FFEs" },
-        { "role": "hq",     "text": "HQ editors" }
+        {
+          "role": "writer",
+          "text": "All writers"
+        },
+        {
+          "role": "copyed",
+          "text": "Copyeds"
+        },
+        {
+          "role": "ffe",
+          "text": "FFEs"
+        },
+        {
+          "role": "hq",
+          "text": "HQ editors"
+        }
       ]
     },
     {
-      "id": "compose", "title": "Compose",
-      "position": { "x": 320, "y": 40 },
-      "accent": "writer", "border": "solid",
-      "badges": ["claimed"],
+      "id": "compose",
+      "title": "Compose",
+      "position": {
+        "x": 320,
+        "y": 40
+      },
+      "accent": "writer",
+      "border": "solid",
+      "badges": [
+        "claimed"
+      ],
       "actors": [
-        { "role": "writer", "text": "All writers" },
-        { "role": "hq",     "text": "HQ editors" }
+        {
+          "role": "writer",
+          "text": "All writers"
+        },
+        {
+          "role": "hq",
+          "text": "HQ editors"
+        }
       ]
     },
     {
-      "id": "grammarly", "title": "Grammarly Edit Complete",
-      "position": { "x": 600, "y": 40 },
-      "accent": "writer", "border": "dashed",
-      "badges": ["claimed"],
+      "id": "grammarly",
+      "title": "Grammarly Edit Complete",
+      "position": {
+        "x": 600,
+        "y": 40
+      },
+      "accent": "writer",
+      "border": "dashed",
+      "badges": [
+        "claimed"
+      ],
       "actors": [
-        { "role": "writer", "text": "All writers — self-publish depends on tier × article type" }
+        {
+          "role": "writer",
+          "text": "All writers — self-publish depends on tier × article type"
+        }
       ]
     },
     {
-      "id": "readyCopy", "title": "Ready for Copy Edit",
-      "position": { "x": 970, "y": 40 },
-      "accent": "copyed", "border": "dashed",
-      "badges": ["claimable"],
+      "id": "readyCopy",
+      "title": "Ready for Copy Edit",
+      "position": {
+        "x": 970,
+        "y": 40
+      },
+      "accent": "copyed",
+      "border": "dashed",
+      "badges": [
+        "claimable"
+      ],
       "actors": [
-        { "role": "writer", "text": "Articles that can't self-publish — " },
-        { "role": "copyed", "text": "Copyeds claim" }
+        {
+          "role": "writer",
+          "text": "Articles that can't self-publish — "
+        },
+        {
+          "role": "copyed",
+          "text": "Copyeds claim"
+        }
       ]
     },
     {
-      "id": "inCopy", "title": "In Copy Edit",
-      "position": { "x": 1250, "y": 40 },
-      "accent": "copyed", "border": "dashed",
-      "badges": ["claimed", "branch"],
+      "id": "inCopy",
+      "title": "In Copy Edit",
+      "position": {
+        "x": 1250,
+        "y": 40
+      },
+      "accent": "copyed",
+      "border": "dashed",
+      "badges": [
+        "claimed",
+        "branch"
+      ],
       "actors": [
-        { "role": "copyed", "text": "Copyeds" },
-        { "role": "hq",     "text": "HQ editors" }
-      ]
-    },
-
-    {
-      "id": "editsDone", "title": "Edits Done",
-      "position": { "x": 320, "y": 250 },
-      "accent": "ffe", "border": "dashed",
-      "badges": ["tbd"],
-      "actors": [
-        { "role": "ffe",    "text": "FFEs" },
-        { "role": "copyed", "text": "Copyeds" },
-        { "role": "hq",     "text": "HQ editors" }
-      ]
-    },
-    {
-      "id": "editsRequired", "title": "Edits Required",
-      "position": { "x": 600, "y": 250 },
-      "accent": "writer", "border": "dashed",
-      "badges": ["claimed"],
-      "actors": [
-        { "role": "writer", "text": "Article's writer" }
+        {
+          "role": "copyed",
+          "text": "Copyeds"
+        },
+        {
+          "role": "hq",
+          "text": "HQ editors"
+        }
       ]
     },
     {
-      "id": "inFinancial", "title": "In Financial Edit",
-      "position": { "x": 970, "y": 250 },
-      "accent": "ffe", "border": "dashed",
-      "badges": ["claimed"],
+      "id": "editsDone",
+      "title": "Edits Done",
+      "position": {
+        "x": 320,
+        "y": 250
+      },
+      "accent": "ffe",
+      "border": "dashed",
+      "badges": [
+        "tbd"
+      ],
       "actors": [
-        { "role": "ffe", "text": "FFEs" },
-        { "role": "hq",  "text": "HQ editors" }
+        {
+          "role": "ffe",
+          "text": "FFEs"
+        },
+        {
+          "role": "copyed",
+          "text": "Copyeds"
+        },
+        {
+          "role": "hq",
+          "text": "HQ editors"
+        }
       ]
     },
     {
-      "id": "readyFinancial", "title": "Ready for Financial Edit",
-      "position": { "x": 1250, "y": 250 },
-      "accent": "ffe", "border": "dashed",
-      "badges": ["claimable"],
+      "id": "editsRequired",
+      "title": "Edits Required",
+      "position": {
+        "x": 600,
+        "y": 250
+      },
+      "accent": "writer",
+      "border": "dashed",
+      "badges": [
+        "claimed"
+      ],
       "actors": [
-        { "role": "writer", "text": "Everything in review except DTP — " },
-        { "role": "ffe",    "text": "FFEs claim" }
+        {
+          "role": "writer",
+          "text": "Article's writer"
+        }
       ]
     },
-
     {
-      "id": "scheduled", "title": "Scheduled to Publish",
-      "position": { "x": 600, "y": 470 },
-      "accent": "system", "border": "solid",
+      "id": "inFinancial",
+      "title": "In Financial Edit",
+      "position": {
+        "x": 970,
+        "y": 250
+      },
+      "accent": "ffe",
+      "border": "dashed",
+      "badges": [
+        "claimed"
+      ],
+      "actors": [
+        {
+          "role": "ffe",
+          "text": "FFEs"
+        },
+        {
+          "role": "hq",
+          "text": "HQ editors"
+        }
+      ]
+    },
+    {
+      "id": "readyFinancial",
+      "title": "Ready for Financial Edit",
+      "position": {
+        "x": 1250,
+        "y": 250
+      },
+      "accent": "ffe",
+      "border": "dashed",
+      "badges": [
+        "claimable"
+      ],
+      "actors": [
+        {
+          "role": "writer",
+          "text": "Everything in review except DTP — "
+        },
+        {
+          "role": "ffe",
+          "text": "FFEs claim"
+        }
+      ]
+    },
+    {
+      "id": "scheduled",
+      "title": "Scheduled to Publish",
+      "position": {
+        "x": 600,
+        "y": 470
+      },
+      "accent": "system",
+      "border": "solid",
       "badges": [],
       "actors": [
-        { "role": "system", "text": "Automatic — set by " },
-        { "role": "ffe",    "text": "FFEs" },
-        { "role": "copyed", "text": "Copyeds" },
-        { "role": "writer", "text": "writers" }
+        {
+          "role": "system",
+          "text": "Automatic — set by "
+        },
+        {
+          "role": "ffe",
+          "text": "FFEs"
+        },
+        {
+          "role": "copyed",
+          "text": "Copyeds"
+        },
+        {
+          "role": "writer",
+          "text": "writers"
+        }
       ]
     },
     {
-      "id": "published", "title": "Published",
-      "position": { "x": 970, "y": 470 },
-      "accent": "system", "border": "solid",
-      "badges": ["access"],
+      "id": "published",
+      "title": "Published",
+      "position": {
+        "x": 970,
+        "y": 470
+      },
+      "accent": "system",
+      "border": "solid",
+      "badges": [
+        "access"
+      ],
       "actors": [
-        { "role": "system", "text": "Automatic — no role acts here" }
+        {
+          "role": "system",
+          "text": "Automatic — no role acts here"
+        }
       ]
     },
     {
-      "id": "unpublished", "title": "Unpublished",
-      "position": { "x": 1250, "y": 470 },
-      "accent": "hq", "border": "dashed",
-      "badges": ["access"],
+      "id": "unpublished",
+      "title": "Unpublished",
+      "position": {
+        "x": 1250,
+        "y": 470
+      },
+      "accent": "hq",
+      "border": "dashed",
+      "badges": [
+        "access"
+      ],
       "actors": [
-        { "role": "hq", "text": "HQ editors only" }
+        {
+          "role": "hq",
+          "text": "HQ editors only"
+        }
       ]
     }
   ],
-
   "transitions": [
     {
-      "id": "t-inbox-compose", "from": "inbox", "to": "compose",
-      "sourceHandle": "r", "targetHandle": "l",
-      "role": "writer", "style": "solid",
+      "id": "t-inbox-compose",
+      "from": "inbox",
+      "to": "compose",
+      "sourceHandle": "r",
+      "targetHandle": "l",
+      "role": "writer",
+      "style": "solid",
       "label": "create / claim",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-compose-grammarly", "from": "compose", "to": "grammarly",
-      "sourceHandle": "r", "targetHandle": "l",
-      "role": "writer", "style": "solid",
+      "id": "t-compose-grammarly",
+      "from": "compose",
+      "to": "grammarly",
+      "sourceHandle": "r",
+      "targetHandle": "l",
+      "role": "writer",
+      "style": "solid",
       "label": "mark complete",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     },
-
     {
-      "id": "t-grammarly-scheduled", "from": "grammarly", "to": "scheduled",
-      "sourceHandle": "l", "targetHandle": "l",
-      "role": "writer", "style": "dashed",
+      "id": "t-grammarly-scheduled",
+      "from": "grammarly",
+      "to": "scheduled",
+      "sourceHandle": "l",
+      "targetHandle": "l",
+      "role": "writer",
+      "style": "dashed",
       "label": "self-publish",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"],
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ],
       "gate": "selfPublish",
       "note": "Eligibility comes from the self-publish matrix, not the tier alone."
     },
     {
-      "id": "t-grammarly-readyCopy", "from": "grammarly", "to": "readyCopy",
-      "sourceHandle": "r", "targetHandle": "l",
-      "role": "writer", "style": "solid",
+      "id": "t-grammarly-readyCopy",
+      "from": "grammarly",
+      "to": "readyCopy",
+      "sourceHandle": "r",
+      "targetHandle": "l",
+      "role": "writer",
+      "style": "solid",
       "label": "submit for copy edit",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"],
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ],
       "gate": "!selfPublish"
     },
-
     {
-      "id": "t-readyCopy-inCopy", "from": "readyCopy", "to": "inCopy",
-      "sourceHandle": "r", "targetHandle": "l",
-      "role": "copyed", "style": "solid",
+      "id": "t-readyCopy-inCopy",
+      "from": "readyCopy",
+      "to": "inCopy",
+      "sourceHandle": "r",
+      "targetHandle": "l",
+      "role": "copyed",
+      "style": "solid",
       "label": "claim",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-inCopy-readyFinancial", "from": "inCopy", "to": "readyFinancial",
-      "sourceHandle": "b", "targetHandle": "t",
-      "role": "copyed", "style": "solid",
+      "id": "t-inCopy-readyFinancial",
+      "from": "inCopy",
+      "to": "readyFinancial",
+      "sourceHandle": "b",
+      "targetHandle": "t",
+      "role": "copyed",
+      "style": "solid",
       "label": "hand off to FFE queue",
-      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
+      "appliesTo": [
+        "swUser",
+        "midDTP",
+        "ultraDTP",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-inCopy-scheduled", "from": "inCopy", "to": "scheduled",
-      "sourceHandle": "b", "targetHandle": "r",
-      "role": "copyed", "style": "solid",
+      "id": "t-inCopy-scheduled",
+      "from": "inCopy",
+      "to": "scheduled",
+      "sourceHandle": "b",
+      "targetHandle": "r",
+      "role": "copyed",
+      "style": "solid",
       "label": "DTP only — copyed publishes / schedules",
-      "appliesTo": ["dtp"],
+      "appliesTo": [
+        "dtp"
+      ],
       "note": "DTP is the only tier that finishes at copy edit. Every other tier that enters review continues to financial edit."
     },
     {
-      "id": "t-inCopy-editsRequired", "from": "inCopy", "to": "editsRequired",
-      "sourceHandle": "t", "targetHandle": "t",
-      "role": "copyed", "style": "dashed",
+      "id": "t-inCopy-editsRequired",
+      "from": "inCopy",
+      "to": "editsRequired",
+      "sourceHandle": "t",
+      "targetHandle": "t",
+      "role": "copyed",
+      "style": "dashed",
       "label": "send back @ writer",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     },
-
     {
-      "id": "t-readyFinancial-inFinancial", "from": "readyFinancial", "to": "inFinancial",
-      "sourceHandle": "l", "targetHandle": "r",
-      "role": "ffe", "style": "solid",
+      "id": "t-readyFinancial-inFinancial",
+      "from": "readyFinancial",
+      "to": "inFinancial",
+      "sourceHandle": "l",
+      "targetHandle": "r",
+      "role": "ffe",
+      "style": "solid",
       "label": "claim",
-      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
+      "appliesTo": [
+        "swUser",
+        "midDTP",
+        "ultraDTP",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-inFinancial-editsRequired", "from": "inFinancial", "to": "editsRequired",
-      "sourceHandle": "l", "targetHandle": "r",
-      "role": "ffe", "style": "dashed",
+      "id": "t-inFinancial-editsRequired",
+      "from": "inFinancial",
+      "to": "editsRequired",
+      "sourceHandle": "l",
+      "targetHandle": "r",
+      "role": "ffe",
+      "style": "dashed",
       "label": "@ writer",
-      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
+      "appliesTo": [
+        "swUser",
+        "midDTP",
+        "ultraDTP",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-inFinancial-scheduled", "from": "inFinancial", "to": "scheduled",
-      "sourceHandle": "b", "targetHandle": "t",
-      "role": "ffe", "style": "solid",
+      "id": "t-inFinancial-scheduled",
+      "from": "inFinancial",
+      "to": "scheduled",
+      "sourceHandle": "b",
+      "targetHandle": "t",
+      "role": "ffe",
+      "style": "solid",
       "label": "FFE publishes / schedules from here",
-      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
+      "appliesTo": [
+        "swUser",
+        "midDTP",
+        "ultraDTP",
+        "aiAssist"
+      ]
     },
-
     {
-      "id": "t-editsRequired-editsDone", "from": "editsRequired", "to": "editsDone",
-      "sourceHandle": "l", "targetHandle": "r",
-      "role": "writer", "style": "dashed",
+      "id": "t-editsRequired-editsDone",
+      "from": "editsRequired",
+      "to": "editsDone",
+      "sourceHandle": "l",
+      "targetHandle": "r",
+      "role": "writer",
+      "style": "dashed",
       "label": "writer resubmits",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-editsDone-inFinancial", "from": "editsDone", "to": "inFinancial",
-      "sourceHandle": "b", "targetHandle": "b",
-      "role": "ffe", "style": "dashed",
+      "id": "t-editsDone-inFinancial",
+      "from": "editsDone",
+      "to": "inFinancial",
+      "sourceHandle": "b",
+      "targetHandle": "b",
+      "role": "ffe",
+      "style": "dashed",
       "label": "FFE resumes the article",
-      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
+      "appliesTo": [
+        "swUser",
+        "midDTP",
+        "ultraDTP",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-editsDone-scheduled-copyed", "from": "editsDone", "to": "scheduled",
-      "sourceHandle": "b", "targetHandle": "l",
-      "role": "copyed", "style": "solid",
+      "id": "t-editsDone-scheduled-copyed",
+      "from": "editsDone",
+      "to": "scheduled",
+      "sourceHandle": "b",
+      "targetHandle": "l",
+      "role": "copyed",
+      "style": "solid",
       "label": "Copyeds publish / schedule",
-      "appliesTo": ["dtp"]
+      "appliesTo": [
+        "dtp"
+      ]
     },
     {
-      "id": "t-editsDone-scheduled-ffe", "from": "editsDone", "to": "scheduled",
-      "sourceHandle": "b", "targetHandle": "t",
-      "role": "ffe", "style": "solid",
+      "id": "t-editsDone-scheduled-ffe",
+      "from": "editsDone",
+      "to": "scheduled",
+      "sourceHandle": "b",
+      "targetHandle": "t",
+      "role": "ffe",
+      "style": "solid",
       "label": "FFE publishes / schedules",
-      "appliesTo": ["swUser", "midDTP", "ultraDTP", "aiAssist"]
+      "appliesTo": [
+        "swUser",
+        "midDTP",
+        "ultraDTP",
+        "aiAssist"
+      ]
     },
-
     {
-      "id": "t-scheduled-published", "from": "scheduled", "to": "published",
-      "sourceHandle": "r", "targetHandle": "l",
-      "role": "system", "style": "solid",
+      "id": "t-scheduled-published",
+      "from": "scheduled",
+      "to": "published",
+      "sourceHandle": "r",
+      "targetHandle": "l",
+      "role": "system",
+      "style": "solid",
       "label": "automatic",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-published-unpublished", "from": "published", "to": "unpublished",
-      "sourceHandle": "r", "targetHandle": "l",
-      "role": "hq", "style": "dashed",
+      "id": "t-published-unpublished",
+      "from": "published",
+      "to": "unpublished",
+      "sourceHandle": "r",
+      "targetHandle": "l",
+      "role": "hq",
+      "style": "dashed",
       "label": "404 the page",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     },
     {
-      "id": "t-unpublished-published", "from": "unpublished", "to": "published",
-      "sourceHandle": "b", "targetHandle": "b",
-      "role": "hq", "style": "dashed",
+      "id": "t-unpublished-published",
+      "from": "unpublished",
+      "to": "published",
+      "sourceHandle": "b",
+      "targetHandle": "b",
+      "role": "hq",
+      "style": "dashed",
       "label": "republish after fixing",
-      "appliesTo": ["ultraDTP", "midDTP", "dtp", "swUser", "aiAssist"]
+      "appliesTo": [
+        "ultraDTP",
+        "midDTP",
+        "dtp",
+        "swUser",
+        "aiAssist"
+      ]
     }
   ],
-
   "reviewStages": [
-    { "id": "copyEdit",      "label": "Copy edit",      "short": "CE",  "state": "inCopy" },
-    { "id": "financialEdit", "label": "Financial edit", "short": "FFE", "state": "inFinancial" }
+    {
+      "id": "copyEdit",
+      "label": "Copy edit",
+      "short": "CE",
+      "state": "inCopy"
+    },
+    {
+      "id": "financialEdit",
+      "label": "Financial edit",
+      "short": "FFE",
+      "state": "inFinancial"
+    }
   ],
-
   "hqOverride": true,
-
   "notes": {
     "answered": [
       "States are skippable by role, and role determines the path.",
       "Writer tiers are SWUser, DTP, MidDTP, UltraDTP and AI-assist. All apply to every state up to Grammarly Edit Complete — no tier skips that state.",
       "At Grammarly Edit Complete, self-publishing is decided by the tier × article-type matrix — not by tier alone. The same writer's News brief and Shorty can take different paths.",
-      "Articles that cannot self-publish move on to the copy edit states, handled by copyeditors.",
+      "Access is three-way, not two. A tier either self-publishes a type, writes it and sends it to review, or has no access and never authors it at all. Only the middle case reaches the copy edit states.",
       "Editors per article depends on the tier, not the article type. SWUser always gets two — a copyeditor and a financial editor. DTP always gets one, the copyeditor. MidDTP, UltraDTP and AI-assist get none when the matrix lets them self-publish, and two when it doesn't.",
       "Most articles are published or scheduled straight out of In Financial Edit — the FFE finishes there. Edits Done is not a step on that path.",
       "In Copy Edit is a branch point, and DTP is the only exception. Every tier that enters copy edit goes on to financial edit — SWUser, MidDTP, UltraDTP and AI-assist alike. DTP is the one tier that finishes there, with the copyeditor publishing or scheduling straight from In Copy Edit.",
@@ -322,7 +759,7 @@
       "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
       "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build."
     ],
-    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor, and every tier except DTP goes on to a financial editor — so the FFE queue draws from SWUser, MidDTP, UltraDTP and AI-assist. New article types default to no self-publish rights for every tier, which means each new type adds work to both queues until someone grants it.",
+    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor, and every tier except DTP goes on to a financial editor — so the FFE queue draws from SWUser, MidDTP, UltraDTP and AI-assist. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
     "caveat": "HQ any-to-any and the copy-edit send-back both need non-sequential transitions, which Sanity does not support today."
   }
 }

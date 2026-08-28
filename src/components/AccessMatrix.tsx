@@ -1,12 +1,25 @@
 import { useState } from 'react'
-import type { WorkflowDoc } from '../data/schema'
-import type { LensSelection } from '../graph/derive'
+import type { AccessLevel, WorkflowDoc } from '../data/schema'
+import { accessLevel, type LensSelection } from '../graph/derive'
 
 interface Props {
   doc: WorkflowDoc
   selection: LensSelection
   onUpdate: (fn: (draft: WorkflowDoc) => WorkflowDoc) => void
   onSelect: (tierId: string, articleTypeId: string) => void
+}
+
+const CELL: Record<AccessLevel, { glyph: string; label: string }> = {
+  publish: { glyph: '✓', label: 'self-publishes' },
+  write: { glyph: 'W', label: 'writes it, goes through review' },
+  none: { glyph: '✗', label: 'no access' },
+}
+
+/** Click cycles publish → write → none → publish. */
+const NEXT: Record<AccessLevel, AccessLevel> = {
+  publish: 'write',
+  write: 'none',
+  none: 'publish',
 }
 
 const slug = (label: string) =>
@@ -17,26 +30,27 @@ const slug = (label: string) =>
     .replace(/^(.)/, (c) => c.toLowerCase())
 
 /**
- * Who may self-publish what.
+ * Who may write what, and who may skip review.
  *
- * This grid — not the writer tier alone — decides the fork at Grammarly Edit
- * Complete, so editing a cell immediately re-derives the active lens. Sitting
- * it next to the graph is the point: you can watch a path change as you flip
- * a permission.
+ * Three states per cell rather than two: a tier can self-publish a type, write
+ * it and send it to review, or have no access at all. That last one matters —
+ * "can't self-publish" and "never authors this" produce very different
+ * diagrams, and collapsing them hid the difference.
  *
- * New article types land denied for every tier, matching the "New Type"
- * column in the source permissions table.
+ * Stored as publish/write id lists per tier, so anything unlisted is no
+ * access. New article types are therefore denied to everyone until granted.
  */
-export function SelfPublishMatrix({ doc, selection, onUpdate, onSelect }: Props) {
+export function AccessMatrix({ doc, selection, onUpdate, onSelect }: Props) {
   const [newType, setNewType] = useState('')
 
-  const toggle = (tierId: string, typeId: string) => {
+  const setLevel = (tierId: string, typeId: string, level: AccessLevel) => {
     onUpdate((d) => {
-      const current = d.selfPublish[tierId] ?? []
-      const next = current.includes(typeId)
-        ? current.filter((t) => t !== typeId)
-        : [...current, typeId]
-      return { ...d, selfPublish: { ...d.selfPublish, [tierId]: next } }
+      const entry = d.access[tierId] ?? { publish: [], write: [] }
+      const publish = entry.publish.filter((t) => t !== typeId)
+      const write = entry.write.filter((t) => t !== typeId)
+      if (level === 'publish') publish.push(typeId)
+      if (level === 'write') write.push(typeId)
+      return { ...d, access: { ...d.access, [tierId]: { publish, write } } }
     })
   }
 
@@ -50,8 +64,7 @@ export function SelfPublishMatrix({ doc, selection, onUpdate, onSelect }: Props)
       while (doc.articleTypes.some((t) => t.id === `${id}${n}`)) n++
       id = `${id}${n}`
     }
-    // Deliberately does not touch selfPublish — an absent id reads as denied,
-    // which is the default-deny rule.
+    // Touches no access lists — unlisted reads as no access, which is the rule.
     onUpdate((d) => ({ ...d, articleTypes: [...d.articleTypes, { id, label }] }))
     setNewType('')
   }
@@ -60,10 +73,13 @@ export function SelfPublishMatrix({ doc, selection, onUpdate, onSelect }: Props)
     onUpdate((d) => ({
       ...d,
       articleTypes: d.articleTypes.filter((t) => t.id !== typeId),
-      selfPublish: Object.fromEntries(
-        Object.entries(d.selfPublish).map(([tier, types]) => [
+      access: Object.fromEntries(
+        Object.entries(d.access).map(([tier, entry]) => [
           tier,
-          types.filter((t) => t !== typeId),
+          {
+            publish: entry.publish.filter((t) => t !== typeId),
+            write: entry.write.filter((t) => t !== typeId),
+          },
         ]),
       ),
     }))
@@ -73,12 +89,11 @@ export function SelfPublishMatrix({ doc, selection, onUpdate, onSelect }: Props)
     <section className="panel matrix-panel" aria-labelledby="matrix-heading">
       <div className="panel__head">
         <h2 className="panel__title" id="matrix-heading">
-          Self-publish matrix
+          Access matrix
         </h2>
         <p className="panel__sub">
-          Which writer tiers may publish which article types straight from Grammarly Edit
-          Complete, skipping copy and financial edit. Everything else routes to a copyeditor.
-          Click a cell to change it — the diagram re-derives immediately.
+          What each writer tier may do with each article type. Click a cell to cycle it — the
+          diagram re-derives immediately. Double-click to trace that combination.
         </p>
       </div>
 
@@ -120,19 +135,19 @@ export function SelfPublishMatrix({ doc, selection, onUpdate, onSelect }: Props)
                   )}
                 </th>
                 {doc.articleTypes.map((type) => {
-                  const allowed = (doc.selfPublish[tier.id] ?? []).includes(type.id)
+                  const level = accessLevel(doc, tier.id, type.id)
                   return (
                     <td key={type.id}>
                       <button
                         type="button"
                         className="matrix__cell"
-                        data-allowed={allowed || undefined}
-                        aria-pressed={allowed}
-                        aria-label={`${tier.label} self-publish ${type.label}: ${allowed ? 'allowed' : 'not allowed'}`}
-                        onClick={() => toggle(tier.id, type.id)}
+                        data-level={level}
+                        aria-label={`${tier.label} / ${type.label}: ${CELL[level].label}. Activate to change.`}
+                        title={CELL[level].label}
+                        onClick={() => setLevel(tier.id, type.id, NEXT[level])}
                         onDoubleClick={() => onSelect(tier.id, type.id)}
                       >
-                        {allowed ? '✓' : '✗'}
+                        {CELL[level].glyph}
                       </button>
                     </td>
                   )
@@ -142,6 +157,23 @@ export function SelfPublishMatrix({ doc, selection, onUpdate, onSelect }: Props)
           </tbody>
         </table>
       </div>
+
+      <p className="matrix__key">
+        <span className="matrix__cell matrix__cell--inline" data-level="publish">
+          ✓
+        </span>{' '}
+        self-publishes, skips review
+        <span className="matrix__keysep">·</span>
+        <span className="matrix__cell matrix__cell--inline" data-level="write">
+          W
+        </span>{' '}
+        writes it, goes through review
+        <span className="matrix__keysep">·</span>
+        <span className="matrix__cell matrix__cell--inline" data-level="none">
+          ✗
+        </span>{' '}
+        no access — that tier never authors this type
+      </p>
 
       <form className="matrix__add" onSubmit={addType}>
         <label htmlFor="new-article-type">New article type</label>
@@ -155,7 +187,7 @@ export function SelfPublishMatrix({ doc, selection, onUpdate, onSelect }: Props)
         <button type="submit" className="btn" disabled={!newType.trim()}>
           Add
         </button>
-        <span className="matrix__hint">Added denied for every tier. Double-click a cell to view that path.</span>
+        <span className="matrix__hint">Added with no access for every tier, until granted.</span>
       </form>
     </section>
   )

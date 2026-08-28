@@ -27,8 +27,17 @@ That same writer's Shorty goes through copy edit. Both facts live in one diagram
 is visible when every edge is drawn at once.
 
 So the fork at **Grammarly Edit Complete is not decided by writer tier** — it's decided by the
-tier × article-type **self-publish matrix**, editable in the page. Flip a cell and the active
-lens re-derives immediately.
+tier × article-type **access matrix**, editable in the page. Each cell is three-way:
+
+| | |
+| --- | --- |
+| ✓ | self-publishes it, skipping review |
+| W | writes it, and it goes through review |
+| ✗ | no access — that tier never authors this type |
+
+Click a cell to cycle it and the active lens re-derives immediately. The ✗/W distinction
+matters: "can't self-publish" and "never writes this" produce very different diagrams, and a
+two-state matrix hid the difference. A new article type starts ✗ for everyone.
 
 ### Three lenses, composable
 

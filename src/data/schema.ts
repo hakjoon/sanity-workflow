@@ -6,7 +6,7 @@
  * unreadable version. It is not a general-purpose schema library.
  */
 
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 
 export type RoleId = 'writer' | 'copyed' | 'ffe' | 'hq' | 'system'
 
@@ -28,6 +28,24 @@ export const BADGES: Record<BadgeId, string> = {
   tbd: 'Claim model TBD',
   access: 'Access TBD',
   branch: 'Branch',
+}
+
+/**
+ * What a writer tier may do with an article type.
+ *
+ *   publish — self-publishes it, skipping review entirely
+ *   write   — writes it, but it must go through review
+ *   none    — no access; that tier never authors this type
+ *
+ * Stored as two id lists per tier rather than a full grid, so anything
+ * unlisted is `none` by construction — new article types are denied to
+ * everyone until someone grants them.
+ */
+export type AccessLevel = 'publish' | 'write' | 'none'
+
+export interface TierAccess {
+  publish: string[]
+  write: string[]
 }
 
 export type HandleId = 't' | 'r' | 'b' | 'l'
@@ -102,8 +120,8 @@ export interface WorkflowDoc {
   version: number
   tiers: Tier[]
   articleTypes: ArticleType[]
-  /** tier id -> article type ids that tier may self-publish. */
-  selfPublish: Record<string, string[]>
+  /** tier id -> what that tier may do with each article type. */
+  access: Record<string, TierAccess>
   states: WorkflowState[]
   transitions: Transition[]
   reviewStages: ReviewStage[]
@@ -170,28 +188,40 @@ export function parseWorkflow(input: unknown): ParseResult {
     })
   }
 
-  // ── Self-publish matrix ────────────────────────────────────────────
-  if (!isObj(input.selfPublish)) {
-    errors.push('"selfPublish" must be an object keyed by tier id.')
+  // ── Access matrix ──────────────────────────────────────────────────
+  if (!isObj(input.access)) {
+    errors.push('"access" must be an object keyed by tier id.')
   } else {
-    for (const [tierId, types] of Object.entries(input.selfPublish)) {
+    for (const [tierId, entry] of Object.entries(input.access)) {
       if (!tierIds.has(tierId)) {
-        errors.push(`selfPublish: "${tierId}" is not a known tier.`)
+        errors.push(`access: "${tierId}" is not a known tier.`)
         continue
       }
-      if (!isStrArray(types)) {
-        errors.push(`selfPublish["${tierId}"]: must be an array of article type ids.`)
+      if (!isObj(entry)) {
+        errors.push(`access["${tierId}"]: must be an object with "publish" and "write" arrays.`)
         continue
       }
-      for (const ty of types) {
-        if (!typeIds.has(ty)) {
-          errors.push(`selfPublish["${tierId}"]: "${ty}" is not a known article type.`)
+      const seen = new Set<string>()
+      for (const level of ['publish', 'write'] as const) {
+        const list = entry[level]
+        if (!isStrArray(list)) {
+          errors.push(`access["${tierId}"].${level}: must be an array of article type ids.`)
+          continue
+        }
+        for (const ty of list) {
+          if (!typeIds.has(ty)) {
+            errors.push(`access["${tierId}"].${level}: "${ty}" is not a known article type.`)
+          }
+          if (seen.has(ty)) {
+            errors.push(`access["${tierId}"]: "${ty}" appears in both publish and write.`)
+          }
+          seen.add(ty)
         }
       }
     }
     for (const tierId of tierIds) {
-      if (!(tierId in input.selfPublish)) {
-        errors.push(`selfPublish: missing entry for tier "${tierId}" (use [] for none).`)
+      if (!(tierId in input.access)) {
+        errors.push(`access: missing entry for tier "${tierId}".`)
       }
     }
   }

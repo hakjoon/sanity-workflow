@@ -9,7 +9,7 @@ import { EMPTY_LENS, LensBar } from './components/LensBar'
 import { Legend } from './components/Legend'
 import { NotesPanel } from './components/NotesPanel'
 import { ReviewPathPanel } from './components/ReviewPathPanel'
-import { SelfPublishMatrix } from './components/SelfPublishMatrix'
+import { AccessMatrix } from './components/AccessMatrix'
 import type { WorkflowDoc } from './data/schema'
 
 export default function App() {
@@ -188,7 +188,7 @@ export default function App() {
         onSelect={(tierId, articleTypeId) => setLens((l) => ({ ...l, tierId, articleTypeId }))}
       />
 
-      <SelfPublishMatrix
+      <AccessMatrix
         doc={doc}
         selection={lens}
         onUpdate={update}

@@ -8,7 +8,7 @@
  * different paths out of the same state.
  */
 
-import type { RoleId, Transition, WorkflowDoc } from '../data/schema'
+import type { AccessLevel, RoleId, Transition, WorkflowDoc } from '../data/schema'
 
 export interface LensSelection {
   tierId: string | null
@@ -38,6 +38,8 @@ export interface DerivedPath {
   selfPublishes: boolean
   /** Which self-publish outcomes are in play across the selection. */
   reach: SelfPublishReach
+  /** True when the selection describes an article nobody writes. */
+  noAccess: boolean
   /** True when neither a tier nor a type is selected. */
   unfiltered: boolean
 }
@@ -47,13 +49,32 @@ export function entryStateId(doc: WorkflowDoc): string | null {
   return doc.states[0]?.id ?? null
 }
 
+/** What the tier may do with the type. Anything unlisted is no access. */
+export function accessLevel(
+  doc: WorkflowDoc,
+  tierId: string,
+  articleTypeId: string,
+): AccessLevel {
+  const entry = doc.access[tierId]
+  if (!entry) return 'none'
+  if (entry.publish.includes(articleTypeId)) return 'publish'
+  if (entry.write.includes(articleTypeId)) return 'write'
+  return 'none'
+}
+
 export function canSelfPublish(
   doc: WorkflowDoc,
   tierId: string | null,
   articleTypeId: string | null,
 ): boolean {
   if (!tierId || !articleTypeId) return false
-  return (doc.selfPublish[tierId] ?? []).includes(articleTypeId)
+  return accessLevel(doc, tierId, articleTypeId) === 'publish'
+}
+
+/** Article types a tier can author at all, at either access level. */
+export function writableTypes(doc: WorkflowDoc, tierId: string): string[] {
+  const entry = doc.access[tierId]
+  return entry ? [...entry.publish, ...entry.write] : []
 }
 
 /** Whether self-publish is possible / impossible across a set of combinations. */
@@ -75,17 +96,15 @@ function selfPublishReach(
   tierIds: string[],
   typeIds: string[],
 ): SelfPublishReach {
-  // A document with no article types can't answer the question either way;
-  // treat both branches as possible rather than silently dropping them.
-  if (typeIds.length === 0) return { any: true, none: true }
-
   let any = false
   let none = false
   for (const tier of tierIds) {
-    const allowed = doc.selfPublish[tier] ?? []
     for (const type of typeIds) {
-      if (allowed.includes(type)) any = true
-      else none = true
+      // Combinations the tier has no access to aren't articles that exist,
+      // so they can't make either branch live.
+      const level = accessLevel(doc, tier, type)
+      if (level === 'publish') any = true
+      else if (level === 'write') none = true
       if (any && none) return { any, none }
     }
   }
@@ -125,9 +144,34 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
   // "All tiers" / "All types" widen the candidate set rather than switching
   // the lens off. Picking MidDTP alone still has to drop the SWUser-only
   // financial-edit branch — otherwise choosing a tier appears to do nothing.
-  const tierIds = sel.tierId ? [sel.tierId] : doc.tiers.map((t) => t.id)
-  const typeIds = sel.articleTypeId ? [sel.articleTypeId] : doc.articleTypes.map((t) => t.id)
+  let tierIds = sel.tierId ? [sel.tierId] : doc.tiers.map((t) => t.id)
+  let typeIds = sel.articleTypeId ? [sel.articleTypeId] : doc.articleTypes.map((t) => t.id)
   const unfiltered = !sel.tierId && !sel.articleTypeId
+
+  // Narrow each axis to combinations that actually exist. Picking a type only
+  // should show the tiers that write it, not every tier; picking a tier only
+  // should ignore types it has no access to.
+  if (sel.articleTypeId && !sel.tierId) {
+    tierIds = tierIds.filter((t) => accessLevel(doc, t, sel.articleTypeId as string) !== 'none')
+  }
+  if (sel.tierId && !sel.articleTypeId) {
+    typeIds = typeIds.filter((t) => accessLevel(doc, sel.tierId as string, t) !== 'none')
+  }
+
+  // A tier that cannot author this type has no path at all.
+  const noAccess =
+    !!sel.tierId && !!sel.articleTypeId && accessLevel(doc, sel.tierId, sel.articleTypeId) === 'none'
+  if (noAccess || tierIds.length === 0 || typeIds.length === 0) {
+    return {
+      reachableStates: new Set(),
+      activeTransitions: new Set(),
+      viewerTransitions: new Set(),
+      selfPublishes: false,
+      reach: { any: false, none: false },
+      noAccess: true,
+      unfiltered: false,
+    }
+  }
 
   const reach = selfPublishReach(doc, tierIds, typeIds)
   const tierSet = new Set(tierIds)
@@ -165,6 +209,7 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
     viewerTransitions: viewerSubset(doc, activeTransitions, sel.viewerRoles),
     selfPublishes: canSelfPublish(doc, sel.tierId, sel.articleTypeId),
     reach,
+    noAccess: false,
     unfiltered,
   }
 }
@@ -196,6 +241,12 @@ export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: Derived
   const tier = doc.tiers.find((t) => t.id === sel.tierId)
   const type = doc.articleTypes.find((t) => t.id === sel.articleTypeId)
 
+  if (path.noAccess) {
+    if (tier && type) return `${tier.label} writers have no access to ${type.label} — that article doesn't exist.`
+    if (type) return `No tier can write ${type.label} yet — grant write or self-publish access below.`
+    return `${tier?.label ?? 'This tier'} has no article types yet — grant access below.`
+  }
+
   // Both chosen — one definite answer.
   if (tier && type) {
     const verdict = path.selfPublishes
@@ -207,23 +258,26 @@ export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: Derived
 
   // Tier only — the union across every article type that tier writes.
   if (tier) {
-    const allowed = (doc.selfPublish[tier.id] ?? []).length
-    const total = doc.articleTypes.length
+    const entry = doc.access[tier.id]
+    const pub = entry?.publish.length ?? 0
+    const wr = entry?.write.length ?? 0
     const split =
-      allowed === 0
-        ? 'no type self-publishes, so everything routes through copy edit'
-        : allowed === total
-          ? 'every type self-publishes'
-          : `${allowed} of ${total} types self-publish, the rest route through copy edit`
-    return `Everywhere a ${tier.label} article can go — ${of}. Pick a type to narrow further: ${split}.`
+      wr === 0
+        ? `all ${pub} types it writes self-publish, so it never enters review`
+        : pub === 0
+          ? `none of its ${wr} types self-publish, so everything goes to review`
+          : `${pub} of its ${pub + wr} types self-publish, the other ${wr} go to review`
+    return `Everywhere a ${tier.label} article can go — ${of}. ${split[0].toUpperCase()}${split.slice(1)}.`
   }
 
   // Type only — the union across every tier.
   const article = /^[aeiou]/i.test(type?.label ?? '') ? 'An' : 'A'
-  const canSelf = doc.tiers.filter((t) => (doc.selfPublish[t.id] ?? []).includes(type?.id ?? ''))
+  const typeId = type?.id ?? ''
+  const writers = doc.tiers.filter((t) => accessLevel(doc, t.id, typeId) !== 'none')
+  const selfPub = doc.tiers.filter((t) => accessLevel(doc, t.id, typeId) === 'publish')
   const who =
-    canSelf.length === 0
-      ? 'no tier can self-publish it'
-      : `${canSelf.map((t) => t.label).join(', ')} can self-publish it`
-  return `${article} ${type?.label ?? '—'} across all tiers — ${of}. Pick a tier to narrow further: ${who}.`
+    selfPub.length === 0
+      ? 'none of them self-publish it'
+      : `${selfPub.map((t) => t.label).join(' and ')} self-publish it`
+  return `${article} ${type?.label ?? '—'} — ${of}. Written by ${writers.map((t) => t.label).join(', ')}; ${who}.`
 }

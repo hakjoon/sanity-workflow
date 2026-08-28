@@ -29,7 +29,7 @@ interface Case {
 
 const CASES: Case[] = [
   { tier: 'ultraDTP', type: 'shorty', states: 6, excludes: ['readyCopy', 'inCopy', 'inFinancial'] },
-  { tier: 'ultraDTP', type: 'aiAssist', states: 12 },
+  { tier: 'ultraDTP', type: 'aiAssist', states: 0 },   // no access
   { tier: 'midDTP', type: 'newsBrief', states: 6, excludes: ['readyCopy', 'inCopy', 'inFinancial'] },
   { tier: 'midDTP', type: 'shorty', states: 12 },
   { tier: 'dtp', type: 'shorty', states: 10, excludes: ['readyFinancial', 'inFinancial'] },
@@ -84,20 +84,31 @@ withNewType.articleTypes.push({ id: 'brandNew', label: 'Brand New' })
 let denyFailed = false
 for (const tier of withNewType.tiers) {
   const p = derivePath(withNewType, { tierId: tier.id, articleTypeId: 'brandNew', viewerRoles: [], hideUnreachable: false })
-  if (p.selfPublishes || !p.reachableStates.has('readyCopy')) {
+  if (!p.noAccess || p.reachableStates.size !== 0) {
     denyFailed = true
-    console.log(`✗ default-deny: ${tier.id} did not route a new type through copy edit`)
+    console.log(`✗ default-deny: ${tier.id} has access to a brand-new type`)
   }
 }
-if (!denyFailed) console.log(`✓ ${'default-deny (new type)'.padEnd(24)} all 5 tiers route to copy edit`)
+if (!denyFailed) console.log(`✓ ${'default-deny (new type)'.padEnd(24)} no access for all 5 tiers until granted`)
 else failed++
+
+// No-access selections describe an article that doesn't exist.
+const noAcc = derivePath(doc, { tierId: 'swUser', articleTypeId: 'aiAssist', viewerRoles: [], hideUnreachable: false })
+if (noAcc.noAccess && noAcc.reachableStates.size === 0) console.log(`✓ ${'no-access selection'.padEnd(24)} SWUser + AI-Assist yields no path`)
+else { failed++; console.log(`✗ SWUser + AI-Assist should have no path, got ${noAcc.reachableStates.size} states`) }
+
+// Picking a type alone narrows to the tiers that actually write it.
+const aiOnly = derivePath(doc, { tierId: null, articleTypeId: 'aiAssist', viewerRoles: [], hideUnreachable: false })
+if (aiOnly.reachableStates.size === 6 && !aiOnly.reachableStates.has('inCopy')) {
+  console.log(`✓ ${'AI-Assist across tiers'.padEnd(24)} only the AI-assist tier writes it — self-publish path`)
+} else { failed++; console.log(`✗ AI-Assist across tiers: expected 6 self-publish states, got ${aiOnly.reachableStates.size}`) }
 
 // Tier alone, "All types": the union across every type that tier writes.
 // This is the case that used to fall through to "show everything".
 interface TierCase { tier: string; states: number; excludes?: string[] }
 const TIER_ONLY: TierCase[] = [
   { tier: 'midDTP',   states: 12 },
-  { tier: 'ultraDTP', states: 12 },
+  { tier: 'ultraDTP', states: 6, excludes: ['readyCopy', 'inCopy', 'readyFinancial', 'inFinancial'] },
   { tier: 'dtp',      states: 10, excludes: ['readyFinancial', 'inFinancial'] },
   { tier: 'aiAssist', states: 12 },
   { tier: 'swUser',   states: 12 },
@@ -140,13 +151,17 @@ const REVIEW: Array<[string, string[]]> = [
   ['swUser',   ['inCopy', 'inFinancial']],
   ['dtp',      ['inCopy']],
   ['midDTP',   ['inCopy', 'inFinancial']],
-  ['ultraDTP', ['inCopy', 'inFinancial']],
+  ['ultraDTP', []],   // every type it writes self-publishes; AI-Assist is no-access
   ['aiAssist', ['inCopy', 'inFinancial']],
 ]
 for (const [tier, expectedStages] of REVIEW) {
-  const allowed = doc.selfPublish[tier] ?? []
-  const sample = doc.articleTypes.find((t) => !allowed.includes(t.id))
-  if (!sample) { failed++; console.log(`✗ ${tier}: no non-self-publish type to test`); continue }
+  const sample = doc.articleTypes.find((t) => (doc.access[tier]?.write ?? []).includes(t.id))
+  if (!sample) {
+    const ok = expectedStages.length === 0
+    if (ok) console.log(`✓ ${(tier + ' review stages').padEnd(24)} never enters review`)
+    else { failed++; console.log(`✗ ${tier}: expected ${expectedStages.join(' → ')} but it writes nothing that needs review`) }
+    continue
+  }
   const p = derivePath(doc, { tierId: tier, articleTypeId: sample.id, viewerRoles: [], hideUnreachable: false })
   const got = doc.reviewStages.filter((r) => p.reachableStates.has(r.state)).map((r) => r.state)
   const ok = got.length === expectedStages.length && expectedStages.every((x) => got.includes(x))
