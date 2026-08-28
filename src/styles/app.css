@@ -652,3 +652,25 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   border-color: var(--mf-primary-100);
   color: var(--mf-primary-0);
 }
+
+/* ── Editable labels ────────────────────────────────────────────────── */
+.editable-label {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  padding: 1px var(--space-1);
+  min-width: 4ch;
+  max-width: 22ch;
+  transition: background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.editable-label:hover { border-color: var(--mf-primary-24); background: var(--mf-primary-0); }
+.editable-label:focus {
+  outline: none;
+  border-color: var(--mf-primary-100);
+  background: var(--mf-primary-0);
+  color: var(--mf-text-100);
+}
+.matrix__colhead .editable-label { text-align: center; }

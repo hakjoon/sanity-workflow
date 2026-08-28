@@ -265,7 +265,7 @@ function viewerSubset(
  */
 export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: DerivedPath): string {
   if (path.unfiltered) {
-    return 'Showing every state and transition. Pick a writer tier or an article type to narrow it.'
+    return 'Showing every state and transition. Pick a group or an article type to narrow it.'
   }
 
   const n = path.reachableStates.size
@@ -284,12 +284,12 @@ export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: Derived
   if (path.noAccess) {
     for (const m of pinnedOn) {
       if (tier && !m.appliesTo.includes(tier.id)) {
-        return `${tier.label} writers can't carry ${m.label}, so that combination doesn't exist.`
+        return `${tier.label} can't carry ${m.label}, so that combination doesn't exist.`
       }
     }
-    if (tier && type) return `${tier.label} writers have no access to ${type.label} — that article doesn't exist.`
-    if (type) return `No tier can write ${type.label} yet — grant write or self-publish access below.`
-    return `${tier?.label ?? 'This tier'} has no article types yet — grant access below.`
+    if (tier && type) return `${tier.label} has no access to ${type.label} — that article doesn't exist.`
+    if (type) return `No group can write ${type.label} yet — grant write or self-publish access below.`
+    return `${tier?.label ?? 'This group'} has no article types yet — grant access below.`
   }
 
   // Both chosen — one definite answer.
@@ -298,7 +298,7 @@ export function describeLens(doc: WorkflowDoc, sel: LensSelection, path: Derived
       ? 'self-publishes from Grammarly Edit Complete'
       : 'routes through copy edit'
     const article = /^[aeiou]/i.test(type.label) ? 'An' : 'A'
-    return `${article} ${type.label} by a ${tier.label}${modSuffix} writer ${verdict} — ${of}.`
+    return `${article} ${type.label} by ${tier.label}${modSuffix} ${verdict} — ${of}.`
   }
 
   // Tier only — the union across every article type that tier writes.

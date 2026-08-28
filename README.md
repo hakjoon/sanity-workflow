@@ -36,7 +36,8 @@ tier × article-type **access matrix**, editable in the page. Each cell is three
 | ✗ | no access — that tier never authors this type |
 
 Click a cell to cycle it and the active lens re-derives immediately. Groups and article types are
-both addable and removable from the matrix, and a further column per modifier controls which
+addable, removable and renameable from the matrix — renaming changes only the display label, so
+every access rule, transition and modifier stays attached — and a further column per modifier controls which
 groups can carry it. The ✗/W distinction
 matters: "can't self-publish" and "never writes this" produce very different diagrams, and a
 two-state matrix hid the difference. A new article type starts ✗ for everyone.

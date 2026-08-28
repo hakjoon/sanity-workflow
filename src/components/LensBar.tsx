@@ -53,7 +53,7 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
             value={selection.tierId ?? ''}
             onChange={(e) => set({ tierId: e.target.value || null })}
           >
-            <option value="">All tiers</option>
+            <option value="">All groups</option>
             {doc.tiers.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.label}

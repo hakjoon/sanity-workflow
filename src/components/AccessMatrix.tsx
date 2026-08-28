@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { AccessLevel, WorkflowDoc } from '../data/schema'
 import { accessLevel, type LensSelection } from '../graph/derive'
+import { EditableLabel } from './EditableLabel'
 
 interface Props {
   doc: WorkflowDoc
@@ -63,6 +64,23 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
       if (level === 'write') write.push(typeId)
       return { ...d, access: { ...d.access, [tierId]: { publish, write } } }
     })
+  }
+
+  // Only the label changes. Ids stay fixed, because access lists, transitions
+  // and modifier membership all reference them — renaming an id would orphan
+  // every one of those.
+  const renameGroup = (tierId: string, label: string) => {
+    onUpdate((d) => ({
+      ...d,
+      tiers: d.tiers.map((t) => (t.id === tierId ? { ...t, label } : t)),
+    }))
+  }
+
+  const renameType = (typeId: string, label: string) => {
+    onUpdate((d) => ({
+      ...d,
+      articleTypes: d.articleTypes.map((t) => (t.id === typeId ? { ...t, label } : t)),
+    }))
   }
 
   const addType = (e: React.FormEvent) => {
@@ -159,7 +177,8 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
         </h2>
         <p className="panel__sub">
           What each writer group may do with each article type. Click a cell to cycle it — the
-          diagram re-derives immediately. Double-click to trace that combination.
+          diagram re-derives immediately. Double-click to trace that combination. Group and type
+          names are editable in place; renaming keeps every existing rule attached.
         </p>
       </div>
 
@@ -177,7 +196,11 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
                   className="matrix__colhead"
                   data-active={selection.articleTypeId === t.id || undefined}
                 >
-                  <span>{t.label}</span>
+                  <EditableLabel
+                    value={t.label}
+                    ariaLabel={`Rename article type ${t.label}`}
+                    onCommit={(label) => renameType(t.id, label)}
+                  />
                   <button
                     type="button"
                     className="matrix__remove"
@@ -195,7 +218,11 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
             {doc.tiers.map((tier) => (
               <tr key={tier.id} data-active={selection.tierId === tier.id || undefined}>
                 <th scope="row" className="matrix__rowhead">
-                  {tier.label}
+                  <EditableLabel
+                    value={tier.label}
+                    ariaLabel={`Rename group ${tier.label}`}
+                    onCommit={(label) => renameGroup(tier.id, label)}
+                  />
                   <button
                     type="button"
                     className="matrix__remove"
