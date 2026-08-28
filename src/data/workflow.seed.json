@@ -338,7 +338,7 @@
       "actors": [
         {
           "role": "writer",
-          "text": "Everything in review except DTP — "
+          "text": "Standard writers in review — "
         },
         {
           "role": "ffe",
@@ -792,12 +792,12 @@
   "notes": {
     "answered": [
       "States are skippable by role, and role determines the path.",
-      "Writer tiers are UltraDTP, MidDTP, SWUser and AI-assist. All apply to every state up to Grammarly Edit Complete — no tier skips that state. 1Editor is not a tier: it is a property a writer carries on top of one, so someone can be MidDTP and 1Editor, or SWUser and 1Editor.",
+      "Every writer group applies to every state up to Grammarly Edit Complete — no group skips it. 1Editor is not a group: it is a property a writer carries on top of one, so someone can be PubProjects and 1Editor, or PubZero and 1Editor.",
       "At Grammarly Edit Complete, self-publishing is decided by the tier × article-type matrix — not by tier alone. The same writer's News brief and Shorty can take different paths.",
       "Access is three-way, not two. A tier either self-publishes a type, writes it and sends it to review, or has no access and never authors it at all. Only the middle case reaches the copy edit states.",
       "Editors per article comes from three things: the tier's access to the type, whether the writer carries 1Editor, and nothing else. Anything self-published gets none. Anything else gets a copyeditor, then a financial editor — unless the writer is 1Editor, in which case the copyeditor finishes it.",
       "Most articles are published or scheduled straight out of In Financial Edit — the FFE finishes there. Edits Done is not a step on that path.",
-      "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the copyeditor from In Copy Edit. UltraDTP, MidDTP and SWUser can carry 1Editor; AI-assist cannot.",
+      "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the copyeditor from In Copy Edit. Which groups can carry 1Editor is set in the editors panel below, not fixed here.",
       "No tier skips copy edit but still needs FFE — financial edit always follows copy edit.",
       "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
       "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
