@@ -138,6 +138,7 @@
       "label": "1Editor",
       "description": "Review stops at copy edit — the copyeditor publishes, no financial editor.",
       "appliesTo": [
+        "pubAll",
         "ultraDTP",
         "midDTP",
         "swUser"
