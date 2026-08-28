@@ -1,29 +1,40 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Props {
   value: string
   /** Called on blur or Enter, never per keystroke. */
   onCommit: (next: string) => void
   ariaLabel: string
-  className?: string
 }
 
 /**
- * A label you can type over in place.
+ * A label you can click to rename.
  *
- * Commits on blur or Enter rather than on every keystroke, so a rename is one
- * undo step and one localStorage write instead of one per character. Escape
- * abandons the edit. Blanking the field restores the previous value — an
- * unnamed group or article type would be unreadable in every other panel, and
- * silently keeping "" is worse than refusing it.
+ * Renders as plain text until activated, and only then swaps to an input.
+ * That matters for the matrix headers: an <input> can't wrap, so rendering one
+ * permanently forced every column as wide as its longest label — "AI-Assist
+ * (all types)" alone pushed a column to 200px. As text it wraps and the column
+ * stays checkbox-width.
+ *
+ * Commits on blur or Enter rather than per keystroke, so a rename is one undo
+ * step and one write instead of one per character. Escape abandons. Blanking
+ * restores the previous value — an unnamed group would be unreadable in every
+ * other panel, and silently keeping "" is worse than refusing it.
  */
-export function EditableLabel({ value, onCommit, ariaLabel, className }: Props) {
+export function EditableLabel({ value, onCommit, ariaLabel }: Props) {
+  const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(value)
+  const input = useRef<HTMLInputElement>(null)
 
-  // Follow external changes — import, reset to seed, undo elsewhere.
+  // Follow external changes — import, reset to seed, a rename elsewhere.
   useEffect(() => setDraft(value), [value])
 
+  useEffect(() => {
+    if (editing) input.current?.select()
+  }, [editing])
+
   const commit = () => {
+    setEditing(false)
     const next = draft.trim()
     if (!next) {
       setDraft(value)
@@ -32,26 +43,42 @@ export function EditableLabel({ value, onCommit, ariaLabel, className }: Props) 
     if (next !== value) onCommit(next)
   }
 
+  if (!editing) {
+    return (
+      <button
+        type="button"
+        className="editable-label"
+        aria-label={ariaLabel}
+        title="Click to rename"
+        onClick={(e) => {
+          e.stopPropagation()
+          setEditing(true)
+        }}
+      >
+        {value}
+      </button>
+    )
+  }
+
   return (
     <input
-      className={`editable-label${className ? ` ${className}` : ''}`}
+      ref={input}
+      className="editable-label editable-label--editing"
       value={draft}
       aria-label={ariaLabel}
-      size={Math.max(draft.length, 4)}
       onChange={(e) => setDraft(e.target.value)}
       onBlur={commit}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
           e.preventDefault()
-          e.currentTarget.blur()
+          commit()
         } else if (e.key === 'Escape') {
           setDraft(value)
-          e.currentTarget.blur()
+          setEditing(false)
         }
       }}
-      // Clicking a header shouldn't also trigger the row's lens selection.
       onClick={(e) => e.stopPropagation()}
-      onDoubleClick={(e) => e.stopPropagation()}
+      autoFocus
     />
   )
 }
