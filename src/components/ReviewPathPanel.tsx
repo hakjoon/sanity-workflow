@@ -5,6 +5,7 @@ import { derivePath, type LensSelection } from '../graph/derive'
 interface Props {
   doc: WorkflowDoc
   selection: LensSelection
+  onUpdate: (fn: (draft: WorkflowDoc) => WorkflowDoc) => void
   onSelect: (tierId: string, articleTypeId: string | null) => void
 }
 
@@ -86,27 +87,46 @@ function editorsLabel(row: TierRow): string {
   return `${row.minEditors} or ${row.maxEditors}`
 }
 
-export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
+export function ReviewPathPanel({ doc, selection, onUpdate, onSelect }: Props) {
   const rows = useMemo(() => buildRows(doc), [doc])
+
+  // Modifier eligibility lives here rather than in the access matrix. It is
+  // about how many editors review an article, not about which article types a
+  // group may write, and mixing the two into one grid read as confusing.
+  const toggleModifier = (modifierId: string, tierId: string) => {
+    onUpdate((d) => ({
+      ...d,
+      modifiers: d.modifiers.map((m) =>
+        m.id !== modifierId
+          ? m
+          : {
+              ...m,
+              appliesTo: m.appliesTo.includes(tierId)
+                ? m.appliesTo.filter((t) => t !== tierId)
+                : [...m.appliesTo, tierId],
+            },
+      ),
+    }))
+  }
 
   return (
     <section className="panel" aria-labelledby="review-path-heading">
       <div className="panel__head">
         <h2 className="panel__title" id="review-path-heading">
-          Editors per article, by tier
+          Editors per article, by group
         </h2>
         <p className="panel__sub">
           How many editors touch an article before it publishes. Types marked ✓ in the access
-          matrix skip review entirely; types marked W go to a copyeditor, and every tier except DTP
-          continues to a financial editor — unless the writer carries 1Editor, which stops review
-          at the copyeditor. Click a row to trace that tier.
+          matrix skip review entirely; types marked W go to a copyeditor, then on to a financial
+          editor — unless the writer carries 1Editor, which stops review at the copyeditor. Click a
+          row to trace that group.
         </p>
       </div>
 
       <table className="review-table">
         <thead>
           <tr>
-            <th scope="col">Tier</th>
+            <th scope="col">Group</th>
             <th scope="col">Self-publishes</th>
             <th scope="col">Otherwise</th>
             <th scope="col">Editors</th>
@@ -165,6 +185,29 @@ export function ReviewPathPanel({ doc, selection, onSelect }: Props) {
           ))}
         </tbody>
       </table>
+
+      {doc.modifiers.map((m) => (
+        <div className="modifier-row" key={m.id}>
+          <span className="modifier-row__label">Who can be {m.label}?</span>
+          <span className="modifier-row__chips">
+            {doc.tiers.map((tier) => {
+              const on = m.appliesTo.includes(tier.id)
+              return (
+                <button
+                  key={tier.id}
+                  type="button"
+                  className="chip"
+                  aria-pressed={on}
+                  onClick={() => toggleModifier(m.id, tier.id)}
+                >
+                  {tier.label}
+                </button>
+              )
+            })}
+          </span>
+          <span className="modifier-row__note">{m.description}</span>
+        </div>
+      ))}
 
       <p className="review-table__key">
         {doc.reviewStages.map((s, i) => (

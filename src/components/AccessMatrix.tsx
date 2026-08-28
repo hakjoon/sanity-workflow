@@ -65,22 +65,6 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
     })
   }
 
-  const toggleModifier = (modifierId: string, tierId: string) => {
-    onUpdate((d) => ({
-      ...d,
-      modifiers: d.modifiers.map((m) =>
-        m.id !== modifierId
-          ? m
-          : {
-              ...m,
-              appliesTo: m.appliesTo.includes(tierId)
-                ? m.appliesTo.filter((t) => t !== tierId)
-                : [...m.appliesTo, tierId],
-            },
-      ),
-    }))
-  }
-
   const addType = (e: React.FormEvent) => {
     e.preventDefault()
     const label = newType.trim()
@@ -174,9 +158,8 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
           Access matrix
         </h2>
         <p className="panel__sub">
-          What each writer group may do with each article type, and which modifiers it can carry.
-          Click a cell to cycle it — the diagram re-derives immediately. Double-click to trace that
-          combination.
+          What each writer group may do with each article type. Click a cell to cycle it — the
+          diagram re-derives immediately. Double-click to trace that combination.
         </p>
       </div>
 
@@ -204,11 +187,6 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
                   >
                     ×
                   </button>
-                </th>
-              ))}
-              {doc.modifiers.map((m) => (
-                <th key={m.id} scope="col" className="matrix__colhead matrix__colhead--mod">
-                  <span>{m.label}</span>
                 </th>
               ))}
             </tr>
@@ -242,24 +220,6 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
                         onDoubleClick={() => onSelect(tier.id, type.id)}
                       >
                         {CELL[level].glyph}
-                      </button>
-                    </td>
-                  )
-                })}
-                {doc.modifiers.map((m) => {
-                  const carries = m.appliesTo.includes(tier.id)
-                  return (
-                    <td key={m.id} className="matrix__modcell">
-                      <button
-                        type="button"
-                        className="matrix__cell"
-                        data-level={carries ? 'publish' : 'none'}
-                        aria-pressed={carries}
-                        aria-label={`${tier.label} ${carries ? 'can' : 'cannot'} carry ${m.label}. Activate to change.`}
-                        title={`${m.label}: ${m.description}`}
-                        onClick={() => toggleModifier(m.id, tier.id)}
-                      >
-                        {carries ? '✓' : '✗'}
                       </button>
                     </td>
                   )

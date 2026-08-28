@@ -185,6 +185,7 @@ export default function App() {
       <ReviewPathPanel
         doc={doc}
         selection={lens}
+        onUpdate={update}
         onSelect={(tierId, articleTypeId) => setLens((l) => ({ ...l, tierId, articleTypeId }))}
       />
 
