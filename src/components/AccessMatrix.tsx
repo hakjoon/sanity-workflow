@@ -114,6 +114,13 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
   }
 
   const removeType = (typeId: string) => {
+    const label = doc.articleTypes.find((t) => t.id === typeId)?.label ?? typeId
+    const withAccess = doc.tiers.filter((t) => accessLevel(doc, t.id, typeId) !== 'none')
+    const detail = withAccess.length
+      ? `\n\n${withAccess.length} group${withAccess.length === 1 ? '' : 's'} can write it: ${withAccess.map((t) => t.label).join(', ')}. That access is removed too.`
+      : ''
+    if (!confirm(`Remove the ${label} article type?${detail}`)) return
+
     onUpdate((d) => ({
       ...d,
       articleTypes: d.articleTypes.filter((t) => t.id !== typeId),
@@ -191,7 +198,7 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
                   <button
                     type="button"
                     className="matrix__remove"
-                    title={`Remove ${t.label}`}
+                    title={`Remove the ${t.label} article type`}
                     aria-label={`Remove article type ${t.label}`}
                     onClick={() => removeType(t.id)}
                   >
@@ -214,7 +221,7 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
                   <button
                     type="button"
                     className="matrix__remove"
-                    title={`Remove ${tier.label}`}
+                    title={`Remove the ${tier.label} group`}
                     aria-label={`Remove group ${tier.label}`}
                     onClick={() => removeGroup(tier.id)}
                   >

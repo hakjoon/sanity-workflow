@@ -464,19 +464,25 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
 .matrix__corner { text-align: left; }
 .matrix__colhead[data-active] { background: var(--mf-primary-24); }
 .matrix__colhead span { display: block; }
+/* Always visible, just quiet. Hiding these behind :hover made removal
+   undiscoverable, and unreachable entirely on touch. */
 .matrix__remove {
   border: 0;
   background: transparent;
-  color: var(--mf-text-70);
+  color: var(--mf-content-36);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1;
-  padding: 0;
-  opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-out);
+  padding: 0 2px;
+  border-radius: var(--radius-xs);
+  opacity: 0.7;
+  transition: opacity var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out);
 }
-.matrix__colhead:hover .matrix__remove { opacity: 1; }
-.matrix__remove:hover { color: var(--mf-red-100); }
+.matrix__colhead:hover .matrix__remove,
+.matrix__remove:hover { color: var(--mf-red-100); background: var(--mf-red-4); opacity: 1; }
+.matrix__remove:focus-visible { outline: 2px solid var(--mf-primary-100); outline-offset: 1px; opacity: 1; }
 .matrix__rowhead {
   background: var(--mf-content-4);
   color: var(--mf-content-92);
@@ -608,7 +614,6 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
 .matrix__colhead--mod { border-left: 2px solid var(--mf-primary-24); }
 .matrix__modcell { border-left: 2px solid var(--mf-primary-24); }
 .matrix__rowhead .matrix__remove { margin-left: var(--space-2); }
-.matrix__rowhead:hover .matrix__remove { opacity: 1; }
 .matrix__adds { display: flex; gap: var(--space-8); flex-wrap: wrap; margin-top: var(--space-4); }
 .matrix__adds .matrix__add { margin-top: 0; }
 .matrix__saved { margin-top: var(--space-3); max-width: 80ch; }
