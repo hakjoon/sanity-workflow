@@ -2,16 +2,20 @@
   "version": 4,
   "tiers": [
     {
+      "id": "pubAll",
+      "label": "PubAll"
+    },
+    {
       "id": "ultraDTP",
-      "label": "UltraDTP"
+      "label": "PubCore"
     },
     {
       "id": "midDTP",
-      "label": "MidDTP"
+      "label": "PubProjects"
     },
     {
       "id": "swUser",
-      "label": "SWUser"
+      "label": "PubZero"
     },
     {
       "id": "aiAssist",
@@ -66,15 +70,16 @@
       "publish": [
         "shorty",
         "medium",
-        "article",
+        "article"
+      ],
+      "write": [
         "duo",
         "newsBrief",
         "shortMM",
         "longMM",
         "influencer",
         "earnings"
-      ],
-      "write": []
+      ]
     },
     "midDTP": {
       "publish": [
@@ -109,17 +114,11 @@
       "publish": [
         "aiAssist"
       ],
-      "write": [
-        "shorty",
-        "medium",
-        "article",
-        "duo",
-        "newsBrief",
-        "shortMM",
-        "longMM",
-        "influencer",
-        "earnings"
-      ]
+      "write": []
+    },
+    "pubAll": {
+      "publish": [],
+      "write": []
     }
   },
   "modifiers": [
@@ -339,7 +338,7 @@
       "actors": [
         {
           "role": "writer",
-          "text": "Standard writers in review — "
+          "text": "Everything in review except DTP — "
         },
         {
           "role": "ffe",
@@ -429,7 +428,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
     },
     {
@@ -445,7 +445,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
     },
     {
@@ -461,7 +462,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "gate": "selfPublish",
       "note": "Eligibility comes from the self-publish matrix, not the tier alone."
@@ -479,7 +481,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "gate": "!selfPublish"
     },
@@ -496,7 +499,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
     },
     {
@@ -512,7 +516,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -531,7 +536,8 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "swUser"
+        "swUser",
+        "pubAll"
       ],
       "note": "Only for writers carrying the 1Editor modifier. Everyone else continues to financial edit.",
       "whenModifier": {
@@ -552,7 +558,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
     },
     {
@@ -568,7 +575,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -588,7 +596,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -608,7 +617,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -628,7 +638,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
     },
     {
@@ -644,7 +655,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -663,7 +675,8 @@
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "swUser"
+        "swUser",
+        "pubAll"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -683,7 +696,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -703,7 +717,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
     },
     {
@@ -719,7 +734,8 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
     },
     {
@@ -735,8 +751,27 @@
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "pubAll"
       ]
+    },
+    {
+      "id": "t-compose-inbox-mtd9oa3u",
+      "from": "compose",
+      "to": "inbox",
+      "sourceHandle": "t",
+      "targetHandle": "t",
+      "role": "writer",
+      "style": "solid",
+      "label": "Back to Inbox",
+      "appliesTo": [
+        "pubAll",
+        "ultraDTP",
+        "midDTP",
+        "swUser",
+        "aiAssist"
+      ],
+      "note": "Unclaims document/resets author"
     }
   ],
   "reviewStages": [
