@@ -113,7 +113,7 @@ export default function App() {
       )}
 
       <LensBar doc={doc} selection={lens} path={path} onChange={setLens} />
-      <Legend />
+      <Legend doc={doc} />
 
       <section className="panel panel--flush">
         <div className="toolbar">

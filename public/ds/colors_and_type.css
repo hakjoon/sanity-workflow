@@ -9,7 +9,15 @@
        bafa3119-c5c8-40d7-8d99-919568c8ff58/colors_and_type.css
    in the "Sanity roles and permissions" Claude Design project.
 
-   Only the @font-face block was changed. Removed:
+   The @font-face block is now gone entirely and the family tokens point at
+   the system stack. Satoshi was dropped when the repo went public: the ITF
+   licence clearly permits serving it via @font-face, but says nothing about
+   whether a public repo counts as redistributing the file, and the font's own
+   name table carries an attribution requirement. Not worth the ambiguity for
+   an internal spec tool. Headings lose Satoshi's weight; nothing else changes,
+   since every family reference goes through these tokens.
+
+   Previously, only the @font-face block was changed. Removed then:
      · all 14 "Hurme Geometric Sans 1" faces  — Hurme backs --font-logo
        only, and this app renders no logo.
      · the Satoshi italic variable face       — no italics in this UI.
@@ -20,20 +28,12 @@
      · @import of Google Fonts "Inter"        — backs --font-mono, which
        nothing here uses; it was a render-blocking third-party request.
 
-   Kept: the single Satoshi variable face, and every token, base type
-   rule, and utility class, unchanged.
+   Kept: every token, base type rule, and utility class, unchanged. No
+   webfont is loaded at all now.
 
    To re-sync from the design project, re-fetch upstream and re-apply
    this trim deliberately — do not paste the upstream file over this one.
    ═══════════════════════════════════════════════════════════════════ */
-
-/* ── Webfont: Satoshi (the entire UI face) ─────────────────────────── */
-@font-face {
-  font-family: "Satoshi";
-  src: url("fonts/Satoshi-Variable.ttf") format("truetype-variations"),
-       url("fonts/Satoshi-Variable.ttf") format("truetype");
-  font-weight: 300 900; font-style: normal; font-display: swap;
-}
 
 :root {
   /* ── PRIMITIVES · Primary (Fool blue) ──────────────────────────── */
@@ -157,18 +157,18 @@
   --space-16: 64px;
 
   /* ── TYPOGRAPHY · Families ─────────────────────────────────────── */
-  /* Satoshi owns the whole UI — headings, display, body, buttons.
-     Hurme Geometric Sans 1 is reserved for the logo wordmark only. */
-  --font-sans:    "Satoshi", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-ui:      "Satoshi", "Inter", system-ui, sans-serif;
-  --font-body:    "Satoshi", "Inter", system-ui, sans-serif;
+  /* The system UI face owns everything. Upstream this was Satoshi, with
+     Hurme reserved for the logo wordmark; neither is loaded here. */
+  --font-sans:    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-ui:      system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-body:    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-mono:    "Inter", ui-monospace, Menlo, Consolas, monospace;       /* tabular numeric UI */
-  --font-display: "Satoshi", "Inter", system-ui, sans-serif;
-  --font-heading: "Satoshi", "Inter", system-ui, sans-serif;
-  --font-logo:    "Hurme Geometric Sans 1", "Satoshi", system-ui, sans-serif;
+  --font-display: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-logo:    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 
   /* ── TYPOGRAPHY · Scale (exact values from Figma Text-Styles) ─── */
-  /* Heading scale — Satoshi Black (900) */
+  /* Heading scale — weight 900 */
   --text-h1-size: 32px;  --text-h1-lh: 40px;   --text-h1-weight: 900;
   --text-h2-size: 24px;  --text-h2-lh: 32px;   --text-h2-weight: 900;
   --text-h3-size: 20px;  --text-h3-lh: 28px;   --text-h3-weight: 900;

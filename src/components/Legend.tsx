@@ -1,16 +1,21 @@
-import { BADGES, ROLES, ROLE_IDS } from '../data/schema'
+import { BADGES, ROLES, ROLE_IDS, type WorkflowDoc } from '../data/schema'
 
 /**
  * Static key for the diagram: what each line colour means, what the badges
  * mean, and how the two line styles read.
  */
-export function Legend() {
+export function Legend({ doc }: { doc: WorkflowDoc }) {
+  // Derived, not written down — renaming a group updates the legend too.
+  const groups = doc.tiers.map((t) => t.label).join(' · ')
   return (
     <section className="legend" aria-label="Diagram key">
       {ROLE_IDS.map((r) => (
         <span key={r} className={`legend__item role-${r}`}>
           <span className="legend__swatch" />
-          <span className="legend__label">{ROLES[r].label}</span>
+          <span className="legend__label">
+            {ROLES[r].label}
+            {r === 'writer' && groups && ` — ${groups}`}
+          </span>
         </span>
       ))}
 

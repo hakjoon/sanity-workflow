@@ -127,7 +127,13 @@ financial editor. The seed follows the corrected rule, and `npm run check` pins 
 
 `public/ds/colors_and_type.css` is a vendored, **trimmed** copy of the Motley Fool design
 system's stylesheet. Every token, base type rule and utility class is byte-identical to
-upstream; only the `@font-face` block was reduced — to the one Satoshi variable face we ship.
+upstream; the `@font-face` block is gone and the family tokens point at the system stack.
+
+Satoshi was dropped when the repo went public. The ITF licence plainly permits serving it via
+`@font-face`, but is silent on whether a public repo counts as redistributing the file, and the
+font's own name table carries an attribution requirement. Not worth the ambiguity for an
+internal spec tool — so headings render in the system face and nothing is downloaded.
+
 The file's header records exactly what was removed and why. Re-syncing means re-fetching
 upstream and re-applying that trim deliberately, not pasting over it.
 

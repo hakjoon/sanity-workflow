@@ -1,0 +1,58 @@
+# Manual deploy only — there is deliberately no `push:` trigger.
+#
+# The site republishes when you press "Run workflow" in the Actions tab, or run
+# `gh workflow run deploy.yml`. Consequence worth knowing: the live site stays
+# on the previous build until you do, so it can lag main after a seed edit.
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; a queued one supersedes an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # These gate the publish. A seed edit that breaks the derived paths, or a
+      # raw hex slipping past the design tokens, should fail here rather than
+      # ship — that is the whole reason these scripts exist.
+      - name: Check derived paths
+        run: npm run check
+
+      - name: Check design tokens
+        run: npm run lint:tokens
+
+      # tsc -b && vite build
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

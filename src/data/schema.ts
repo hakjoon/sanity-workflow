@@ -13,7 +13,10 @@ export type RoleId = 'writer' | 'copyed' | 'ffe' | 'hq' | 'system'
 export const ROLE_IDS: RoleId[] = ['writer', 'copyed', 'ffe', 'hq', 'system']
 
 export const ROLES: Record<RoleId, { label: string; short: string }> = {
-  writer: { label: 'Writers — SWUser · DTP · MidDTP · UltraDTP · AI-assist', short: 'Writers' },
+  // Just "Writers" — the legend appends the live group names from the
+  // document. Spelling them out here went stale the moment groups were
+  // renamed, and claimed DTP was still a group long after it became a modifier.
+  writer: { label: 'Writers', short: 'Writers' },
   copyed: { label: 'Copyeds', short: 'Copyeds' },
   ffe: { label: 'FFEs', short: 'FFEs' },
   hq: { label: 'HQ editors', short: 'HQ' },
