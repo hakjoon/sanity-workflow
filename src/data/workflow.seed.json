@@ -117,8 +117,19 @@
       "write": []
     },
     "pubAll": {
-      "publish": [],
-      "write": []
+      "publish": [
+        "shorty",
+        "medium",
+        "article",
+        "newsBrief",
+        "shortMM",
+        "longMM",
+        "influencer",
+        "earnings"
+      ],
+      "write": [
+        "duo"
+      ]
     }
   },
   "modifiers": [
