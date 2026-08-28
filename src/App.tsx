@@ -182,17 +182,17 @@ export default function App() {
         </ReactFlowProvider>
       </section>
 
-      <ReviewPathPanel
-        doc={doc}
-        selection={lens}
-        onUpdate={update}
-        onSelect={(tierId, articleTypeId) => setLens((l) => ({ ...l, tierId, articleTypeId }))}
-      />
-
       <AccessMatrix
         doc={doc}
         selection={lens}
         dirty={store.dirty}
+        onUpdate={update}
+        onSelect={(tierId, articleTypeId) => setLens((l) => ({ ...l, tierId, articleTypeId }))}
+      />
+
+      <ReviewPathPanel
+        doc={doc}
+        selection={lens}
         onUpdate={update}
         onSelect={(tierId, articleTypeId) => setLens((l) => ({ ...l, tierId, articleTypeId }))}
       />

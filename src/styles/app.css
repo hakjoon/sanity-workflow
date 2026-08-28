@@ -691,3 +691,26 @@ textarea.input { resize: vertical; font-family: var(--font-ui); }
   min-width: 8ch;
 }
 .editable-label--editing:focus { outline: none; }
+
+/* ── Row reordering ─────────────────────────────────────────────────── */
+.matrix__reorder {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  vertical-align: middle;
+  margin-right: var(--space-1);
+}
+.matrix__move {
+  border: 0;
+  background: transparent;
+  color: var(--mf-content-36);
+  cursor: pointer;
+  font-size: 7px;
+  line-height: 7px;
+  padding: 1px 2px;
+  border-radius: 2px;
+  transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.matrix__move:hover:not(:disabled) { color: var(--mf-primary-100); background: var(--mf-primary-8); }
+.matrix__move:disabled { opacity: 0.25; cursor: default; }
+.matrix__move:focus-visible { outline: 1px solid var(--mf-primary-100); }

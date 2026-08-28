@@ -83,6 +83,20 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
     }))
   }
 
+  // Row order is just the order of doc.tiers, which the editors table, the
+  // eligibility chips and the lens picker all iterate — so moving a row here
+  // reorders every one of them.
+  const moveGroup = (tierId: string, delta: number) => {
+    onUpdate((d) => {
+      const i = d.tiers.findIndex((t) => t.id === tierId)
+      const j = i + delta
+      if (i < 0 || j < 0 || j >= d.tiers.length) return d
+      const tiers = [...d.tiers]
+      ;[tiers[i], tiers[j]] = [tiers[j], tiers[i]]
+      return { ...d, tiers }
+    })
+  }
+
   const addType = (e: React.FormEvent) => {
     e.preventDefault()
     const label = newType.trim()
@@ -178,7 +192,8 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
         <p className="panel__sub">
           What each writer group may do with each article type. Click a cell to cycle it — the
           diagram re-derives immediately. Double-click to trace that combination. Group and type
-          names are editable in place; renaming keeps every existing rule attached.
+          names are editable in place; renaming keeps every existing rule attached. Reorder groups
+          with ▲▼ — the editors table, the eligibility chips and the lens picker all follow.
         </p>
       </div>
 
@@ -215,9 +230,31 @@ export function AccessMatrix({ doc, selection, dirty, onUpdate, onSelect }: Prop
             </tr>
           </thead>
           <tbody>
-            {doc.tiers.map((tier) => (
+            {doc.tiers.map((tier, i) => (
               <tr key={tier.id} data-active={selection.tierId === tier.id || undefined}>
                 <th scope="row" className="matrix__rowhead">
+                  <span className="matrix__reorder">
+                    <button
+                      type="button"
+                      className="matrix__move"
+                      title={`Move ${tier.label} up`}
+                      aria-label={`Move group ${tier.label} up`}
+                      disabled={i === 0}
+                      onClick={() => moveGroup(tier.id, -1)}
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      className="matrix__move"
+                      title={`Move ${tier.label} down`}
+                      aria-label={`Move group ${tier.label} down`}
+                      disabled={i === doc.tiers.length - 1}
+                      onClick={() => moveGroup(tier.id, 1)}
+                    >
+                      ▼
+                    </button>
+                  </span>
                   <EditableLabel
                     value={tier.label}
                     ariaLabel={`Rename group ${tier.label}`}
