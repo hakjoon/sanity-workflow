@@ -469,7 +469,7 @@
       "sourceHandle": "b",
       "targetHandle": "l",
       "role": "writer",
-      "style": "dashed",
+      "style": "solid",
       "label": "self-publish",
       "appliesTo": [
         "core-author",
@@ -647,7 +647,7 @@
       "sourceHandle": "l",
       "targetHandle": "r",
       "role": "writer",
-      "style": "dashed",
+      "style": "solid",
       "label": "writer resubmits",
       "appliesTo": [
         "core-author",
@@ -821,7 +821,7 @@
       "sourceHandle": "b",
       "targetHandle": "b",
       "role": "hq",
-      "style": "dashed",
+      "style": "solid",
       "label": "republish after fixing",
       "appliesTo": [
         "core-author",
@@ -838,7 +838,7 @@
       "sourceHandle": "t",
       "targetHandle": "t",
       "role": "writer",
-      "style": "solid",
+      "style": "dashed",
       "label": "Back to Inbox",
       "appliesTo": [
         "core-author",

@@ -231,8 +231,8 @@ export function Inspector({ doc, selected, onUpdate, onClose, onDelete }: Props)
               value={transition.style}
               onChange={(e) => patchTransition({ style: e.target.value as 'solid' | 'dashed' })}
             >
-              <option value="solid">Solid — standard path</option>
-              <option value="dashed">Dashed — conditional</option>
+              <option value="solid">Solid — moves forwards</option>
+              <option value="dashed">Dashed — a step backwards</option>
             </select>
           </label>
 
