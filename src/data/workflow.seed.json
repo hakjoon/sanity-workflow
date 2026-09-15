@@ -2,25 +2,27 @@
   "version": 4,
   "tiers": [
     {
-      "id": "pubAll",
-      "label": "PubAll"
-    },
-    {
       "id": "ultraDTP",
-      "label": "PubCore"
+      "label": "Core Author",
+      "note": "Editorial's PubCore. PubAll is not a role of its own — it is one person holding Core Author and Projects Author, so read those two rows together."
     },
     {
       "id": "midDTP",
-      "label": "PubProjects"
+      "label": "Projects Author"
     },
     {
       "id": "swUser",
-      "label": "PubZero"
+      "label": "Free Writer"
     },
     {
       "id": "aiAssist",
-      "label": "AI-assist",
-      "note": "Most are also members of one of the other writer buckets, but a writer acts as exactly one tier at a time."
+      "label": "AI-Assist Author",
+      "note": "Held alongside one of the other writer roles, not instead of one, but a writer acts as exactly one role at a time."
+    },
+    {
+      "id": "freeAuthor",
+      "label": "Free Author",
+      "note": "The one writer role that exists in Sanity today. Its Free resource is unfiltered — Publish on _type == \"freeArticle\" — so it self-publishes every type, Duo and AI-Assist included, and already covers PubAll on its own. Duo self-publishing is a consequence of that grant, not an editorial rule: the target model keeps Duo out of every self-publish row."
     }
   ],
   "articleTypes": [
@@ -116,20 +118,20 @@
       ],
       "write": []
     },
-    "pubAll": {
+    "freeAuthor": {
       "publish": [
         "shorty",
         "medium",
         "article",
+        "duo",
         "newsBrief",
         "shortMM",
         "longMM",
         "influencer",
-        "earnings"
+        "earnings",
+        "aiAssist"
       ],
-      "write": [
-        "duo"
-      ]
+      "write": []
     }
   },
   "modifiers": [
@@ -138,7 +140,6 @@
       "label": "1Editor",
       "description": "Review stops at copy edit — the copyeditor publishes, no financial editor.",
       "appliesTo": [
-        "pubAll",
         "ultraDTP",
         "midDTP",
         "swUser"
@@ -165,11 +166,11 @@
         },
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "hq",
@@ -238,7 +239,7 @@
         },
         {
           "role": "copyed",
-          "text": "Copyeds claim"
+          "text": "Copy Editors claim"
         }
       ]
     },
@@ -258,7 +259,7 @@
       "actors": [
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "hq",
@@ -281,11 +282,11 @@
       "actors": [
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "hq",
@@ -327,7 +328,7 @@
       "actors": [
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "hq",
@@ -354,7 +355,7 @@
         },
         {
           "role": "ffe",
-          "text": "FFEs claim"
+          "text": "Financial Editors claim"
         }
       ]
     },
@@ -375,11 +376,11 @@
         },
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "writer",
@@ -441,7 +442,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -458,7 +459,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -475,7 +476,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "gate": "selfPublish",
       "note": "Eligibility comes from the self-publish matrix, not the tier alone."
@@ -494,7 +495,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "gate": "!selfPublish"
     },
@@ -512,7 +513,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -523,13 +524,13 @@
       "targetHandle": "t",
       "role": "copyed",
       "style": "solid",
-      "label": "hand off to FFE queue",
+      "label": "hand off to the financial queue",
       "appliesTo": [
         "ultraDTP",
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -544,12 +545,11 @@
       "targetHandle": "r",
       "role": "copyed",
       "style": "solid",
-      "label": "1Editor — copyed publishes / schedules",
+      "label": "1Editor — the Copy Editor publishes / schedules",
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "swUser",
-        "pubAll"
+        "swUser"
       ],
       "note": "Only for writers carrying the 1Editor modifier. Everyone else continues to financial edit.",
       "whenModifier": {
@@ -571,7 +571,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -588,7 +588,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -609,7 +609,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -624,13 +624,13 @@
       "targetHandle": "t",
       "role": "ffe",
       "style": "solid",
-      "label": "FFE publishes / schedules from here",
+      "label": "the Financial Editor publishes / schedules from here",
       "appliesTo": [
         "ultraDTP",
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -651,7 +651,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -662,13 +662,13 @@
       "targetHandle": "b",
       "role": "ffe",
       "style": "dashed",
-      "label": "FFE resumes the article",
+      "label": "the Financial Editor resumes the article",
       "appliesTo": [
         "ultraDTP",
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -683,12 +683,11 @@
       "targetHandle": "l",
       "role": "copyed",
       "style": "solid",
-      "label": "Copyeds publish / schedule",
+      "label": "Copy Editors publish / schedule",
       "appliesTo": [
         "ultraDTP",
         "midDTP",
-        "swUser",
-        "pubAll"
+        "swUser"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -703,13 +702,13 @@
       "targetHandle": "t",
       "role": "ffe",
       "style": "solid",
-      "label": "FFE publishes / schedules",
+      "label": "Financial Editors publish / schedule",
       "appliesTo": [
         "ultraDTP",
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -730,7 +729,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -747,7 +746,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -764,7 +763,7 @@
         "midDTP",
         "swUser",
         "aiAssist",
-        "pubAll"
+        "freeAuthor"
       ]
     },
     {
@@ -777,11 +776,11 @@
       "style": "solid",
       "label": "Back to Inbox",
       "appliesTo": [
-        "pubAll",
         "ultraDTP",
         "midDTP",
         "swUser",
-        "aiAssist"
+        "aiAssist",
+        "freeAuthor"
       ],
       "note": "Unclaims document/resets author"
     }
@@ -796,7 +795,7 @@
     {
       "id": "financialEdit",
       "label": "Financial edit",
-      "short": "FFE",
+      "short": "FE",
       "state": "inFinancial"
     }
   ],
@@ -804,16 +803,16 @@
   "notes": {
     "answered": [
       "States are skippable by role, and role determines the path.",
-      "Every writer group applies to every state up to Grammarly Edit Complete — no group skips it. 1Editor is not a group: it is a property a writer carries on top of one, so someone can be PubProjects and 1Editor, or PubZero and 1Editor.",
+      "Every writer role applies to every state up to Grammarly Edit Complete — no role skips it. Core Author + Projects Author is one person holding two of them, which editorial calls PubAll. 1Editor is not a role: it is a property a writer carries on top of one, so someone can be a Projects Author and 1Editor, or a Free Writer and 1Editor.",
       "At Grammarly Edit Complete, self-publishing is decided by the tier × article-type matrix — not by tier alone. The same writer's News brief and Shorty can take different paths.",
       "Access is three-way, not two. A tier either self-publishes a type, writes it and sends it to review, or has no access and never authors it at all. Only the middle case reaches the copy edit states.",
       "Editors per article comes from three things: the tier's access to the type, whether the writer carries 1Editor, and nothing else. Anything self-published gets none. Anything else gets a copyeditor, then a financial editor — unless the writer is 1Editor, in which case the copyeditor finishes it.",
-      "Most articles are published or scheduled straight out of In Financial Edit — the FFE finishes there. Edits Done is not a step on that path.",
-      "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the copyeditor from In Copy Edit. Which groups can carry 1Editor is set in the editors panel below, not fixed here.",
-      "No tier skips copy edit but still needs FFE — financial edit always follows copy edit.",
+      "Most articles are published or scheduled straight out of In Financial Edit — the Financial Editor finishes there. Edits Done is not a step on that path.",
+      "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the Copy Editor from In Copy Edit. Which roles can carry 1Editor is set in the editors panel below, not fixed here.",
+      "No role skips copy edit but still needs financial edit — financial edit always follows copy edit.",
       "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
       "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
-      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the FFE, or is published or scheduled there by an FFE or, for a 1Editor writer's article, a copyeditor.",
+      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the Financial Editor, or is published or scheduled there by a Financial Editor or, for a 1Editor writer's article, a Copy Editor.",
       "HQ editors can move an article from any state to any other."
     ],
     "open": [
@@ -821,7 +820,7 @@
       "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
       "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build."
     ],
-    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the FFE queue depends on how many writers hold that modifier, not on which tier they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
+    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a Copy Editor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the financial-edit queue depends on how many writers hold that modifier, not on which role they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
     "caveat": "HQ any-to-any and the copy-edit send-back both need non-sequential transitions, which Sanity does not support today."
   }
 }

@@ -17,8 +17,8 @@ export const ROLES: Record<RoleId, { label: string; short: string }> = {
   // document. Spelling them out here went stale the moment groups were
   // renamed, and claimed DTP was still a group long after it became a modifier.
   writer: { label: 'Writers', short: 'Writers' },
-  copyed: { label: 'Copyeds', short: 'Copyeds' },
-  ffe: { label: 'FFEs', short: 'FFEs' },
+  copyed: { label: 'Copy Editors', short: 'Copy Eds' },
+  ffe: { label: 'Financial Editors', short: 'Fin Eds' },
   hq: { label: 'HQ editors', short: 'HQ' },
   system: { label: 'System (automatic)', short: 'System' },
 }
