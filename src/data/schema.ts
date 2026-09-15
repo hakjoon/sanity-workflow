@@ -6,7 +6,7 @@
  * unreadable version. It is not a general-purpose schema library.
  */
 
-export const SCHEMA_VERSION = 4
+export const SCHEMA_VERSION = 5
 
 export type RoleId = 'writer' | 'copyed' | 'ffe' | 'hq' | 'system'
 

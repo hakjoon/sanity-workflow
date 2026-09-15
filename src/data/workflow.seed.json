@@ -1,26 +1,26 @@
 {
-  "version": 4,
+  "version": 5,
   "tiers": [
     {
-      "id": "ultraDTP",
+      "id": "core-author",
       "label": "Core Author",
       "note": "Editorial's PubCore. PubAll is not a role of its own — it is one person holding Core Author and Projects Author, so read those two rows together."
     },
     {
-      "id": "midDTP",
+      "id": "projects-author",
       "label": "Projects Author"
     },
     {
-      "id": "swUser",
+      "id": "free-writer",
       "label": "Free Writer"
     },
     {
-      "id": "aiAssist",
+      "id": "ai-assist-author",
       "label": "AI-Assist Author",
       "note": "Held alongside one of the other writer roles, not instead of one, but a writer acts as exactly one role at a time."
     },
     {
-      "id": "freeAuthor",
+      "id": "free-author",
       "label": "Free Author",
       "note": "The one writer role that exists in Sanity today. Its Free resource is unfiltered — Publish on _type == \"freeArticle\" — so it self-publishes every type, Duo and AI-Assist included, and already covers PubAll on its own. Duo self-publishing is a consequence of that grant, not an editorial rule: the target model keeps Duo out of every self-publish row."
     }
@@ -68,7 +68,7 @@
     }
   ],
   "access": {
-    "ultraDTP": {
+    "core-author": {
       "publish": [
         "shorty",
         "medium",
@@ -83,7 +83,7 @@
         "earnings"
       ]
     },
-    "midDTP": {
+    "projects-author": {
       "publish": [
         "newsBrief",
         "shortMM",
@@ -98,7 +98,7 @@
         "duo"
       ]
     },
-    "swUser": {
+    "free-writer": {
       "publish": [],
       "write": [
         "shorty",
@@ -112,13 +112,13 @@
         "earnings"
       ]
     },
-    "aiAssist": {
+    "ai-assist-author": {
       "publish": [
         "aiAssist"
       ],
       "write": []
     },
-    "freeAuthor": {
+    "free-author": {
       "publish": [
         "shorty",
         "medium",
@@ -140,9 +140,9 @@
       "label": "1Editor",
       "description": "Review stops at copy edit — the copyeditor publishes, no financial editor.",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ]
     }
   ],
@@ -436,11 +436,11 @@
       "style": "solid",
       "label": "create / claim",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -453,11 +453,11 @@
       "style": "solid",
       "label": "mark complete",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -470,11 +470,11 @@
       "style": "dashed",
       "label": "self-publish",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "gate": "selfPublish",
       "note": "Eligibility comes from the self-publish matrix, not the tier alone."
@@ -489,11 +489,11 @@
       "style": "solid",
       "label": "submit for copy edit",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "gate": "!selfPublish"
     },
@@ -507,11 +507,11 @@
       "style": "solid",
       "label": "claim",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -524,11 +524,11 @@
       "style": "solid",
       "label": "hand off to the financial queue",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -545,9 +545,9 @@
       "style": "solid",
       "label": "1Editor — the Copy Editor publishes / schedules",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "note": "Only for writers carrying the 1Editor modifier. Everyone else continues to financial edit.",
       "whenModifier": {
@@ -565,11 +565,11 @@
       "style": "dashed",
       "label": "send back @ writer",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -582,11 +582,11 @@
       "style": "solid",
       "label": "claim",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -603,11 +603,11 @@
       "style": "dashed",
       "label": "@ writer",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -624,11 +624,11 @@
       "style": "solid",
       "label": "the Financial Editor publishes / schedules from here",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -645,11 +645,11 @@
       "style": "dashed",
       "label": "writer resubmits",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -662,11 +662,11 @@
       "style": "dashed",
       "label": "the Financial Editor resumes the article",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -683,9 +683,9 @@
       "style": "solid",
       "label": "Copy Editors publish / schedule",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -702,11 +702,11 @@
       "style": "solid",
       "label": "Financial Editors publish / schedule",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -723,11 +723,11 @@
       "style": "solid",
       "label": "automatic",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -740,11 +740,11 @@
       "style": "dashed",
       "label": "404 the page",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -757,11 +757,11 @@
       "style": "dashed",
       "label": "republish after fixing",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ]
     },
     {
@@ -774,11 +774,11 @@
       "style": "solid",
       "label": "Back to Inbox",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "freeAuthor"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
       ],
       "note": "Unclaims document/resets author"
     }
