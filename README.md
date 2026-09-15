@@ -22,7 +22,7 @@ npm run dev        # http://localhost:5173
 ## The idea
 
 The static diagram couldn't answer the question people actually ask: *what happens to my
-article?* A MidDTP writer's News brief self-publishes straight from Grammarly Edit Complete.
+article?* A Projects Author's News brief self-publishes straight from Grammarly Edit Complete.
 That same writer's Shorty goes through copy edit. Both facts live in one diagram, and neither
 is visible when every edge is drawn at once.
 
@@ -44,18 +44,19 @@ two-state matrix hid the difference. A new article type starts ✗ for everyone.
 
 ### Three lenses, composable
 
-- **Article by** — writer group: UltraDTP, MidDTP, SWUser, AI-assist (add your own in the matrix)
-- **1Editor** — a modifier a writer carries *on top of* a tier, not a tier itself. Someone can be
-  MidDTP and 1Editor, or SWUser and 1Editor. It stops review at the copyeditor instead of
-  continuing to a financial editor. UltraDTP, MidDTP and SWUser can carry it; AI-assist can't.
-  Left on **Either**, both review depths show
+- **Article by** — writer role: Core Author, Projects Author, Free Writer, AI-Assist Author, Free
+  Author (add your own in the matrix)
+- **1Editor** — a modifier a writer carries *on top of* a role, not a role itself. Someone can be
+  a Projects Author and 1Editor, or a Free Writer and 1Editor. It stops review at the Copy Editor
+  instead of continuing to a Financial Editor. Which roles can carry it is set in the editors
+  panel. Left on **Either**, both review depths show
 - **Article type** — Shorty, Medium, Article, Duo, News brief, Short MM, Long MM, Influencer,
   Earnings, AI-Assist
-- **Highlight roles** — Writers / Copyeds / FFEs / HQ / System, **multi-select**
+- **Highlight roles** — Writers / Copy Editors / Financial Editors / HQ / System, **multi-select**
 
-Tier + type answer *where does this article go*. Highlighting roles answers *which of those moves
-are whose*. Because roles multi-select, you can light up writers + copyeds together to see the
-whole handoff chain for a DTP article, rather than one role at a time.
+Role + type answer *where does this article go*. Highlighting roles answers *which of those moves
+are whose*. Because roles multi-select, you can light up writers + Copy Editors together to see
+the whole handoff chain for a reviewed article, rather than one role at a time.
 
 Both lenses work by receding, not by shouting: what you select stays at full strength and
 everything else drops away — states, transitions and labels alike. Highlighting a role leaves
@@ -67,27 +68,28 @@ performs stays visible, because it's still part of the article's path.
 
 ### Reference paths
 
-| Tier + type | States | Route | Editors |
+| Role + type | States | Route | Editors |
 | --- | --- | --- | --- |
-| UltraDTP + Shorty | 6 | self-publishes, never enters review | 0 |
-| UltraDTP + AI-Assist | 0 | no access — that article doesn't exist | — |
-| MidDTP + News brief | 6 | self-publishes | 0 |
-| MidDTP + Shorty | 12 | copy edit → financial edit | 2 |
-| MidDTP + Shorty + 1Editor | 10 | copy edit only — copyeditor finishes it | 1 |
-| SWUser + anything | 12 | copy edit → financial edit | 2 |
-| SWUser + anything + 1Editor | 10 | copy edit only | 1 |
-| AI-assist + AI-Assist | 6 | self-publishes | 0 |
+| Core Author + Shorty | 6 | self-publishes, never enters review | 0 |
+| Core Author + AI-Assist | 0 | no access — that article doesn't exist | — |
+| Projects Author + News brief | 6 | self-publishes | 0 |
+| Projects Author + Shorty | 12 | copy edit → financial edit | 2 |
+| Projects Author + Shorty + 1Editor | 10 | copy edit only — the Copy Editor finishes it | 1 |
+| Free Writer + anything | 12 | copy edit → financial edit | 2 |
+| Free Writer + anything + 1Editor | 10 | copy edit only | 1 |
+| AI-Assist Author + AI-Assist | 6 | self-publishes | 0 |
+| Free Author + anything | 6 | self-publishes everything, Duo included | 0 |
 
-**Editors come from two things and nothing else:** the tier's access to that article type, and
-whether the writer carries 1Editor. Self-published → 0. Otherwise a copyeditor, then a financial
-editor — unless 1Editor, which stops at the copyeditor.
+**Editors come from two things and nothing else:** the role's access to that article type, and
+whether the writer carries 1Editor. Self-published → 0. Otherwise a Copy Editor, then a Financial
+Editor — unless 1Editor, which stops at the Copy Editor.
 
-Leaving either selector on **All** widens the union rather than switching the lens off. MidDTP
-across all types reaches 10 states — the SWUser-only financial-edit branch stays dark — and both
-forks out of Grammarly Edit Complete are live, because 5 of MidDTP's 10 types self-publish and
-the rest don't.
+Leaving either selector on **All** widens the union rather than switching the lens off. A
+Projects Author across all types reaches all 12 states, because 5 of its 10 types self-publish
+and the rest don't, so both forks out of Grammarly Edit Complete are live. A Free Author reaches
+6: nothing it writes enters review.
 
-`npm run check` asserts all of these, both tier-only and tier+type, plus default-deny and the
+`npm run check` asserts all of these, both role-only and role+type, plus default-deny and the
 role subsets.
 
 ## Editing
@@ -115,13 +117,14 @@ draft.
 edges that would bury the diagram. It's the `hqOverride` flag, surfaced as a banner when you view
 as HQ.
 
-**Three things are still open**, badged in the diagram and listed in the notes panel: who holds
-Edits Done, who can get back into a Published article, and who can reach Unpublished.
+**Two things are still open**, badged in the diagram and listed in the notes panel: who can get
+back into a Published article, and who can reach Unpublished.
 
 **The fall-through routing departs from the source diagram.** The design said *"Only SWUser
-articles continue to financial edit"*, which would send a MidDTP article that can't self-publish
-down the DTP route. That's wrong: confirmed with the team, every tier except DTP continues to a
-financial editor. The seed follows the corrected rule, and `npm run check` pins it per tier.
+articles continue to financial edit"*, which would send a Projects Author's article that can't
+self-publish down the one-editor route. That's wrong: confirmed with the team, every writer
+continues to a Financial Editor unless they carry 1Editor. The seed follows the corrected rule,
+and `npm run check` pins it per role.
 
 ## Design system
 
