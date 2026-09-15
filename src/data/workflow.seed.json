@@ -17,7 +17,7 @@
     {
       "id": "ai-assist-author",
       "label": "AI-Assist Author",
-      "note": "Held alongside one of the other writer roles, not instead of one, but a writer acts as exactly one role at a time."
+      "note": "Held alongside one of the other writer roles, not instead of one, but a writer acts as exactly one role at a time. The aiAssist id in articleTypes is the article type, not this role — the two are deliberately spelled differently, and the aiAssist entries inside the access publish lists are that type."
     },
     {
       "id": "free-author",
