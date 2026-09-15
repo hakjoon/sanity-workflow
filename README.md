@@ -78,7 +78,6 @@ performs stays visible, because it's still part of the article's path.
 | Free Writer + anything | 12 | copy edit → financial edit | 2 |
 | Free Writer + anything + 1Editor | 10 | copy edit only | 1 |
 | AI-Assist Author + AI-Assist | 6 | self-publishes | 0 |
-| Free Author + anything | 6 | self-publishes everything, Duo included | 0 |
 
 **Editors come from two things and nothing else:** the role's access to that article type, and
 whether the writer carries 1Editor. Self-published → 0. Otherwise a Copy Editor, then a Financial
@@ -86,8 +85,8 @@ Editor — unless 1Editor, which stops at the Copy Editor.
 
 Leaving either selector on **All** widens the union rather than switching the lens off. A
 Projects Author across all types reaches all 12 states, because 5 of its 10 types self-publish
-and the rest don't, so both forks out of Grammarly Edit Complete are live. A Free Author reaches
-6: nothing it writes enters review.
+and the rest don't, so both forks out of Grammarly Edit Complete are live. An AI-Assist Author
+reaches 6: the one type it touches is self-published.
 
 `npm run check` asserts all of these, both role-only and role+type, plus default-deny and the
 role subsets.

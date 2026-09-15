@@ -18,11 +18,6 @@
       "id": "ai-assist-author",
       "label": "AI-Assist Author",
       "note": "Held alongside one of the other writer roles, not instead of one, but a writer acts as exactly one role at a time. The aiAssist id in articleTypes is the article type, not this role — the two are deliberately spelled differently, and the aiAssist entries inside the access publish lists are that type."
-    },
-    {
-      "id": "free-author",
-      "label": "Free Author",
-      "note": "The one writer role that exists in Sanity today. Its Free resource is unfiltered — Publish on _type == \"freeArticle\" — so it self-publishes every type, Duo and AI-Assist included, and already covers PubAll on its own. Duo self-publishing is a consequence of that grant, not an editorial rule: the target model keeps Duo out of every self-publish row."
     }
   ],
   "articleTypes": [
@@ -114,21 +109,6 @@
     },
     "ai-assist-author": {
       "publish": [
-        "aiAssist"
-      ],
-      "write": []
-    },
-    "free-author": {
-      "publish": [
-        "shorty",
-        "medium",
-        "article",
-        "duo",
-        "newsBrief",
-        "shortMM",
-        "longMM",
-        "influencer",
-        "earnings",
         "aiAssist"
       ],
       "write": []
@@ -441,8 +421,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ]
     },
     {
@@ -458,8 +437,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ]
     },
     {
@@ -475,8 +453,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "gate": "selfPublish",
       "note": "Eligibility comes from the self-publish matrix, not the tier alone."
@@ -494,8 +471,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "gate": "!selfPublish"
     },
@@ -512,8 +488,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ]
     },
     {
@@ -529,8 +504,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -592,8 +566,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -613,8 +586,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -636,8 +608,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -658,8 +629,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ]
     },
     {
@@ -675,8 +645,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "note": "A second or later round of edits on the same article.",
       "whenModifier": {
@@ -718,8 +687,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -781,8 +749,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -803,8 +770,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ]
     },
     {
@@ -820,8 +786,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ]
     },
     {
@@ -837,8 +802,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ]
     },
     {
@@ -854,8 +818,7 @@
         "core-author",
         "projects-author",
         "free-writer",
-        "ai-assist-author",
-        "free-author"
+        "ai-assist-author"
       ],
       "note": "Unclaims document/resets author"
     }
