@@ -276,9 +276,7 @@
       },
       "accent": "ffe",
       "border": "dashed",
-      "badges": [
-        "tbd"
-      ],
+      "badges": [],
       "actors": [
         {
           "role": "ffe",
@@ -813,10 +811,10 @@
       "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
       "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
       "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the Financial Editor, or is published or scheduled there by a Financial Editor or, for a 1Editor writer's article, a Copy Editor.",
-      "HQ editors can move an article from any state to any other."
+      "HQ editors can move an article from any state to any other.",
+      "Edits Done is open to every editor and super-user, not held by the editor who sent the article back. That editor usually picks it up again, but forgets often enough that it has to stay open — so whoever publishes or schedules from Edits Done need not be the one who sent it back."
     ],
     "open": [
-      "Edits Done — claimed by one owner, or an open queue? Unclear whether it stays claimed by the FFE who finished the edit, or reopens for anyone eligible to pick up. Two things narrow this: it only ever affects articles that were sent back, since Edits Done is unreachable otherwise; and whoever holds it can publish or schedule, so the answer decides who is allowed to finish a resubmitted article.",
       "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
       "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build."
     ],
