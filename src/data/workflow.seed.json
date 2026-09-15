@@ -151,8 +151,8 @@
       "id": "inbox",
       "title": "Inbox/Ideas",
       "position": {
-        "x": 69,
-        "y": 47
+        "x": 49,
+        "y": 49
       },
       "accent": "writer",
       "border": "solid",
@@ -182,7 +182,7 @@
       "id": "compose",
       "title": "Compose",
       "position": {
-        "x": 345,
+        "x": 330,
         "y": 61
       },
       "accent": "writer",
@@ -247,8 +247,8 @@
       "id": "inCopy",
       "title": "In Copy Edit",
       "position": {
-        "x": 1412,
-        "y": 34
+        "x": 1411,
+        "y": 35
       },
       "accent": "copyed",
       "border": "dashed",
@@ -272,7 +272,7 @@
       "title": "Edits Done",
       "position": {
         "x": 78,
-        "y": 295
+        "y": 299
       },
       "accent": "ffe",
       "border": "dashed",
@@ -298,8 +298,8 @@
       "id": "editsRequired",
       "title": "Edits Required",
       "position": {
-        "x": 463,
-        "y": 247
+        "x": 437,
+        "y": 277
       },
       "accent": "writer",
       "border": "dashed",
@@ -317,8 +317,8 @@
       "id": "inFinancial",
       "title": "In Financial Edit",
       "position": {
-        "x": 886,
-        "y": 239
+        "x": 924,
+        "y": 273
       },
       "accent": "ffe",
       "border": "dashed",
@@ -340,8 +340,8 @@
       "id": "readyFinancial",
       "title": "Ready for Financial Edit",
       "position": {
-        "x": 1226,
-        "y": 230
+        "x": 1224,
+        "y": 264
       },
       "accent": "ffe",
       "border": "dashed",
@@ -363,8 +363,8 @@
       "id": "scheduled",
       "title": "Scheduled to Publish",
       "position": {
-        "x": 796,
-        "y": 568
+        "x": 664,
+        "y": 582
       },
       "accent": "system",
       "border": "solid",
@@ -393,7 +393,7 @@
       "title": "Published",
       "position": {
         "x": 1047,
-        "y": 438
+        "y": 476
       },
       "accent": "system",
       "border": "solid",
@@ -411,8 +411,8 @@
       "id": "unpublished",
       "title": "Unpublished",
       "position": {
-        "x": 1321,
-        "y": 448
+        "x": 1320,
+        "y": 480
       },
       "accent": "hq",
       "border": "dashed",
@@ -467,7 +467,7 @@
       "from": "grammarly",
       "to": "scheduled",
       "sourceHandle": "b",
-      "targetHandle": "l",
+      "targetHandle": "t",
       "role": "writer",
       "style": "solid",
       "label": "self-publish",
@@ -628,6 +628,7 @@
       "sourceHandle": "b",
       "targetHandle": "t",
       "sourceShift": -20,
+      "targetShift": 24,
       "role": "ffe",
       "style": "solid",
       "label": "the Financial Editor publishes / schedules from here",
@@ -772,6 +773,7 @@
       "to": "scheduled",
       "sourceHandle": "b",
       "targetHandle": "t",
+      "targetShift": -24,
       "role": "ffe",
       "style": "solid",
       "label": "Financial Editors publish / schedule",
