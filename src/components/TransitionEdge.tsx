@@ -13,6 +13,8 @@ export interface TransitionEdgeData extends Record<string, unknown> {
   label: string
   /** Gated by the self-publish matrix rather than by tier alone. */
   gated: boolean
+  /** Parallel track, to keep two routes sharing a corridor off each other. */
+  lane: number
   /**
    * Lens state, mirrored from the edge's className. EdgeLabelRenderer portals
    * labels into their own layer outside the edge <g>, so the class on the edge
@@ -23,6 +25,11 @@ export interface TransitionEdgeData extends Record<string, unknown> {
 }
 
 export type TransitionEdgeType = Edge<TransitionEdgeData, 'transition'>
+
+/** React Flow's own default offset, kept as the lane-0 route. */
+const LANE_BASE = 20
+/** Enough to read as two lines with a label chip between them. */
+const LANE_GAP = 22
 
 /**
  * Orthogonal transition edge.
@@ -52,6 +59,9 @@ export function TransitionEdge({
     sourcePosition,
     targetPosition,
     borderRadius: 0,
+    // How far the route runs straight out of the handle before it turns, so a
+    // lane shifts the long leg clear of anything sharing the same corridor.
+    offset: LANE_BASE + (data?.lane ?? 0) * LANE_GAP,
   })
 
   const role = data?.role ?? 'system'

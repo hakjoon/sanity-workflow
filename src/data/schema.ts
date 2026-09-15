@@ -132,6 +132,13 @@ export interface Transition {
   gate?: Gate
   whenModifier?: ModifierCondition
   note?: string
+  /**
+   * Which parallel track this route runs on, for edges that would otherwise
+   * share a corridor. Routes are orthogonal, so two edges leaving the same
+   * side of a node and heading the same way overlap for most of their length;
+   * a higher lane turns further out from the handle before running. 0 if unset.
+   */
+  lane?: number
 }
 
 export interface WorkflowNotes {
@@ -342,6 +349,9 @@ export function parseWorkflow(input: unknown): ParseResult {
       }
       if (t.gate !== undefined && t.gate !== 'selfPublish' && t.gate !== '!selfPublish') {
         errors.push(`${at}: "gate" must be "selfPublish" or "!selfPublish".`)
+      }
+      if (t.lane !== undefined && (typeof t.lane !== 'number' || !Number.isInteger(t.lane) || t.lane < 0)) {
+        errors.push(`${at}: "lane" must be a non-negative integer.`)
       }
       if (t.whenModifier !== undefined) {
         const wm = t.whenModifier

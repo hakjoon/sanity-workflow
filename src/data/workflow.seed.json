@@ -151,8 +151,8 @@
       "id": "inbox",
       "title": "Inbox/Ideas",
       "position": {
-        "x": 40,
-        "y": 40
+        "x": 69,
+        "y": 47
       },
       "accent": "writer",
       "border": "solid",
@@ -182,8 +182,8 @@
       "id": "compose",
       "title": "Compose",
       "position": {
-        "x": 320,
-        "y": 40
+        "x": 345,
+        "y": 61
       },
       "accent": "writer",
       "border": "solid",
@@ -205,8 +205,8 @@
       "id": "grammarly",
       "title": "Grammarly Edit Complete",
       "position": {
-        "x": 600,
-        "y": 40
+        "x": 754,
+        "y": 41
       },
       "accent": "writer",
       "border": "dashed",
@@ -224,8 +224,8 @@
       "id": "readyCopy",
       "title": "Ready for Copy Edit",
       "position": {
-        "x": 970,
-        "y": 40
+        "x": 1081,
+        "y": 38
       },
       "accent": "copyed",
       "border": "dashed",
@@ -247,8 +247,8 @@
       "id": "inCopy",
       "title": "In Copy Edit",
       "position": {
-        "x": 1250,
-        "y": 40
+        "x": 1412,
+        "y": 34
       },
       "accent": "copyed",
       "border": "dashed",
@@ -271,8 +271,8 @@
       "id": "editsDone",
       "title": "Edits Done",
       "position": {
-        "x": 320,
-        "y": 250
+        "x": 78,
+        "y": 295
       },
       "accent": "ffe",
       "border": "dashed",
@@ -298,8 +298,8 @@
       "id": "editsRequired",
       "title": "Edits Required",
       "position": {
-        "x": 600,
-        "y": 250
+        "x": 463,
+        "y": 247
       },
       "accent": "writer",
       "border": "dashed",
@@ -317,8 +317,8 @@
       "id": "inFinancial",
       "title": "In Financial Edit",
       "position": {
-        "x": 970,
-        "y": 250
+        "x": 886,
+        "y": 239
       },
       "accent": "ffe",
       "border": "dashed",
@@ -340,8 +340,8 @@
       "id": "readyFinancial",
       "title": "Ready for Financial Edit",
       "position": {
-        "x": 1250,
-        "y": 250
+        "x": 1226,
+        "y": 230
       },
       "accent": "ffe",
       "border": "dashed",
@@ -363,8 +363,8 @@
       "id": "scheduled",
       "title": "Scheduled to Publish",
       "position": {
-        "x": 600,
-        "y": 470
+        "x": 796,
+        "y": 568
       },
       "accent": "system",
       "border": "solid",
@@ -392,8 +392,8 @@
       "id": "published",
       "title": "Published",
       "position": {
-        "x": 970,
-        "y": 470
+        "x": 1047,
+        "y": 438
       },
       "accent": "system",
       "border": "solid",
@@ -411,8 +411,8 @@
       "id": "unpublished",
       "title": "Unpublished",
       "position": {
-        "x": 1250,
-        "y": 470
+        "x": 1321,
+        "y": 448
       },
       "accent": "hq",
       "border": "dashed",
@@ -466,7 +466,7 @@
       "id": "t-grammarly-scheduled",
       "from": "grammarly",
       "to": "scheduled",
-      "sourceHandle": "l",
+      "sourceHandle": "b",
       "targetHandle": "l",
       "role": "writer",
       "style": "dashed",
@@ -728,6 +728,7 @@
       "role": "copyed",
       "style": "dashed",
       "label": "1Editor — the Copy Editor resumes the article",
+      "lane": 1,
       "appliesTo": [
         "core-author",
         "projects-author",

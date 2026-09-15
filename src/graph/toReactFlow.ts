@@ -110,6 +110,7 @@ export function toReactFlow(
         style: t.style,
         label: t.label,
         gated: Boolean(t.gate),
+        lane: t.lane ?? 0,
         lens: lens === 'lens-dim' ? 'dim' : lens === 'lens-mute' ? 'mute' : null,
       },
       hidden: hide && !active,
