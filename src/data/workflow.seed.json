@@ -276,7 +276,9 @@
       },
       "accent": "ffe",
       "border": "dashed",
-      "badges": [],
+      "badges": [
+        "claimable"
+      ],
       "actors": [
         {
           "role": "ffe",
@@ -563,14 +565,17 @@
       "targetHandle": "t",
       "role": "copyed",
       "style": "dashed",
-      "label": "send back @ writer",
+      "label": "1Editor — send back @ writer",
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author",
-        "free-author"
-      ]
+        "free-writer"
+      ],
+      "note": "Only when the Copy Editor is finishing the article themselves. On a two-editor article the Copy Editor leaves questions as a note for the Financial Editor instead, so the writer is asked for edits once rather than twice.",
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
+      }
     },
     {
       "id": "t-readyFinancial-inFinancial",
@@ -653,6 +658,47 @@
       ]
     },
     {
+      "id": "t-editsDone-editsRequired-ffe",
+      "from": "editsDone",
+      "to": "editsRequired",
+      "sourceHandle": "t",
+      "targetHandle": "t",
+      "role": "ffe",
+      "style": "dashed",
+      "label": "another round @ writer",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author",
+        "free-author"
+      ],
+      "note": "A second or later round of edits on the same article.",
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
+    },
+    {
+      "id": "t-editsDone-editsRequired-copyed",
+      "from": "editsDone",
+      "to": "editsRequired",
+      "sourceHandle": "r",
+      "targetHandle": "b",
+      "role": "copyed",
+      "style": "dashed",
+      "label": "1Editor — another round @ writer",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
+      }
+    },
+    {
       "id": "t-editsDone-inFinancial",
       "from": "editsDone",
       "to": "inFinancial",
@@ -671,6 +717,26 @@
       "whenModifier": {
         "id": "oneEditor",
         "is": false
+      }
+    },
+    {
+      "id": "t-editsDone-inCopy",
+      "from": "editsDone",
+      "to": "inCopy",
+      "sourceHandle": "l",
+      "targetHandle": "t",
+      "role": "copyed",
+      "style": "dashed",
+      "label": "1Editor — the Copy Editor resumes the article",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "note": "Claiming it back. Edits Done holds nobody, so an editor who needs to work on the article themselves takes it into their own edit state first — the same move the Financial Editor makes.",
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
       }
     },
     {
@@ -808,11 +874,14 @@
       "Most articles are published or scheduled straight out of In Financial Edit — the Financial Editor finishes there. Edits Done is not a step on that path.",
       "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the Copy Editor from In Copy Edit. Which roles can carry 1Editor is set in the editors panel below, not fixed here.",
       "No role skips copy edit but still needs financial edit — financial edit always follows copy edit.",
-      "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
-      "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
-      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the Financial Editor, or is published or scheduled there by a Financial Editor or, for a 1Editor writer's article, a Copy Editor.",
+      "Send-backs land in Edits Required, from In Copy Edit, In Financial Edit or Edits Done — never back to Compose. Edits Done to Edits Required is a second or later round of edits on the same article.",
+      "Who may send an article back depends on the flow, not just the role. Financial Editors are the main users of Edits Required. A Copy Editor uses it only on an article they are finishing themselves — on a two-editor article they leave any question for the Financial Editor as a note, so the writer is interrupted once instead of twice.",
+      "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit, In Financial Edit or Edits Done itself returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
+      "Edits Done never goes to Ready for Financial Edit. In a two-editor flow the Copy Editor does not use Edits Required at all, so an article in Edits Done has already been through the financial queue and returns to In Financial Edit.",
+      "Edits Done is a queue, not a workspace. Nobody edits there and nobody holds it — the editor with nothing left to change publishes or schedules straight out of it, and the editor who does have something to change claims it back into their own edit state first: In Financial Edit, or In Copy Edit on a 1Editor article. So Edits Done sits in the same class as Ready for Copy Edit and Ready for Financial Edit, and one person works an article at a time everywhere in the graph.",
+      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it is published or scheduled, claimed back into an edit state, or sent to the writer for another round.",
       "HQ editors can move an article from any state to any other.",
-      "Edits Done is open to every editor and super-user, not held by the editor who sent the article back. That editor usually picks it up again, but forgets often enough that it has to stay open — so whoever publishes or schedules from Edits Done need not be the one who sent it back."
+      "Edits Done is open to every editor and super-user, not held by the editor who sent the article back. That editor usually picks it up again, but forgets often enough that it has to stay open — so whoever publishes, claims or schedules from Edits Done need not be the one who sent it back."
     ],
     "open": [
       "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
