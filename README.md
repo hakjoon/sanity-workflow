@@ -1,6 +1,6 @@
 # Article Workflow Editor
 
-An editable model of Sanity's article lifecycle — 12 states, 18 transitions, five writer tiers
+An editable model of Sanity's article lifecycle — 12 states, 24 transitions, four writer roles
 and ten article types — with a lens that collapses the graph to the path one article actually
 takes.
 
@@ -44,8 +44,8 @@ two-state matrix hid the difference. A new article type starts ✗ for everyone.
 
 ### Three lenses, composable
 
-- **Article by** — writer role: Core Author, Projects Author, Free Writer, AI-Assist Author, Free
-  Author (add your own in the matrix)
+- **Article by** — writer role: Core Author, Projects Author, Free Writer, AI-Assist Author (add
+  your own in the matrix)
 - **1Editor** — a modifier a writer carries *on top of* a role, not a role itself. Someone can be
   a Projects Author and 1Editor, or a Free Writer and 1Editor. It stops review at the Copy Editor
   instead of continuing to a Financial Editor. Which roles can carry it is set in the editors
@@ -112,12 +112,13 @@ draft.
 
 ## Two things to know
 
-**HQ's any-to-any is not drawn.** HQ editors can move an article between any two states — 132
+**HQ's any-to-any is not drawn.** Free HQ Editors can move an article between any two states — 132
 edges that would bury the diagram. It's the `hqOverride` flag, surfaced as a banner when you view
 as HQ.
 
-**Two things are still open**, badged in the diagram and listed in the notes panel: who can get
-back into a Published article, and who can reach Unpublished.
+**Two things are still open**, listed in the notes panel and badged in the diagram where they sit
+on a state: re-scheduling a published article and who sets the publish date, and whether the
+editor who asked for edits is notified when they come back.
 
 **The fall-through routing departs from the source diagram.** The design said *"Only SWUser
 articles continue to financial edit"*, which would send a Projects Author's article that can't

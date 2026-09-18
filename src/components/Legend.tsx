@@ -50,7 +50,7 @@ export function Legend({ doc }: { doc: WorkflowDoc }) {
 
       <span className="legend__item">
         <span className="legend__swatch legend__swatch--dashed" />
-        a step backwards — a send-back, an undo, or a pull out of live
+        an exception — a send-back, a release, an undo, or a pull out of live
       </span>
       <span className="legend__item">
         <span className="legend__gate" aria-hidden="true">

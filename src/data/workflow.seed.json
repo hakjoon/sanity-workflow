@@ -154,7 +154,7 @@
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -177,7 +177,7 @@
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -243,7 +243,7 @@
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -270,7 +270,7 @@
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -312,7 +312,7 @@
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -383,7 +383,11 @@
       "actors": [
         {
           "role": "system",
-          "text": "Automatic — no role acts here"
+          "text": "Automatic — the article lands here"
+        },
+        {
+          "role": "hq",
+          "text": "Free HQ Editors edit a published article"
         }
       ]
     },
@@ -396,13 +400,11 @@
       },
       "accent": "hq",
       "border": "dashed",
-      "badges": [
-        "access"
-      ],
+      "badges": [],
       "actors": [
         {
           "role": "hq",
-          "text": "HQ editors only"
+          "text": "Free HQ Editors only"
         }
       ]
     }
@@ -492,6 +494,25 @@
       ]
     },
     {
+      "id": "t-inCopy-readyCopy",
+      "from": "inCopy",
+      "to": "readyCopy",
+      "sourceHandle": "l",
+      "targetHandle": "r",
+      "sourceShift": 22,
+      "targetShift": 22,
+      "role": "copyed",
+      "style": "dashed",
+      "label": "release to the queue",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
+      ],
+      "note": "A Copy Editor who cannot finish an article puts it back in the queue, which clears the hold so another Copy Editor can claim it. Releasing is the only hand-off between editors — one editor never takes an article from another."
+    },
+    {
       "id": "t-inCopy-readyFinancial",
       "from": "inCopy",
       "to": "readyFinancial",
@@ -568,6 +589,28 @@
         "free-writer",
         "ai-assist-author"
       ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
+    },
+    {
+      "id": "t-inFinancial-readyFinancial",
+      "from": "inFinancial",
+      "to": "readyFinancial",
+      "sourceHandle": "t",
+      "targetHandle": "t",
+      "targetShift": -24,
+      "role": "ffe",
+      "style": "dashed",
+      "label": "release to the queue",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
+      ],
+      "note": "The same release the Copy Editor makes, one queue along: a Financial Editor who cannot finish puts the article back for another to claim.",
       "whenModifier": {
         "id": "oneEditor",
         "is": false
@@ -849,17 +892,24 @@
       "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the Copy Editor from In Copy Edit. Which roles can carry 1Editor is set in the editors panel below, not fixed here.",
       "No role skips copy edit but still needs financial edit — financial edit always follows copy edit.",
       "Send-backs land in Edits Required, from In Copy Edit, In Financial Edit or Edits Done — never back to Compose. Edits Done to Edits Required is a second or later round of edits on the same article.",
-      "Who may send an article back depends on the flow, not just the role. Financial Editors are the main users of Edits Required. A Copy Editor uses it only on an article they are finishing themselves — on a two-editor article they leave any question for the Financial Editor as a note, so the writer is interrupted once instead of twice.",
+      "Who may send an article back depends on the flow, not just the role. Financial Editors are the main users of Edits Required. A Copy Editor uses it only on an article they are finishing themselves — on a two-editor article they leave any question for the Financial Editor as a note, so the writer is interrupted once instead of twice. (Kris Eddy, migration channel, 11 Sept.)",
       "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit, In Financial Edit or Edits Done itself returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
-      "Edits Done never goes to Ready for Financial Edit. In a two-editor flow the Copy Editor does not use Edits Required at all, so an article in Edits Done has already been through the financial queue and returns to In Financial Edit.",
+      "Edits Done never goes to Ready for Financial Edit. In a two-editor flow the Copy Editor does not use Edits Required at all, so an article in Edits Done has already been through the financial queue and returns to In Financial Edit. (Follows from the rule above — Kris Eddy, migration channel, 11 Sept.)",
       "Edits Done is a queue, not a workspace. Nobody edits there and nobody holds it — the editor with nothing left to change publishes or schedules straight out of it, and the editor who does have something to change claims it back into their own edit state first: In Financial Edit, or In Copy Edit on a 1Editor article. So Edits Done sits in the same class as Ready for Copy Edit and Ready for Financial Edit, and one person works an article at a time everywhere in the graph.",
       "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it is published or scheduled, claimed back into an edit state, or sent to the writer for another round.",
-      "HQ editors can move an article from any state to any other.",
-      "Edits Done is open to every editor and super-user, not held by the editor who sent the article back. That editor usually picks it up again, but forgets often enough that it has to stay open — so whoever publishes, claims or schedules from Edits Done need not be the one who sent it back."
+      "Free HQ Editors can move an article from any state to any other.",
+      "Only Free HQ Editors unpublish, and only Free HQ Editors republish. A writer who self-publishes cannot take the article back down or push it out again, so every post-publish change routes through a Free HQ Editor — which is how it works today. (Editorial, content tech review, Sept.)",
+      "Taking an article someone else holds is not drawn, and follows one rule wherever it applies: Free HQ Editors may take one from anybody, editors may take one from any writer, and writers may take one from nobody — not from another writer and not from an editor. Editors never take an article from each other; they hand over by releasing it to the queue. (Katrina Jones and Savannah Esworthy, touchpoint, 11 Sept.)",
+      "Edits Done is open to every editor and super-user, not held by the editor who sent the article back. That editor usually picks it up again, but forgets often enough that it has to stay open — so whoever publishes, claims or schedules from Edits Done need not be the one who sent it back. (Kris Eddy, 3 Sept.)",
+      "A Copy Editor can edit the article themselves as well as send it back to the writer — both exits from In Copy Edit are open, and the editor chooses. Assumed rather than asked: which one an article takes, and how often, is not something the graph needs to know.",
+      "An editor hands over by releasing the article back to its queue — In Copy Edit returns to Ready for Copy Edit, In Financial Edit to Ready for Financial Edit — which clears the hold so another editor can claim it. One editor never takes an article from another. (Savannah Esworthy and Kristen Steele, touchpoint, 11 Sept.)",
+      "Both editor kinds are freelance: FFE is freelance financial editor, and the copyeditors are contractors too. Free HQ Editors are the roughly five full-time employees on the team, and the role covers fool.com and nothing else — not premium, taxonomy or the admin workspace, which is why the premium side has its own Premium Editor. A Free HQ Editor may enter any article, change its state, publish, unpublish, republish, edit anything and take an article from anyone. (Savannah Esworthy, touchpoint, 11 Sept; the scope and the name, content tech review, Sept.)",
+      "Duo never self-publishes and always takes two editors, whoever wrote it. The matrix carries the first half — no role publishes Duo — but not the second: 1Editor is a property of the writer with no article-type dimension, so a 1Editor writer's Duo shows one editor here rather than two. Duo is paused as an article type, so this is recorded rather than fixed. (Kris Eddy, roles call, 28 Aug; the pause, Savannah Esworthy, touchpoint, 11 Sept.)",
+      "The editor axis is two roles, one per queue: Copy Editor and Financial Editor. Mostly different people, with three or four who work both queues and hold both roles. (Editorial, content tech review, 16 Sept.)"
     ],
     "open": [
-      "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
-      "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build."
+      "Published — editing it is settled, the rest is not. Only Free HQ Editors may edit a published article, which is how the current CMS behaves and editorial is happy to keep (Savannah Esworthy, touchpoint, 11 Sept). Still open: who may unschedule or re-schedule, and who may set the publish date.",
+      "When an article returns to Edits Done, is the editor who sent it back notified? Any editor may claim it, which is settled, but that editor is the one waiting on it. Notifying them means the graph has to remember who they were, across the trip out to the writer and back. Nobody has asked editorial this; the expectation here is ours."
     ],
     "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a Copy Editor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the financial-edit queue depends on how many writers hold that modifier, not on which role they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
     "caveat": "HQ any-to-any and the copy-edit send-back both need non-sequential transitions, which Sanity does not support today."

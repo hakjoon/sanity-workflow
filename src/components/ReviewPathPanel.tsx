@@ -217,7 +217,7 @@ export function ReviewPathPanel({ doc, selection, onUpdate, onSelect }: Props) {
             {s.label}
           </span>
         ))}
-        {' · '}HQ editors can move an article anywhere and are not counted here.
+        {' · '}Free HQ Editors can move an article anywhere and are not counted here.
       </p>
     </section>
   )

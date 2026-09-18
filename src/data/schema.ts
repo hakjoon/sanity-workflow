@@ -18,8 +18,12 @@ export const ROLES: Record<RoleId, { label: string; short: string }> = {
   // renamed, and claimed DTP was still a group long after it became a modifier.
   writer: { label: 'Writers', short: 'Writers' },
   copyed: { label: 'Copy Editors', short: 'Copy Eds' },
+  // Editorial's FFE, which is freelance financial editor — both editor kinds
+  // are freelance, and the notes panel says so. The label stays short because
+  // the legend and every actor line render it.
   ffe: { label: 'Financial Editors', short: 'Fin Eds' },
-  hq: { label: 'HQ editors', short: 'HQ' },
+  // Free-side only, and the full-time employees on the team.
+  hq: { label: 'Free HQ Editors', short: 'HQ' },
   system: { label: 'System (automatic)', short: 'System' },
 }
 

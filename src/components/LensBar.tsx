@@ -169,7 +169,7 @@ export function LensBar({ doc, selection, path, onChange }: Props) {
 
       {selection.viewerRoles.includes('hq') && doc.hqOverride && (
         <p className="callout callout--hq">
-          <strong>HQ editors can move an article from any state to any other.</strong> Those{' '}
+          <strong>Free HQ Editors can move an article from any state to any other.</strong> Those{' '}
           {doc.states.length * (doc.states.length - 1)} transitions are not drawn — they would
           bury the diagram. Every state is reachable and leavable by HQ.
         </p>
