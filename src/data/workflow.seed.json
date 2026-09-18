@@ -489,8 +489,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ]
     },
     {
@@ -507,8 +506,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "note": "A Copy Editor who cannot finish an article puts it back in the queue, which clears the hold so another Copy Editor can claim it. Release is the only route between editors, since there is no editor-to-editor steal."
     },
@@ -524,8 +522,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -586,8 +583,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -607,8 +603,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "note": "The same release the Copy Editor makes, one queue along: a Financial Editor who cannot finish puts the article back for another to claim.",
       "whenModifier": {
@@ -628,8 +623,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -650,8 +644,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -671,8 +664,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ]
     },
     {
@@ -687,8 +679,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "note": "A second or later round of edits on the same article.",
       "whenModifier": {
@@ -729,8 +720,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -791,8 +781,7 @@
       "appliesTo": [
         "core-author",
         "projects-author",
-        "free-writer",
-        "ai-assist-author"
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
