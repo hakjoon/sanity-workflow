@@ -80,8 +80,8 @@ export default function App() {
           Article workflow — states, transitions, and who can move them
         </h1>
         <p className="page__intro">
-          Solid lines are the standard path; dashed lines are conditional routes. Line colour
-          shows who performs the transition, and badges mark which states sit in an open claim
+          Solid lines are the path an article takes when nothing goes wrong; dashed lines are the
+          exceptions — a send-back, a release, an undo, or a pull out of live. Line colour shows who performs the transition, and badges mark which states sit in an open claim
           queue. Pick a writer tier and an article type to trace one article through the graph —
           the fork at Grammarly Edit Complete is decided by the self-publish matrix below, so the
           same writer's News brief and Shorty take different routes.

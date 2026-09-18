@@ -1,26 +1,23 @@
 {
-  "version": 4,
+  "version": 5,
   "tiers": [
     {
-      "id": "pubAll",
-      "label": "PubAll"
+      "id": "core-author",
+      "label": "Core Author",
+      "note": "Editorial's PubCore. PubAll is not a role of its own — it is one person holding Core Author and Projects Author, so read those two rows together."
     },
     {
-      "id": "ultraDTP",
-      "label": "PubCore"
+      "id": "projects-author",
+      "label": "Projects Author"
     },
     {
-      "id": "midDTP",
-      "label": "PubProjects"
+      "id": "free-writer",
+      "label": "Free Writer"
     },
     {
-      "id": "swUser",
-      "label": "PubZero"
-    },
-    {
-      "id": "aiAssist",
-      "label": "AI-assist",
-      "note": "Most are also members of one of the other writer buckets, but a writer acts as exactly one tier at a time."
+      "id": "ai-assist-author",
+      "label": "AI-Assist Author",
+      "note": "Held alongside one of the other writer roles, not instead of one, but a writer acts as exactly one role at a time. The aiAssist id in articleTypes is the article type, not this role — the two are deliberately spelled differently, and the aiAssist entries inside the access publish lists are that type."
     }
   ],
   "articleTypes": [
@@ -66,7 +63,7 @@
     }
   ],
   "access": {
-    "ultraDTP": {
+    "core-author": {
       "publish": [
         "shorty",
         "medium",
@@ -81,7 +78,7 @@
         "earnings"
       ]
     },
-    "midDTP": {
+    "projects-author": {
       "publish": [
         "newsBrief",
         "shortMM",
@@ -96,7 +93,7 @@
         "duo"
       ]
     },
-    "swUser": {
+    "free-writer": {
       "publish": [],
       "write": [
         "shorty",
@@ -110,26 +107,11 @@
         "earnings"
       ]
     },
-    "aiAssist": {
+    "ai-assist-author": {
       "publish": [
         "aiAssist"
       ],
       "write": []
-    },
-    "pubAll": {
-      "publish": [
-        "shorty",
-        "medium",
-        "article",
-        "newsBrief",
-        "shortMM",
-        "longMM",
-        "influencer",
-        "earnings"
-      ],
-      "write": [
-        "duo"
-      ]
     }
   },
   "modifiers": [
@@ -138,10 +120,9 @@
       "label": "1Editor",
       "description": "Review stops at copy edit — the copyeditor publishes, no financial editor.",
       "appliesTo": [
-        "pubAll",
-        "ultraDTP",
-        "midDTP",
-        "swUser"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ]
     }
   ],
@@ -150,8 +131,8 @@
       "id": "inbox",
       "title": "Inbox/Ideas",
       "position": {
-        "x": 40,
-        "y": 40
+        "x": 49,
+        "y": 49
       },
       "accent": "writer",
       "border": "solid",
@@ -165,15 +146,15 @@
         },
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -181,8 +162,8 @@
       "id": "compose",
       "title": "Compose",
       "position": {
-        "x": 320,
-        "y": 40
+        "x": 330,
+        "y": 61
       },
       "accent": "writer",
       "border": "solid",
@@ -196,7 +177,7 @@
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -204,8 +185,8 @@
       "id": "grammarly",
       "title": "Grammarly Edit Complete",
       "position": {
-        "x": 600,
-        "y": 40
+        "x": 754,
+        "y": 41
       },
       "accent": "writer",
       "border": "dashed",
@@ -223,8 +204,8 @@
       "id": "readyCopy",
       "title": "Ready for Copy Edit",
       "position": {
-        "x": 970,
-        "y": 40
+        "x": 1081,
+        "y": 38
       },
       "accent": "copyed",
       "border": "dashed",
@@ -238,7 +219,7 @@
         },
         {
           "role": "copyed",
-          "text": "Copyeds claim"
+          "text": "Copy Editors claim"
         }
       ]
     },
@@ -246,8 +227,8 @@
       "id": "inCopy",
       "title": "In Copy Edit",
       "position": {
-        "x": 1250,
-        "y": 40
+        "x": 1411,
+        "y": 35
       },
       "accent": "copyed",
       "border": "dashed",
@@ -258,11 +239,11 @@
       "actors": [
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -270,26 +251,26 @@
       "id": "editsDone",
       "title": "Edits Done",
       "position": {
-        "x": 320,
-        "y": 250
+        "x": 78,
+        "y": 299
       },
       "accent": "ffe",
       "border": "dashed",
       "badges": [
-        "tbd"
+        "claimable"
       ],
       "actors": [
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -297,8 +278,8 @@
       "id": "editsRequired",
       "title": "Edits Required",
       "position": {
-        "x": 600,
-        "y": 250
+        "x": 437,
+        "y": 277
       },
       "accent": "writer",
       "border": "dashed",
@@ -316,8 +297,8 @@
       "id": "inFinancial",
       "title": "In Financial Edit",
       "position": {
-        "x": 970,
-        "y": 250
+        "x": 924,
+        "y": 273
       },
       "accent": "ffe",
       "border": "dashed",
@@ -327,11 +308,11 @@
       "actors": [
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "hq",
-          "text": "HQ editors"
+          "text": "Free HQ Editors"
         }
       ]
     },
@@ -339,8 +320,8 @@
       "id": "readyFinancial",
       "title": "Ready for Financial Edit",
       "position": {
-        "x": 1250,
-        "y": 250
+        "x": 1224,
+        "y": 264
       },
       "accent": "ffe",
       "border": "dashed",
@@ -354,7 +335,7 @@
         },
         {
           "role": "ffe",
-          "text": "FFEs claim"
+          "text": "Financial Editors claim"
         }
       ]
     },
@@ -362,8 +343,8 @@
       "id": "scheduled",
       "title": "Scheduled to Publish",
       "position": {
-        "x": 600,
-        "y": 470
+        "x": 664,
+        "y": 582
       },
       "accent": "system",
       "border": "solid",
@@ -375,11 +356,11 @@
         },
         {
           "role": "ffe",
-          "text": "FFEs"
+          "text": "Financial Editors"
         },
         {
           "role": "copyed",
-          "text": "Copyeds"
+          "text": "Copy Editors"
         },
         {
           "role": "writer",
@@ -391,8 +372,8 @@
       "id": "published",
       "title": "Published",
       "position": {
-        "x": 970,
-        "y": 470
+        "x": 1047,
+        "y": 476
       },
       "accent": "system",
       "border": "solid",
@@ -402,7 +383,11 @@
       "actors": [
         {
           "role": "system",
-          "text": "Automatic — no role acts here"
+          "text": "Automatic — the article lands here"
+        },
+        {
+          "role": "hq",
+          "text": "Free HQ Editors edit a published article"
         }
       ]
     },
@@ -410,18 +395,16 @@
       "id": "unpublished",
       "title": "Unpublished",
       "position": {
-        "x": 1250,
-        "y": 470
+        "x": 1320,
+        "y": 480
       },
       "accent": "hq",
       "border": "dashed",
-      "badges": [
-        "access"
-      ],
+      "badges": [],
       "actors": [
         {
           "role": "hq",
-          "text": "HQ editors only"
+          "text": "Free HQ Editors only"
         }
       ]
     }
@@ -437,11 +420,10 @@
       "style": "solid",
       "label": "create / claim",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ]
     },
     {
@@ -454,28 +436,26 @@
       "style": "solid",
       "label": "mark complete",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ]
     },
     {
       "id": "t-grammarly-scheduled",
       "from": "grammarly",
       "to": "scheduled",
-      "sourceHandle": "l",
-      "targetHandle": "l",
+      "sourceHandle": "b",
+      "targetHandle": "t",
       "role": "writer",
-      "style": "dashed",
+      "style": "solid",
       "label": "self-publish",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ],
       "gate": "selfPublish",
       "note": "Eligibility comes from the self-publish matrix, not the tier alone."
@@ -490,11 +470,10 @@
       "style": "solid",
       "label": "submit for copy edit",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ],
       "gate": "!selfPublish"
     },
@@ -508,12 +487,28 @@
       "style": "solid",
       "label": "claim",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ]
+    },
+    {
+      "id": "t-inCopy-readyCopy",
+      "from": "inCopy",
+      "to": "readyCopy",
+      "sourceHandle": "l",
+      "targetHandle": "r",
+      "sourceShift": 22,
+      "targetShift": 22,
+      "role": "copyed",
+      "style": "dashed",
+      "label": "release to the queue",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "note": "A Copy Editor who cannot finish an article puts it back in the queue, which clears the hold so another Copy Editor can claim it. Release is the only route between editors, since there is no editor-to-editor steal."
     },
     {
       "id": "t-inCopy-readyFinancial",
@@ -523,13 +518,11 @@
       "targetHandle": "t",
       "role": "copyed",
       "style": "solid",
-      "label": "hand off to FFE queue",
+      "label": "hand off to the financial queue",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -542,14 +535,14 @@
       "to": "scheduled",
       "sourceHandle": "b",
       "targetHandle": "r",
+      "targetShift": 14,
       "role": "copyed",
       "style": "solid",
-      "label": "1Editor — copyed publishes / schedules",
+      "label": "1Editor — the Copy Editor publishes / schedules",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "note": "Only for writers carrying the 1Editor modifier. Everyone else continues to financial edit.",
       "whenModifier": {
@@ -563,16 +556,20 @@
       "to": "editsRequired",
       "sourceHandle": "t",
       "targetHandle": "t",
+      "sourceShift": -20,
       "role": "copyed",
       "style": "dashed",
-      "label": "send back @ writer",
+      "label": "1Editor — send back @ writer",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
-      ]
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "note": "Only when the Copy Editor is finishing the article themselves. On a two-editor article the Copy Editor leaves questions as a note for the Financial Editor instead, so the writer is asked for edits once rather than twice.",
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
+      }
     },
     {
       "id": "t-readyFinancial-inFinancial",
@@ -584,12 +581,31 @@
       "style": "solid",
       "label": "claim",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
+    },
+    {
+      "id": "t-inFinancial-readyFinancial",
+      "from": "inFinancial",
+      "to": "readyFinancial",
+      "sourceHandle": "t",
+      "targetHandle": "t",
+      "targetShift": -24,
+      "role": "ffe",
+      "style": "dashed",
+      "label": "release to the queue",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "note": "The same release the Copy Editor makes, one queue along: a Financial Editor who cannot finish puts the article back for another to claim.",
       "whenModifier": {
         "id": "oneEditor",
         "is": false
@@ -605,11 +621,9 @@
       "style": "dashed",
       "label": "@ writer",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -622,15 +636,15 @@
       "to": "scheduled",
       "sourceHandle": "b",
       "targetHandle": "t",
+      "sourceShift": -20,
+      "targetShift": 24,
       "role": "ffe",
       "style": "solid",
-      "label": "FFE publishes / schedules from here",
+      "label": "the Financial Editor publishes / schedules from here",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -643,16 +657,55 @@
       "to": "editsDone",
       "sourceHandle": "l",
       "targetHandle": "r",
+      "targetShift": 14,
       "role": "writer",
-      "style": "dashed",
+      "style": "solid",
       "label": "writer resubmits",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ]
+    },
+    {
+      "id": "t-editsDone-editsRequired-ffe",
+      "from": "editsDone",
+      "to": "editsRequired",
+      "sourceHandle": "t",
+      "targetHandle": "t",
+      "role": "ffe",
+      "style": "dashed",
+      "label": "another round @ writer",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "note": "A second or later round of edits on the same article.",
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": false
+      }
+    },
+    {
+      "id": "t-editsDone-editsRequired-copyed",
+      "from": "editsDone",
+      "to": "editsRequired",
+      "sourceHandle": "r",
+      "targetHandle": "b",
+      "sourceShift": -14,
+      "role": "copyed",
+      "style": "dashed",
+      "label": "1Editor — another round @ writer",
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
+      }
     },
     {
       "id": "t-editsDone-inFinancial",
@@ -660,19 +713,40 @@
       "to": "inFinancial",
       "sourceHandle": "b",
       "targetHandle": "b",
+      "targetShift": 20,
       "role": "ffe",
       "style": "dashed",
-      "label": "FFE resumes the article",
+      "label": "the Financial Editor resumes the article",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
         "is": false
+      }
+    },
+    {
+      "id": "t-editsDone-inCopy",
+      "from": "editsDone",
+      "to": "inCopy",
+      "sourceHandle": "l",
+      "targetHandle": "t",
+      "targetShift": 20,
+      "role": "copyed",
+      "style": "dashed",
+      "label": "1Editor — the Copy Editor resumes the article",
+      "lane": 1,
+      "appliesTo": [
+        "core-author",
+        "projects-author",
+        "free-writer"
+      ],
+      "note": "Claiming it back. Edits Done holds nobody, so an editor who needs to work on the article themselves takes it into their own edit state first — the same move the Financial Editor makes.",
+      "whenModifier": {
+        "id": "oneEditor",
+        "is": true
       }
     },
     {
@@ -683,12 +757,11 @@
       "targetHandle": "l",
       "role": "copyed",
       "style": "solid",
-      "label": "Copyeds publish / schedule",
+      "label": "Copy Editors publish / schedule",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -701,15 +774,14 @@
       "to": "scheduled",
       "sourceHandle": "b",
       "targetHandle": "t",
+      "targetShift": -24,
       "role": "ffe",
       "style": "solid",
-      "label": "FFE publishes / schedules",
+      "label": "Financial Editors publish / schedule",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer"
       ],
       "whenModifier": {
         "id": "oneEditor",
@@ -722,15 +794,15 @@
       "to": "published",
       "sourceHandle": "r",
       "targetHandle": "l",
+      "sourceShift": -14,
       "role": "system",
       "style": "solid",
       "label": "automatic",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ]
     },
     {
@@ -743,11 +815,10 @@
       "style": "dashed",
       "label": "404 the page",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ]
     },
     {
@@ -757,14 +828,13 @@
       "sourceHandle": "b",
       "targetHandle": "b",
       "role": "hq",
-      "style": "dashed",
+      "style": "solid",
       "label": "republish after fixing",
       "appliesTo": [
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist",
-        "pubAll"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ]
     },
     {
@@ -774,16 +844,15 @@
       "sourceHandle": "t",
       "targetHandle": "t",
       "role": "writer",
-      "style": "solid",
+      "style": "dashed",
       "label": "Back to Inbox",
       "appliesTo": [
-        "pubAll",
-        "ultraDTP",
-        "midDTP",
-        "swUser",
-        "aiAssist"
+        "core-author",
+        "projects-author",
+        "free-writer",
+        "ai-assist-author"
       ],
-      "note": "Unclaims document/resets author"
+      "note": "Unclaims the article and resets its author. Only open to articles that came from Inbox: one created from a template starts in Compose and has no Inbox to go back to."
     }
   ],
   "reviewStages": [
@@ -796,7 +865,7 @@
     {
       "id": "financialEdit",
       "label": "Financial edit",
-      "short": "FFE",
+      "short": "FE",
       "state": "inFinancial"
     }
   ],
@@ -804,24 +873,35 @@
   "notes": {
     "answered": [
       "States are skippable by role, and role determines the path.",
-      "Every writer group applies to every state up to Grammarly Edit Complete — no group skips it. 1Editor is not a group: it is a property a writer carries on top of one, so someone can be PubProjects and 1Editor, or PubZero and 1Editor.",
+      "Every writer role applies to every state up to Grammarly Edit Complete — no role skips it. Core Author + Projects Author is one person holding two of them, which editorial calls PubAll. 1Editor is not a role: it is a property a writer carries on top of one, so someone can be a Projects Author and 1Editor, or a Free Writer and 1Editor.",
       "At Grammarly Edit Complete, self-publishing is decided by the tier × article-type matrix — not by tier alone. The same writer's News brief and Shorty can take different paths.",
       "Access is three-way, not two. A tier either self-publishes a type, writes it and sends it to review, or has no access and never authors it at all. Only the middle case reaches the copy edit states.",
       "Editors per article comes from three things: the tier's access to the type, whether the writer carries 1Editor, and nothing else. Anything self-published gets none. Anything else gets a copyeditor, then a financial editor — unless the writer is 1Editor, in which case the copyeditor finishes it.",
-      "Most articles are published or scheduled straight out of In Financial Edit — the FFE finishes there. Edits Done is not a step on that path.",
-      "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the copyeditor from In Copy Edit. Which groups can carry 1Editor is set in the editors panel below, not fixed here.",
-      "No tier skips copy edit but still needs FFE — financial edit always follows copy edit.",
-      "Send-backs land in Edits Required, from either In Copy Edit or In Financial Edit — never back to Compose.",
-      "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit or In Financial Edit returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
-      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it goes back to the FFE, or is published or scheduled there by an FFE or, for a 1Editor writer's article, a copyeditor.",
-      "HQ editors can move an article from any state to any other."
+      "Most articles are published or scheduled straight out of In Financial Edit — the Financial Editor finishes there. Edits Done is not a step on that path.",
+      "In Copy Edit is a branch point, and 1Editor is what decides it. A standard writer's article goes on to financial edit; a 1Editor writer's article is published or scheduled by the Copy Editor from In Copy Edit. Which roles can carry 1Editor is set in the editors panel below, not fixed here.",
+      "No role skips copy edit but still needs financial edit — financial edit always follows copy edit.",
+      "Send-backs land in Edits Required, from In Copy Edit, In Financial Edit or Edits Done — never back to Compose. Edits Done to Edits Required is a second or later round of edits on the same article.",
+      "Who may send an article back to the writer depends on the flow, not just the role. Financial Editors are the main users of Edits Required. A Copy Editor uses it only on an article they are finishing themselves — on a two-editor article they leave any question for the Financial Editor as a note, so the writer is interrupted once instead of twice. (Kris Eddy, migration channel, 11 Sept.)",
+      "Edits Done is optional. An article only reaches it after a send-back: In Copy Edit, In Financial Edit or Edits Done itself returns it to Edits Required, the writer resubmits, and it lands in Edits Done. An article that is never sent back never touches it.",
+      "Edits Done never goes to Ready for Financial Edit. In a two-editor flow the Copy Editor does not use Edits Required at all, so an article in Edits Done has already been through the financial queue — when it goes back for more work it returns to In Financial Edit, not to the queue. (Follows from the rule above — Kris Eddy, migration channel, 11 Sept.)",
+      "Edits Done is a queue, not a workspace. Nobody edits there and nobody holds it — the editor with nothing left to change publishes or schedules straight out of it, and the editor who does have something to change claims it back into their own edit state first: In Financial Edit, or In Copy Edit on a 1Editor article. So Edits Done sits in the same class as Ready for Copy Edit and Ready for Financial Edit, and one person works an article at a time everywhere in the graph.",
+      "Nothing publishes from Edits Required. Once the writer resubmits, the article moves to Edits Done — where it is published or scheduled, claimed back into an edit state, or sent to the writer for another round.",
+      "Free HQ Editors can move an article from any state to any other.",
+      "Only Free HQ Editors unpublish, and only Free HQ Editors republish. A writer who self-publishes cannot take the article back down or push it out again, so every post-publish change routes through a Free HQ Editor — which is how it works today. (Editorial, content tech review, Sept.)",
+      "Stealing an article someone else holds is not drawn, and follows one rule wherever it applies: Free HQ Editors steal from anybody, editors steal from any writer, and writers steal from nobody — not from another writer and not from an editor. There is no editor-to-editor steal: an editor who wants an article another editor holds waits for them to release it. (Katrina Jones and Savannah Esworthy, touchpoint, 11 Sept.)",
+      "Edits Done is open to every editor and super-user, not held by the editor who sent the article back. That editor usually picks it up again, but forgets often enough that it has to stay open — so whoever publishes, claims or schedules from Edits Done need not be the one who sent it back. (Kris Eddy, 3 Sept.)",
+      "A Copy Editor can edit the article themselves as well as send it back to the writer — both exits from In Copy Edit are open, and the editor chooses. Assumed rather than asked: which one an article takes, and how often, is not something the graph needs to know.",
+      "An article reaches Compose one of two ways, and the difference decides whether it can go back to Inbox. A writer claims an idea out of Inbox, which can be unclaimed and returned there; or a writer creates one from a template, which starts in Compose and has no Inbox to return to. The diagram draws one Compose, so read Back to Inbox as available only to the first kind.",
+      "Since there is no editor-to-editor steal, an article moves between editors by release: In Copy Edit returns to Ready for Copy Edit, In Financial Edit to Ready for Financial Edit, which clears the hold so another editor can claim it. (Savannah Esworthy and Kristen Steele, touchpoint, 11 Sept.)",
+      "Both editor kinds are freelance: FFE is freelance financial editor, and the copyeditors are contractors too. Free HQ Editors are the roughly five full-time employees on the team, and the role covers fool.com and nothing else — not premium, taxonomy or the admin workspace. On premium everyone is a Premium Editor today, and the people who correspond to Free HQ Editors there are the POMs, the full-time staff on premium — but the boundaries between them are loose enough that a POMs group is not being created until something needs it. A Free HQ Editor may enter any article, change its state, publish, unpublish, republish, edit anything and take an article from anyone. (Savannah Esworthy, touchpoint, 11 Sept; the scope and the name, content tech review, Sept.)",
+      "Duo never self-publishes and always takes two editors, whoever wrote it. The matrix carries the first half — no role publishes Duo — but not the second: 1Editor is a property of the writer with no article-type dimension, so a 1Editor writer's Duo shows one editor here rather than two. Duo is paused as an article type, so this is recorded rather than fixed. (Kris Eddy, roles call, 28 Aug; the pause, Savannah Esworthy, touchpoint, 11 Sept.)",
+      "The editor axis is two roles, one per queue: Copy Editor and Financial Editor. Mostly different people, with three or four who work both queues and hold both roles. (Editorial, content tech review, 16 Sept.)"
     ],
     "open": [
-      "Edits Done — claimed by one owner, or an open queue? Unclear whether it stays claimed by the FFE who finished the edit, or reopens for anyone eligible to pick up. Two things narrow this: it only ever affects articles that were sent back, since Edits Done is unreachable otherwise; and whoever holds it can publish or schedule, so the answer decides who is allowed to finish a resubmitted article.",
-      "Published — access undecided. Nothing holds a published article; it lands there automatically. The open question is who can get back into one: can anyone edit or re-schedule it in place, or is HQ unpublish-then-republish the only route? Carried over from the source diagram, which badged Published as undecided without writing up what was undecided.",
-      "Unpublished: leaning HQ and superusers only, since they are the only ones who can send an article there — but that could become a bottleneck. Not needed to start the build."
+      "Published — editing it is settled, the rest is not. Only Free HQ Editors may edit a published article, which is how the current CMS behaves and editorial is happy to keep (Savannah Esworthy, touchpoint, 11 Sept). Still open: who may unschedule or re-schedule, and who may set the publish date.",
+      "When an article returns to Edits Done, is the editor who sent it back notified? Any editor may claim it, which is settled, but that editor is the one waiting on it. Notifying them means the graph has to remember who they were, across the trip out to the writer and back. Nobody has asked editorial this; the expectation here is ours."
     ],
-    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a copyeditor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the FFE queue depends on how many writers hold that modifier, not on which tier they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
+    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a Copy Editor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the financial-edit queue depends on how many writers hold that modifier, not on which role they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
     "caveat": "HQ any-to-any and the copy-edit send-back both need non-sequential transitions, which Sanity does not support today."
   }
 }

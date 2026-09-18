@@ -98,8 +98,8 @@ export function Inspector({ doc, selected, onUpdate, onClose, onDelete }: Props)
               value={state.border}
               onChange={(e) => patchState({ border: e.target.value as 'solid' | 'dashed' })}
             >
-              <option value="solid">Solid — standard path</option>
-              <option value="dashed">Dashed — conditional</option>
+              <option value="solid">Solid — every article passes through</option>
+              <option value="dashed">Dashed — only some articles reach it</option>
             </select>
           </label>
 
@@ -231,8 +231,8 @@ export function Inspector({ doc, selected, onUpdate, onClose, onDelete }: Props)
               value={transition.style}
               onChange={(e) => patchTransition({ style: e.target.value as 'solid' | 'dashed' })}
             >
-              <option value="solid">Solid — standard path</option>
-              <option value="dashed">Dashed — conditional</option>
+              <option value="solid">Solid — the path when nothing goes wrong</option>
+              <option value="dashed">Dashed — an exception</option>
             </select>
           </label>
 

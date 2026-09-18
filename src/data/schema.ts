@@ -6,7 +6,7 @@
  * unreadable version. It is not a general-purpose schema library.
  */
 
-export const SCHEMA_VERSION = 4
+export const SCHEMA_VERSION = 5
 
 export type RoleId = 'writer' | 'copyed' | 'ffe' | 'hq' | 'system'
 
@@ -17,9 +17,13 @@ export const ROLES: Record<RoleId, { label: string; short: string }> = {
   // document. Spelling them out here went stale the moment groups were
   // renamed, and claimed DTP was still a group long after it became a modifier.
   writer: { label: 'Writers', short: 'Writers' },
-  copyed: { label: 'Copyeds', short: 'Copyeds' },
-  ffe: { label: 'FFEs', short: 'FFEs' },
-  hq: { label: 'HQ editors', short: 'HQ' },
+  copyed: { label: 'Copy Editors', short: 'Copy Eds' },
+  // Editorial's FFE, which is freelance financial editor — both editor kinds
+  // are freelance, and the notes panel says so. The label stays short because
+  // the legend and every actor line render it.
+  ffe: { label: 'Financial Editors', short: 'Fin Eds' },
+  // Free-side only, and the full-time employees on the team.
+  hq: { label: 'Free HQ Editors', short: 'HQ' },
   system: { label: 'System (automatic)', short: 'System' },
 }
 
@@ -132,6 +136,22 @@ export interface Transition {
   gate?: Gate
   whenModifier?: ModifierCondition
   note?: string
+  /**
+   * Which parallel track this route runs on, for edges that would otherwise
+   * share a corridor. Routes are orthogonal, so two edges leaving the same
+   * side of a node and heading the same way overlap for most of their length;
+   * a higher lane turns further out from the handle before running. 0 if unset.
+   */
+  lane?: number
+  /**
+   * Nudge, in pixels, along the node's edge, away from the handle's centre.
+   * Every edge on a handle attaches to the same point, so a side carrying an
+   * inbound and an outbound route has both meeting there and neither is
+   * legible; shifting them apart keeps the side but separates the ends.
+   * Signed: negative is left on a top or bottom handle, up on a left or right one.
+   */
+  sourceShift?: number
+  targetShift?: number
 }
 
 export interface WorkflowNotes {
@@ -342,6 +362,15 @@ export function parseWorkflow(input: unknown): ParseResult {
       }
       if (t.gate !== undefined && t.gate !== 'selfPublish' && t.gate !== '!selfPublish') {
         errors.push(`${at}: "gate" must be "selfPublish" or "!selfPublish".`)
+      }
+      if (t.lane !== undefined && (typeof t.lane !== 'number' || !Number.isInteger(t.lane) || t.lane < 0)) {
+        errors.push(`${at}: "lane" must be a non-negative integer.`)
+      }
+      for (const f of ['sourceShift', 'targetShift'] as const) {
+        const v = t[f]
+        if (v !== undefined && (typeof v !== 'number' || !Number.isFinite(v))) {
+          errors.push(`${at}: "${f}" must be a number.`)
+        }
       }
       if (t.whenModifier !== undefined) {
         const wm = t.whenModifier
