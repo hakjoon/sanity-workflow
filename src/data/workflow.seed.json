@@ -538,7 +538,7 @@
       "targetShift": 14,
       "role": "copyed",
       "style": "solid",
-      "label": "1Editor — the Copy Editor publishes / schedules",
+      "label": "1Editor — publish / schedule",
       "appliesTo": [
         "core-author",
         "projects-author",
@@ -628,7 +628,7 @@
       "targetShift": 24,
       "role": "ffe",
       "style": "solid",
-      "label": "the Financial Editor publishes / schedules from here",
+      "label": "publish / schedule",
       "appliesTo": [
         "core-author",
         "projects-author",
@@ -689,7 +689,7 @@
       "targetShift": 20,
       "role": "ffe",
       "style": "dashed",
-      "label": "the Financial Editor resumes the article",
+      "label": "resume",
       "appliesTo": [
         "core-author",
         "projects-author",
@@ -709,7 +709,7 @@
       "targetShift": 20,
       "role": "copyed",
       "style": "dashed",
-      "label": "1Editor — the Copy Editor resumes the article",
+      "label": "1Editor — resume",
       "lane": 1,
       "appliesTo": [
         "core-author",
