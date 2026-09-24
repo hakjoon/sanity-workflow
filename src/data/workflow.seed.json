@@ -668,7 +668,7 @@
       ]
     },
     {
-      "id": "t-editsDone-editsRequired-ffe",
+      "id": "t-editsDone-editsRequired",
       "from": "editsDone",
       "to": "editsRequired",
       "sourceHandle": "t",
@@ -685,27 +685,16 @@
       "whenModifier": {
         "id": "oneEditor",
         "is": false
-      }
-    },
-    {
-      "id": "t-editsDone-editsRequired-copyed",
-      "from": "editsDone",
-      "to": "editsRequired",
-      "sourceHandle": "r",
-      "targetHandle": "b",
-      "sourceShift": -14,
-      "role": "copyed",
-      "style": "dashed",
-      "label": "1Editor — another round @ writer",
-      "appliesTo": [
-        "core-author",
-        "projects-author",
-        "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": true
-      }
+      },
+      "alsoBy": [
+        {
+          "role": "copyed",
+          "whenModifier": {
+            "id": "oneEditor",
+            "is": true
+          }
+        }
+      ]
     },
     {
       "id": "t-editsDone-inFinancial",
@@ -750,26 +739,7 @@
       }
     },
     {
-      "id": "t-editsDone-scheduled-copyed",
-      "from": "editsDone",
-      "to": "scheduled",
-      "sourceHandle": "b",
-      "targetHandle": "l",
-      "role": "copyed",
-      "style": "solid",
-      "label": "Copy Editors publish / schedule",
-      "appliesTo": [
-        "core-author",
-        "projects-author",
-        "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": true
-      }
-    },
-    {
-      "id": "t-editsDone-scheduled-ffe",
+      "id": "t-editsDone-scheduled",
       "from": "editsDone",
       "to": "scheduled",
       "sourceHandle": "b",
@@ -777,7 +747,7 @@
       "targetShift": -24,
       "role": "ffe",
       "style": "solid",
-      "label": "Financial Editors publish / schedule",
+      "label": "publish / schedule",
       "appliesTo": [
         "core-author",
         "projects-author",
@@ -786,7 +756,16 @@
       "whenModifier": {
         "id": "oneEditor",
         "is": false
-      }
+      },
+      "alsoBy": [
+        {
+          "role": "copyed",
+          "whenModifier": {
+            "id": "oneEditor",
+            "is": true
+          }
+        }
+      ]
     },
     {
       "id": "t-scheduled-published",
