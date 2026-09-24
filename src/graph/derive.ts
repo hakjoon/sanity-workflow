@@ -8,7 +8,19 @@
  * different paths out of the same state.
  */
 
-import type { AccessLevel, RoleId, Transition, WorkflowDoc } from '../data/schema'
+import type { AccessLevel, Performer, RoleId, Transition, WorkflowDoc } from '../data/schema'
+
+/** Everyone who can make this move: the primary role first, then `alsoBy`. */
+export function performers(t: Transition): Performer[] {
+  return [{ role: t.role, whenModifier: t.whenModifier }, ...(t.alsoBy ?? [])]
+}
+
+/** Unpinned means either value is possible, so the performer stays live. */
+export function performerLive(p: Performer, modifiers: Record<string, boolean>): boolean {
+  if (!p.whenModifier) return true
+  const pinned = modifiers[p.whenModifier.id]
+  return pinned === undefined || pinned === p.whenModifier.is
+}
 
 export interface LensSelection {
   tierId: string | null
@@ -134,12 +146,7 @@ function isTransitionAvailable(
   if (!t.appliesTo.some((x) => tierIds.has(x))) return false
   if (t.gate === 'selfPublish' && !reach.any) return false
   if (t.gate === '!selfPublish' && !reach.none) return false
-  if (t.whenModifier) {
-    const pinned = modifiers[t.whenModifier.id]
-    // Unpinned means either value is possible, so the transition stays live.
-    if (pinned !== undefined && pinned !== t.whenModifier.is) return false
-  }
-  return true
+  return performers(t).some((p) => performerLive(p, modifiers))
 }
 
 /**
@@ -238,7 +245,7 @@ export function derivePath(doc: WorkflowDoc, sel: LensSelection): DerivedPath {
   return {
     reachableStates,
     activeTransitions,
-    viewerTransitions: viewerSubset(doc, activeTransitions, sel.viewerRoles),
+    viewerTransitions: viewerSubset(doc, activeTransitions, sel.viewerRoles, sel.modifiers),
     selfPublishes: canSelfPublish(doc, sel.tierId, sel.articleTypeId),
     reach,
     noAccess: false,
@@ -250,12 +257,14 @@ function viewerSubset(
   doc: WorkflowDoc,
   active: Set<string>,
   viewerRoles: RoleId[],
+  modifiers: Record<string, boolean>,
 ): Set<string> {
   if (viewerRoles.length === 0) return new Set()
   const roles = new Set(viewerRoles)
   const out = new Set<string>()
   for (const t of doc.transitions) {
-    if (active.has(t.id) && roles.has(t.role)) out.add(t.id)
+    if (!active.has(t.id)) continue
+    if (performers(t).some((p) => roles.has(p.role) && performerLive(p, modifiers))) out.add(t.id)
   }
   return out
 }

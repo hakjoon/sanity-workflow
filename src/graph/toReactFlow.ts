@@ -1,6 +1,6 @@
 import { MarkerType, type Edge, type Node } from '@xyflow/react'
 import type { RoleId, WorkflowDoc } from '../data/schema'
-import type { DerivedPath, LensSelection } from './derive'
+import { performerLive, performers, type DerivedPath, type LensSelection } from './derive'
 import type { StateNodeData } from '../components/StateNode'
 import type { TransitionEdgeData } from '../components/TransitionEdge'
 
@@ -53,7 +53,10 @@ export function toReactFlow(
   if (hasViewer) {
     for (const t of doc.transitions) {
       if (!path.viewerTransitions.has(t.id)) continue
-      if (!actionableStates.has(t.from)) actionableStates.set(t.from, t.role)
+      const actor = performers(t).find(
+        (p) => sel.viewerRoles.includes(p.role) && performerLive(p, sel.modifiers),
+      )
+      if (actor && !actionableStates.has(t.from)) actionableStates.set(t.from, actor.role)
       touchedByViewer.add(t.from)
       touchedByViewer.add(t.to)
     }
@@ -91,6 +94,14 @@ export function toReactFlow(
     // performs stays visible even when a viewer role is selected — it is part
     // of this article's journey, just not your part of it.
     const lens = !active ? 'lens-dim' : hasViewer && !isViewerRole ? 'lens-mute' : undefined
+    // A shared edge takes the colour of whoever the lens leaves making the move:
+    // the highlighted role if it is one of them, else the first still live.
+    const live = performers(t).filter((p) => performerLive(p, sel.modifiers))
+    const role = (
+      live.find((p) => sel.viewerRoles.includes(p.role)) ??
+      live[0] ??
+      performers(t)[0]
+    ).role
 
     return {
       id: t.id,
@@ -103,10 +114,10 @@ export function toReactFlow(
         type: MarkerType.ArrowClosed,
         width: 14,
         height: 14,
-        color: roleColor(t.role),
+        color: roleColor(role),
       },
       data: {
-        role: t.role,
+        role,
         style: t.style,
         label: t.label,
         gated: Boolean(t.gate),

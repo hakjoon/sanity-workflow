@@ -224,6 +224,23 @@ export function Inspector({ doc, selected, onUpdate, onClose, onDelete }: Props)
             </select>
           </label>
 
+          {transition.alsoBy?.length ? (
+            <div className="field">
+              <span className="field__label">Also performed by</span>
+              <ul>
+                {transition.alsoBy.map((p, i) => {
+                  const mod = p.whenModifier && doc.modifiers.find((m) => m.id === p.whenModifier!.id)
+                  return (
+                    <li key={i}>
+                      {ROLES[p.role].short}
+                      {mod && ` — ${p.whenModifier!.is ? '' : 'not '}${mod.label}`}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ) : null}
+
           <label className="field">
             <span className="field__label">Line style</span>
             <select
