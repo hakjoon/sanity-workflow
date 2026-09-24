@@ -344,7 +344,7 @@
       "title": "Scheduled to Publish",
       "position": {
         "x": 664,
-        "y": 582
+        "y": 609
       },
       "accent": "system",
       "border": "solid",
@@ -538,7 +538,7 @@
       "targetShift": 14,
       "role": "copyed",
       "style": "solid",
-      "label": "1Editor — the Copy Editor publishes / schedules",
+      "label": "1Editor — publish / schedule",
       "appliesTo": [
         "core-author",
         "projects-author",
@@ -584,11 +584,7 @@
         "core-author",
         "projects-author",
         "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      ]
     },
     {
       "id": "t-inFinancial-readyFinancial",
@@ -605,11 +601,7 @@
         "projects-author",
         "free-writer"
       ],
-      "note": "The same release the Copy Editor makes, one queue along: a Financial Editor who cannot finish puts the article back for another to claim.",
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      "note": "The same release the Copy Editor makes, one queue along: a Financial Editor who cannot finish puts the article back for another to claim."
     },
     {
       "id": "t-inFinancial-editsRequired",
@@ -624,11 +616,7 @@
         "core-author",
         "projects-author",
         "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      ]
     },
     {
       "id": "t-inFinancial-scheduled",
@@ -640,16 +628,12 @@
       "targetShift": 24,
       "role": "ffe",
       "style": "solid",
-      "label": "the Financial Editor publishes / schedules from here",
+      "label": "publish / schedule",
       "appliesTo": [
         "core-author",
         "projects-author",
         "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      ]
     },
     {
       "id": "t-editsRequired-editsDone",
@@ -668,7 +652,7 @@
       ]
     },
     {
-      "id": "t-editsDone-editsRequired-ffe",
+      "id": "t-editsDone-editsRequired",
       "from": "editsDone",
       "to": "editsRequired",
       "sourceHandle": "t",
@@ -685,27 +669,16 @@
       "whenModifier": {
         "id": "oneEditor",
         "is": false
-      }
-    },
-    {
-      "id": "t-editsDone-editsRequired-copyed",
-      "from": "editsDone",
-      "to": "editsRequired",
-      "sourceHandle": "r",
-      "targetHandle": "b",
-      "sourceShift": -14,
-      "role": "copyed",
-      "style": "dashed",
-      "label": "1Editor — another round @ writer",
-      "appliesTo": [
-        "core-author",
-        "projects-author",
-        "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": true
-      }
+      },
+      "alsoBy": [
+        {
+          "role": "copyed",
+          "whenModifier": {
+            "id": "oneEditor",
+            "is": true
+          }
+        }
+      ]
     },
     {
       "id": "t-editsDone-inFinancial",
@@ -716,7 +689,7 @@
       "targetShift": 20,
       "role": "ffe",
       "style": "dashed",
-      "label": "the Financial Editor resumes the article",
+      "label": "resume",
       "appliesTo": [
         "core-author",
         "projects-author",
@@ -736,7 +709,7 @@
       "targetShift": 20,
       "role": "copyed",
       "style": "dashed",
-      "label": "1Editor — the Copy Editor resumes the article",
+      "label": "1Editor — resume",
       "lane": 1,
       "appliesTo": [
         "core-author",
@@ -750,26 +723,7 @@
       }
     },
     {
-      "id": "t-editsDone-scheduled-copyed",
-      "from": "editsDone",
-      "to": "scheduled",
-      "sourceHandle": "b",
-      "targetHandle": "l",
-      "role": "copyed",
-      "style": "solid",
-      "label": "Copy Editors publish / schedule",
-      "appliesTo": [
-        "core-author",
-        "projects-author",
-        "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": true
-      }
-    },
-    {
-      "id": "t-editsDone-scheduled-ffe",
+      "id": "t-editsDone-scheduled",
       "from": "editsDone",
       "to": "scheduled",
       "sourceHandle": "b",
@@ -777,7 +731,7 @@
       "targetShift": -24,
       "role": "ffe",
       "style": "solid",
-      "label": "Financial Editors publish / schedule",
+      "label": "publish / schedule",
       "appliesTo": [
         "core-author",
         "projects-author",
@@ -786,7 +740,16 @@
       "whenModifier": {
         "id": "oneEditor",
         "is": false
-      }
+      },
+      "alsoBy": [
+        {
+          "role": "copyed",
+          "whenModifier": {
+            "id": "oneEditor",
+            "is": true
+          }
+        }
+      ]
     },
     {
       "id": "t-scheduled-published",
@@ -901,7 +864,7 @@
       "Published — editing it is settled, the rest is not. Only Free HQ Editors may edit a published article, which is how the current CMS behaves and editorial is happy to keep (Savannah Esworthy, touchpoint, 11 Sept). Still open: who may unschedule or re-schedule, and who may set the publish date.",
       "When an article returns to Edits Done, is the editor who sent it back notified? Any editor may claim it, which is settled, but that editor is the one waiting on it. Notifying them means the graph has to remember who they were, across the trip out to the writer and back. Nobody has asked editorial this; the expectation here is ours."
     ],
-    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants — by group if Sanity supports it, otherwise by individual. Articles that fail the self-publish matrix route to a Copy Editor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the financial-edit queue depends on how many writers hold that modifier, not on which role they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
-    "caveat": "HQ any-to-any and the copy-edit send-back both need non-sequential transitions, which Sanity does not support today."
+    "routing": "Copy edit and financial edit are claim-based, so each queue needs a defined list of eligible claimants, set by role. Articles that fail the self-publish matrix route to a Copy Editor, and every article goes on to a financial editor unless its writer carries 1Editor — so the size of the financial-edit queue depends on how many writers hold that modifier, not on which role they are in. A new article type starts with no access for anyone, so adding one grants nobody anything until the matrix is filled in — deliberate, but it means the matrix is the gate on rolling out a new format.",
+    "caveat": "HQ any-to-any and the copy-edit send-back need non-sequential transitions. The workflow plugin already supports them; they only have to be drawn."
   }
 }

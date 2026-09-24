@@ -6,7 +6,9 @@ import {
   type Edge,
   type EdgeProps,
 } from '@xyflow/react'
+import { useEffect, useLayoutEffect, useSyncExternalStore } from 'react'
 import type { RoleId } from '../data/schema'
+import { corridorPosition, midLeg, reportLeg, subscribeCorridors } from '../graph/corridors'
 
 export interface TransitionEdgeData extends Record<string, unknown> {
   role: RoleId
@@ -67,6 +69,14 @@ export function TransitionEdge({
 }: EdgeProps<TransitionEdgeType>) {
   const [sx, sy] = slide(sourceX, sourceY, sourcePosition, data?.sourceShift ?? 0)
   const [tx, ty] = slide(targetX, targetY, targetPosition, data?.targetShift ?? 0)
+  // How far the route runs straight out of the handle before it turns, so a
+  // lane shifts the long leg clear of anything sharing the same corridor.
+  const offset = LANE_BASE + (data?.lane ?? 0) * LANE_GAP
+
+  const leg = midLeg(sx, sy, tx, ty, sourcePosition, targetPosition, offset)
+  useLayoutEffect(() => reportLeg(id, leg))
+  useEffect(() => () => reportLeg(id, null), [id])
+  const spread = useSyncExternalStore(subscribeCorridors, () => corridorPosition(id))
 
   const [path, labelX, labelY] = getSmoothStepPath({
     sourceX: sx,
@@ -76,9 +86,9 @@ export function TransitionEdge({
     sourcePosition,
     targetPosition,
     borderRadius: 0,
-    // How far the route runs straight out of the handle before it turns, so a
-    // lane shifts the long leg clear of anything sharing the same corridor.
-    offset: LANE_BASE + (data?.lane ?? 0) * LANE_GAP,
+    offset: offset + (leg?.kind === 'offset' && spread !== undefined ? Math.abs(spread - leg.at) : 0),
+    centerX: leg?.kind === 'center' && leg.axis === 'x' ? spread : undefined,
+    centerY: leg?.kind === 'center' && leg.axis === 'y' ? spread : undefined,
   })
 
   const role = data?.role ?? 'system'

@@ -122,6 +122,11 @@ export interface WorkflowState {
   actors: Actor[]
 }
 
+export interface Performer {
+  role: RoleId
+  whenModifier?: ModifierCondition
+}
+
 export interface Transition {
   id: string
   from: string
@@ -135,6 +140,12 @@ export interface Transition {
   appliesTo: string[]
   gate?: Gate
   whenModifier?: ModifierCondition
+  /**
+   * Further roles making the same move, each under its own modifier
+   * condition — so the Financial Editor and the 1Editor Copy Editor doing the
+   * same thing draw as one line instead of two.
+   */
+  alsoBy?: Performer[]
   note?: string
   /**
    * Which parallel track this route runs on, for edges that would otherwise
@@ -347,8 +358,29 @@ export function parseWorkflow(input: unknown): ParseResult {
       if (typeof t.to !== 'string' || !stateIds.has(t.to)) {
         errors.push(`${at}: "to" references unknown state "${String(t.to)}".`)
       }
-      if (typeof t.role !== 'string' || !ROLE_IDS.includes(t.role as RoleId)) {
-        errors.push(`${at}: unknown role "${String(t.role)}".`)
+      const checkPerformer = (p: Record<string, unknown>, where: string) => {
+        if (typeof p.role !== 'string' || !ROLE_IDS.includes(p.role as RoleId)) {
+          errors.push(`${where}: unknown role "${String(p.role)}".`)
+        }
+        if (p.whenModifier !== undefined) {
+          const wm = p.whenModifier
+          if (!isObj(wm) || typeof wm.id !== 'string' || typeof wm.is !== 'boolean') {
+            errors.push(`${where}: "whenModifier" needs a string "id" and boolean "is".`)
+          } else if (!modifierIds.has(wm.id)) {
+            errors.push(`${where}: whenModifier references unknown modifier "${wm.id}".`)
+          }
+        }
+      }
+      checkPerformer(t, at)
+      if (t.alsoBy !== undefined) {
+        if (!Array.isArray(t.alsoBy)) {
+          errors.push(`${at}: "alsoBy" must be an array.`)
+        } else {
+          t.alsoBy.forEach((p, k) => {
+            if (isObj(p)) checkPerformer(p, `${at} alsoBy[${k}]`)
+            else errors.push(`${at} alsoBy[${k}]: must be an object.`)
+          })
+        }
       }
       if (t.style !== 'solid' && t.style !== 'dashed') {
         errors.push(`${at}: "style" must be "solid" or "dashed".`)
@@ -370,14 +402,6 @@ export function parseWorkflow(input: unknown): ParseResult {
         const v = t[f]
         if (v !== undefined && (typeof v !== 'number' || !Number.isFinite(v))) {
           errors.push(`${at}: "${f}" must be a number.`)
-        }
-      }
-      if (t.whenModifier !== undefined) {
-        const wm = t.whenModifier
-        if (!isObj(wm) || typeof wm.id !== 'string' || typeof wm.is !== 'boolean') {
-          errors.push(`${at}: "whenModifier" needs a string "id" and boolean "is".`)
-        } else if (!modifierIds.has(wm.id)) {
-          errors.push(`${at}: whenModifier references unknown modifier "${wm.id}".`)
         }
       }
     })

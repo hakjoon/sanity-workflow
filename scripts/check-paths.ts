@@ -12,7 +12,7 @@
 
 import seed from '../src/data/workflow.seed.json' with { type: 'json' }
 import { parseWorkflow } from '../src/data/schema.ts'
-import { accessLevel, derivePath } from '../src/graph/derive.ts'
+import { accessLevel, derivePath, performers } from '../src/graph/derive.ts'
 
 const parsed = parseWorkflow(seed)
 if (!parsed.ok) {
@@ -127,8 +127,12 @@ for (const m of doc.modifiers) {
   const sample = carrier && doc.articleTypes.find((t) => doc.access[carrier.id].write.includes(t.id))
   if (carrier && sample) {
     const either = derivePath(doc, { ...NONE, tierId: carrier.id, articleTypeId: sample.id })
-    const on = doc.transitions.filter((t) => t.whenModifier?.id === m.id && t.whenModifier.is)
-    const off = doc.transitions.filter((t) => t.whenModifier?.id === m.id && !t.whenModifier.is)
+    const when = (is: boolean) =>
+      doc.transitions.filter((t) =>
+        performers(t).some((p) => p.whenModifier?.id === m.id && p.whenModifier.is === is),
+      )
+    const on = when(true)
+    const off = when(false)
     const live = (list: typeof on) => list.some((t) => either.activeTransitions.has(t.id))
     if (live(on) && live(off)) ok(`${m.label} unpinned`, 'both review depths shown')
     else bad(`${m.label} unpinned`, 'expected both review depths live')
