@@ -584,11 +584,7 @@
         "core-author",
         "projects-author",
         "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      ]
     },
     {
       "id": "t-inFinancial-readyFinancial",
@@ -605,11 +601,7 @@
         "projects-author",
         "free-writer"
       ],
-      "note": "The same release the Copy Editor makes, one queue along: a Financial Editor who cannot finish puts the article back for another to claim.",
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      "note": "The same release the Copy Editor makes, one queue along: a Financial Editor who cannot finish puts the article back for another to claim."
     },
     {
       "id": "t-inFinancial-editsRequired",
@@ -624,11 +616,7 @@
         "core-author",
         "projects-author",
         "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      ]
     },
     {
       "id": "t-inFinancial-scheduled",
@@ -645,11 +633,7 @@
         "core-author",
         "projects-author",
         "free-writer"
-      ],
-      "whenModifier": {
-        "id": "oneEditor",
-        "is": false
-      }
+      ]
     },
     {
       "id": "t-editsRequired-editsDone",
