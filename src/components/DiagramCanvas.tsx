@@ -20,6 +20,10 @@ import type { Selected } from './Inspector'
 const nodeTypes = { stateNode: StateNode }
 const edgeTypes = { transition: TransitionEdge }
 
+// fitView frames nodes only, and edges route around the outside of the top
+// and bottom rows, so those need room beyond the node bounds.
+const FIT_PADDING = { x: '20px', y: '60px' } as const
+
 interface Props {
   doc: WorkflowDoc
   path: DerivedPath
@@ -142,7 +146,7 @@ export function DiagramCanvas({ doc, path, selection, selected, onUpdate, onSele
     .join(',')
   const { fitView } = useReactFlow()
   useEffect(() => {
-    const t = setTimeout(() => void fitView({ padding: 0.12, duration: 200 }), 0)
+    const t = setTimeout(() => void fitView({ padding: FIT_PADDING, duration: 200 }), 0)
     return () => clearTimeout(t)
   }, [visibleKey, fitView])
 
@@ -159,7 +163,7 @@ export function DiagramCanvas({ doc, path, selection, selected, onUpdate, onSele
         onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
         fitView
-        fitViewOptions={{ padding: 0.12 }}
+        fitViewOptions={{ padding: FIT_PADDING }}
         minZoom={0.2}
         maxZoom={1.6}
       >
